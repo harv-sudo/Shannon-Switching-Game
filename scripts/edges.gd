@@ -41,10 +41,12 @@ func _ready() -> void:
 	queue_redraw()
 
 func _on_mouse_entered() -> void:
+	Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
 	is_hovered = true
 	queue_redraw()
 	
 func _on_mouse_exited() -> void:
+	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 	is_hovered = false
 	queue_redraw()
 	
