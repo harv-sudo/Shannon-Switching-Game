@@ -1,6 +1,6 @@
 extends Node2D
 
-class_name graphNode
+class_name Point
 
 var x_position: int;
 var y_position: int;
