@@ -4,8 +4,9 @@ class_name Edge
 
 var start_position: Vector2
 var end_position: Vector2
-var width: float = 10.0
+var width: float = 15.0
 var colour: Color = Color.SKY_BLUE
+var edgeIndex: int
 
 var is_hovered = false
 var hovered_colour = Color.BLACK
@@ -13,9 +14,10 @@ var hovered_colour = Color.BLACK
 var area: Area2D 
 var collision: CollisionShape2D
 
-func _init(start: Vector2, end: Vector2):
+func _init(start: Vector2, end: Vector2, index: int):
 	self.start_position = start
 	self.end_position = end
+	self.edgeIndex = index
 
 func createCollision():
 	area = Area2D.new()
@@ -66,10 +68,11 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if (event is InputEventMouseButton 
 	and event.button_index == MOUSE_BUTTON_LEFT
 	and event.pressed):
-		if TurnManager.currentPlayer == 0:
-			print("Player 1s turn")
-			TurnManager.currentPlayer = TurnManager.Player.P2
+		print(edgeIndex)
+		if GlobalVariables.currentPlayer == 0:
+			#print("Player 1s turn")
+			GlobalVariables.currentPlayer = GlobalVariables.Player.P2
 		else:
-			print("Player 2s turn")
-			TurnManager.currentPlayer = TurnManager.Player.P1
+			#print("Player 2s turn")
+			GlobalVariables.currentPlayer = GlobalVariables.Player.P1
 		pass
