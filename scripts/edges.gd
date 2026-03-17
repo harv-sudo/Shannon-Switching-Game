@@ -74,22 +74,30 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if (event is InputEventMouseButton 
 	and event.button_index == MOUSE_BUTTON_LEFT
 	and event.pressed):
-		print(edgeReference)
-		if GlobalVariables.currentPlayer == 0:
-			print("Player 1s turn")
-			GlobalVariables.currentPlayer = GlobalVariables.Player.P2
-			is_captured = true
-			is_hovered = false
-			GlobalVariables.edges.remove_at(edgeReference)
-			area.input_pickable = false
-			Input.set_default_cursor_shape(Input.CURSOR_ARROW)
-			queue_redraw()
-		else:
-			print("Player 2s turn")
-			GlobalVariables.currentPlayer = GlobalVariables.Player.P1
-			GlobalVariables.edges.erase(edgeReference)
-			Input.set_default_cursor_shape(Input.CURSOR_ARROW)
-			queue_free()
-			
+		
+		match (GlobalVariables.currentPlayer):
+			# Edge selected by player 1 turns green
+			0:
+				print("Player 1s turn")
+				# Edge now belongs to the short player
+				is_captured = true
+				GlobalVariables.currentPlayer = GlobalVariables.Player.P2
+				# Enables the re-colouring of the edge
+				queue_redraw()
+			# Edge selected by player 2 is deleted from scene
+			1:
+				print("Player 2s turn")
+				#Removes the edge from the edges global array
+				print(edgeReference)
+				GlobalVariables.edges.erase(edgeReference)
+				GlobalVariables.currentPlayer = GlobalVariables.Player.P1
+				# Removes the edge from the scene
+				queue_free()
+		
+		# The section below is used to remove the clickable area for an edge
+		# when selected
+		area.input_pickable = false
+		is_hovered = false
+		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+		
 		print(GlobalVariables.edges)
-		pass
