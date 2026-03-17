@@ -4,10 +4,10 @@ enum Player { P1 = 0, P2 = 1 }
 var currentPlayer = Player.P1
 
 var points = [
-	{"position": Vector2(200, 200), },
-	{"position": Vector2(450, 150), "edges": [0, 2, 3]},
-	{"position": Vector2(650, 250), "edges": [1]},
-	{"position": Vector2(350, 450), "edges": [0, 1, 2]},
+	{"position": Vector2(200, 200)},
+	{"position": Vector2(450, 150)},
+	{"position": Vector2(650, 250)},
+	{"position": Vector2(350, 450)},
 ]
 
 var edges = {
