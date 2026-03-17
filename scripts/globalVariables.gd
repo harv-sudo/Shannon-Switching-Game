@@ -10,9 +10,9 @@ var points = [
 	{"position": Vector2(350, 450), "edges": [0, 1, 2]},
 ]
 
-var edges = [
-	{"start": 0, "end": 1},
-	{"start": 0, "end": 2},
-	{"start": 0, "end": 3},
-	{"start": 1, "end":  2}
-]
+var edges = {
+	0: {"start": 0, "end": 1},
+	1: {"start": 0, "end": 2},
+	2: {"start": 0, "end": 3},
+	3: {"start": 1, "end":  2}
+}
