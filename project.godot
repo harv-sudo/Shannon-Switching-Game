@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-TurnManager="*uid://2pm3mnk1c5aj"
+GlobalVariables="*uid://2pm3mnk1c5aj"
 
 [physics]
 
