@@ -11,8 +11,13 @@ config_version=5
 [application]
 
 config/name="Shannon Switching Game"
+run/main_scene="res://testingScene.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+TurnManager="*uid://2pm3mnk1c5aj"
 
 [physics]
 
