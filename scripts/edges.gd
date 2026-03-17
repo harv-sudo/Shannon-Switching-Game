@@ -17,7 +17,7 @@ func _init(start: Vector2, end: Vector2):
 	self.start_position = start
 	self.end_position = end
 
-func _ready() -> void:
+func createCollision():
 	area = Area2D.new()
 	add_child(area)
 	
@@ -25,31 +25,51 @@ func _ready() -> void:
 	
 	var rectangle = RectangleShape2D.new()
 	var length = (start_position - end_position).length()
-	rectangle.extents = Vector2(length * 0.5, width * 0.5)
+	rectangle.size = Vector2(length, width)
 	
 	collision = CollisionShape2D.new()
 	collision.shape = rectangle
 	collision.disabled = false
-	area.add_child(collision)
 	
+	area.add_child(collision)
 	area.position = (start_position + end_position) * 0.5
 	area.rotation = (end_position - start_position).angle()
 	
 	area.mouse_entered.connect(_on_mouse_entered)
 	area.mouse_exited.connect(_on_mouse_exited)
-	
-	queue_redraw()
+	area.input_event.connect(_select_edge)
 
+# Used to add hover effect for the edge
 func _on_mouse_entered() -> void:
 	Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
 	is_hovered = true
 	queue_redraw()
 	
+# Used to remove hover effect for the edge
 func _on_mouse_exited() -> void:
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 	is_hovered = false
 	queue_redraw()
-	
+
 func _draw():
 	var checkColour = hovered_colour if is_hovered else colour
 	draw_line(start_position, end_position, checkColour, width)
+
+func _ready() -> void:
+	# Adds the collison to the edge, allowing for hover events to trigger
+	createCollision()
+
+# _ is required infront of variables that are not used, 
+# but they are still need to not flag and error in the debugger
+# as input_event that it is connected to requires these 3 args
+func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+	if (event is InputEventMouseButton 
+	and event.button_index == MOUSE_BUTTON_LEFT
+	and event.pressed):
+		if TurnManager.currentPlayer == 0:
+			print("Player 1s turn")
+			TurnManager.currentPlayer = TurnManager.Player.P2
+		else:
+			print("Player 2s turn")
+			TurnManager.currentPlayer = TurnManager.Player.P1
+		pass
