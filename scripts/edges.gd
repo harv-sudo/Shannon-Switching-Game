@@ -6,9 +6,10 @@ var start_position: Vector2
 var end_position: Vector2
 var width: float = 15.0
 var colour: Color = Color.SKY_BLUE
-var edgeIndex: int
+var edgeReference: int
 
 var is_hovered = false
+var is_captured = false
 var hovered_colour = Color.BLACK
 
 var area: Area2D 
@@ -17,7 +18,7 @@ var collision: CollisionShape2D
 func _init(start: Vector2, end: Vector2, index: int):
 	self.start_position = start
 	self.end_position = end
-	self.edgeIndex = index
+	self.edgeReference = index
 
 func createCollision():
 	area = Area2D.new()
@@ -54,6 +55,11 @@ func _on_mouse_exited() -> void:
 	queue_redraw()
 
 func _draw():
+	if is_captured:
+		colour = Color.GREEN
+		area.mouse_entered.disconnect(_on_mouse_entered)
+		area.mouse_exited.disconnect(_on_mouse_exited)
+		
 	var checkColour = hovered_colour if is_hovered else colour
 	draw_line(start_position, end_position, checkColour, width)
 
@@ -68,11 +74,22 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if (event is InputEventMouseButton 
 	and event.button_index == MOUSE_BUTTON_LEFT
 	and event.pressed):
-		print(edgeIndex)
+		print(edgeReference)
 		if GlobalVariables.currentPlayer == 0:
-			#print("Player 1s turn")
+			print("Player 1s turn")
 			GlobalVariables.currentPlayer = GlobalVariables.Player.P2
+			is_captured = true
+			is_hovered = false
+			GlobalVariables.edges.remove_at(edgeReference)
+			area.input_pickable = false
+			Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+			queue_redraw()
 		else:
-			#print("Player 2s turn")
+			print("Player 2s turn")
 			GlobalVariables.currentPlayer = GlobalVariables.Player.P1
+			GlobalVariables.edges.erase(edgeReference)
+			Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+			queue_free()
+			
+		print(GlobalVariables.edges)
 		pass
