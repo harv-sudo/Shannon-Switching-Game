@@ -7,9 +7,6 @@ extends Node2D
 # This makes it easier to keep track of what data structures we are using for testing purposes
 # We need to implement this dynamically programatically creating different types of graphs
 
-
-
-
 enum Player { P1 = 0, P2 = 1 }
 var currentPlayer = Player.P1
 
@@ -18,13 +15,16 @@ var points = [
 	{"position": Vector2(450, 150)},
 	{"position": Vector2(650, 250)},
 	{"position": Vector2(350, 450)},
+	{"position": Vector2(660, 550)},
 ]
 
 var edges = {
 	0: {"start": 0, "end": 1},
 	1: {"start": 0, "end": 2},
 	2: {"start": 0, "end": 3},
-	3: {"start": 1, "end":  2}
+	3: {"start": 1, "end":  2},
+	4: {"start": 3, "end":  4},
+	5: {"start": 2, "end":  4},
 }
 
 var edgesRemaining = 0
