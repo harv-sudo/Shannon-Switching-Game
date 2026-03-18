@@ -97,17 +97,20 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 			# Edge selected by player 2 is deleted from scene tree
 			1:
 				print("Player 2s turn")
-				print(edgeReference)
 				#Removes the edge from the edges global array
-				GlobalVariables.edges.erase(edgeReference)
 				GlobalVariables.currentPlayer = GlobalVariables.Player.P1
 				# Removes the edge from the scene
 				queue_free()
 		
 		# The section below is used to remove the clickable area for an edge
 		# when selected
+		
+		GlobalVariables.edges.erase(edgeReference)
+		GlobalVariables.edgesRemaining = GlobalVariables.edgesRemaining - 1
 		area.input_pickable = false
 		is_hovered = false
 		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 		
 		print(GlobalVariables.edges)
+		GlobalVariables.is_game_over()
+		
