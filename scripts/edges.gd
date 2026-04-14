@@ -4,18 +4,21 @@ class_name Edge
 
 var start_position: Vector2
 var end_position: Vector2
-var width: float = 10.0
-var colour: Color = Color.SKY_BLUE
+var width: float = 3.0
+var colour: Color = Color.BLACK
+var edgeReference: int
 
-var is_hovered = false
-var hovered_colour = Color.BLACK
+var is_hovered: bool = false
+var is_captured: bool = false
+var hovered_colour: Color = Color.GRAY
 
 var area: Area2D 
 var collision: CollisionShape2D
 
-func _init(start: Vector2, end: Vector2):
+func _init(start: Vector2, end: Vector2, index: int):
 	self.start_position = start
 	self.end_position = end
+	self.edgeReference = index
 
 func createCollision():
 	area = Area2D.new()
@@ -25,7 +28,7 @@ func createCollision():
 	
 	var rectangle = RectangleShape2D.new()
 	var length = (start_position - end_position).length()
-	rectangle.size = Vector2(length, width)
+	rectangle.size = Vector2(length, 10 * width)
 	
 	collision = CollisionShape2D.new()
 	collision.shape = rectangle
@@ -35,6 +38,7 @@ func createCollision():
 	area.position = (start_position + end_position) * 0.5
 	area.rotation = (end_position - start_position).angle()
 	
+	# Adds event listeners to each area created
 	area.mouse_entered.connect(_on_mouse_entered)
 	area.mouse_exited.connect(_on_mouse_exited)
 	area.input_event.connect(_select_edge)
@@ -52,7 +56,20 @@ func _on_mouse_exited() -> void:
 	queue_redraw()
 
 func _draw():
-	var checkColour = hovered_colour if is_hovered else colour
+	var checkColour: Color
+	
+	# Changes colour of edge if selected by the short player (P1)
+	if is_captured:
+		checkColour = Color.GREEN
+		area.mouse_entered.disconnect(_on_mouse_entered)
+		area.mouse_exited.disconnect(_on_mouse_exited)
+
+	elif is_hovered:
+		checkColour = hovered_colour
+		
+	else:
+		checkColour = colour
+
 	draw_line(start_position, end_position, checkColour, width)
 
 func _ready() -> void:
@@ -66,10 +83,34 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if (event is InputEventMouseButton 
 	and event.button_index == MOUSE_BUTTON_LEFT
 	and event.pressed):
-		if TurnManager.currentPlayer == 0:
-			print("Player 1s turn")
-			TurnManager.currentPlayer = TurnManager.Player.P2
-		else:
-			print("Player 2s turn")
-			TurnManager.currentPlayer = TurnManager.Player.P1
-		pass
+		
+		match (GlobalVariables.currentPlayer):
+			# Edge selected by short player (P1) turns green
+			0:
+				print("Player 1s turn")
+				# Enables the re-colouring of the edge
+				is_captured = true
+				GlobalVariables.currentPlayer = GlobalVariables.Player.P2
+				# Tells the engine to redraw the canvas item
+				queue_redraw()
+				
+			# Edge selected by player 2 is deleted from scene tree
+			1:
+				print("Player 2s turn")
+				#Removes the edge from the edges global array
+				GlobalVariables.currentPlayer = GlobalVariables.Player.P1
+				# Removes the edge from the scene
+				queue_free()
+		
+		# The section below is used to remove the clickable area for an edge
+		# when selected
+		
+		GlobalVariables.edges.erase(edgeReference)
+		GlobalVariables.edgesRemaining = GlobalVariables.edgesRemaining - 1
+		area.input_pickable = false
+		is_hovered = false
+		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+		
+		print(GlobalVariables.edges)
+		GlobalVariables.is_game_over()
+		
