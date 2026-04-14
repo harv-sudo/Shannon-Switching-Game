@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://rkun70jouwsb"]
+
+[ext_resource type="Script" uid="uid://cise5uh5hmws1" path="res://scripts/ui/main_menu.gd" id="1_l6cm7"]
+
+[node name="MainMenu" type="Control" unique_id=677604285]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_l6cm7")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=120979065]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=921303116]
+layout_mode = 2
+theme_override_constants/separation = 169
+
+[node name="VBoxLabelContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=1970271234]
+layout_mode = 2
+theme_override_constants/separation = 23
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer/VBoxLabelContainer" unique_id=863461831]
+layout_mode = 2
+theme_override_font_sizes/font_size = 42
+text = "Shannon Switching Game"
+
+[node name="SubtitleLabel" type="Label" parent="CenterContainer/VBoxContainer/VBoxLabelContainer" unique_id=1611426792]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "COMP530 Group Project"
+horizontal_alignment = 1
+
+[node name="VBoxButtonContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=1882733601]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="StartButton" type="Button" parent="CenterContainer/VBoxContainer/VBoxButtonContainer" unique_id=1429353088]
+custom_minimum_size = Vector2(220, 50)
+layout_mode = 2
+text = "Start"
+
+[node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer/VBoxButtonContainer" unique_id=69254621]
+custom_minimum_size = Vector2(220, 50)
+layout_mode = 2
+text = "Quit"
