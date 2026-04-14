@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://qxl6va50twrc"]
+
+[ext_resource type="Script" uid="uid://rv7p7byyxj37" path="res://scripts/ui/gameSetup.gd" id="1_hcxev"]
+
+[node name="GameSetup" type="Control" unique_id=744022010]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hcxev")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=374982318]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=2106717872]
+custom_minimum_size = Vector2(500, 320)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=388427991]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer" unique_id=222594824]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=992129698]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Game Setup"
+horizontal_alignment = 1
+
+[node name="NodesRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1964581317]
+layout_mode = 2
+
+[node name="NodesLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/NodesRow" unique_id=561775710]
+layout_mode = 2
+text = "Number of Nodes: "
+
+[node name="NodesSpinBox" type="SpinBox" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/NodesRow" unique_id=1464911728]
+layout_mode = 2
+
+[node name="EdgesRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1671500886]
+layout_mode = 2
+
+[node name="EdgesLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/EdgesRow" unique_id=1832150015]
+layout_mode = 2
+text = "Number of Edges: "
+
+[node name="SpinBox" type="SpinBox" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/EdgesRow" unique_id=20231730]
+layout_mode = 2
+
+[node name="ModeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1785452102]
+layout_mode = 2
+
+[node name="ModeLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ModeRow" unique_id=241370721]
+layout_mode = 2
+text = "Game mode: "
+
+[node name="ModeOptionButton" type="OptionButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ModeRow" unique_id=1215012392]
+layout_mode = 2
+
+[node name="ButtonsRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=859534166]
+layout_mode = 2
+theme_override_constants/separation = 141
+
+[node name="BackButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonsRow" unique_id=919738138]
+layout_mode = 2
+text = "Back"
+
+[node name="StartGameButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonsRow" unique_id=966791148]
+layout_mode = 2
+text = "Start Game"
