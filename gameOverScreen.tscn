@@ -1,5 +1,9 @@
 [gd_scene format=3 uid="uid://cyjsn17mfonuq"]
 
+[ext_resource type="Script" uid="uid://dqmeeu17lhjiq" path="res://scripts/ui/game_over_screen.gd" id="1_iot85"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_v7ja1"]
+
 [node name="Control" type="Control" unique_id=1752648630]
 layout_mode = 3
 anchors_preset = 15
@@ -7,10 +11,11 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 4
+script = ExtResource("1_iot85")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=948258129]
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer" unique_id=982511256]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=982511256]
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -22,14 +27,21 @@ offset_right = 87.0
 offset_bottom = 40.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 8
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer" unique_id=269874326]
+[node name="Label2" type="Label" parent="VBoxContainer" unique_id=1272310459]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
 text = "Game Over"
+horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="CanvasLayer/VBoxContainer" unique_id=1434789436]
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=269874326]
 layout_mode = 2
-text = "Restart"
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 32
+text = "WINNER"
+label_settings = SubResource("LabelSettings_v7ja1")
+
+[node name="Button" type="Button" parent="VBoxContainer" unique_id=1434789436]
+layout_mode = 2
+text = "Main Menu"
