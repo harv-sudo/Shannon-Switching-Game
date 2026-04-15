@@ -104,6 +104,7 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 		var gameState = WinConditions.new()
 		var currentState = gameState.is_game_over(GlobalVariables.start_node, GlobalVariables.end_node, GlobalVariables.points, GlobalVariables.edges)
 		
+		# XOR bit flip to change the current Player
 		GlobalVariables.currentPlayer ^= 1
 		area.input_pickable = false
 		is_hovered = false

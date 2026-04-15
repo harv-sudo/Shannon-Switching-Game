@@ -36,14 +36,14 @@ func path_exists(start_node: int, target_node: int, adjacency: Dictionary) -> bo
 	return _dfs(start_node, target_node, adjacency, visited)
 		
 
-# Check to see if the "short" player can still win the game, if not "cut" player wins
 func is_game_over(start_node: int, target_node: int, points: Array, edges: Dictionary) -> bool:
 	var adjacency = build_adjacency(points, edges)
 	
+	# Check to see if the "short" player can still win the game, if not "cut" player wins
 	if path_exists(start_node, target_node, adjacency):
 		#Player 1s dictionary of moves
 		var shortAdjacency = build_adjacency(points, GlobalVariables.short_edges)
-		
+		# Check to see if "short" player has found a winning path
 		if path_exists(start_node, target_node, shortAdjacency):
 			GlobalVariables.winner_label = "Player 1 wins"
 			return true
