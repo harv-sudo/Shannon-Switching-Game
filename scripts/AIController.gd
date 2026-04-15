@@ -1,89 +1,134 @@
-extends RefCounted
+extends Node
 class_name AIController
 
-# AI V1 logic and settings
+var ai_enabled: bool = true
+var ai_player: int = GlobalVariables.Player.P2
 
-var ai_enabled := false
-var ai_player := 1
-var terminal_start := 0
-var terminal_end := 2
+var terminal_start: int = 0
+var terminal_end: int = 6
 
-func ai_take_turn(globals: Node, board_root: Node) -> void:
-	if not ai_enabled or globals.currentPlayer != ai_player:
+
+func ai_take_turn(board_root: Node, globals) -> void:
+	if not ai_enabled:
+		return
+	if globals.currentPlayer != ai_player:
+		return
+	if globals.game_state == globals.GameState.GAME_OVER:
 		return
 
-	var edge_to_remove := choose_ai_edge(globals, board_root)
-	if edge_to_remove == -1:
-		globals.currentPlayer = globals.Player.P1
+	var best_edge: int = choose_ai_edge(globals.edges, globals.edge_states, globals.points)
+	if best_edge == -1:
 		return
 
-	globals.edges.erase(edge_to_remove)
+	# Mark the chosen edge as cut
+	globals.edge_states[best_edge] = "cut"
 
+	# Update the matching edge node visually
 	for child in board_root.get_children():
-		if child is Edge and child.edgeReference == edge_to_remove:
-			child.queue_free()
+		if child is Edge and child.edgeReference == best_edge:
+			if child.has_method("queue_redraw"):
+				child.queue_redraw()
 			break
 
-	globals.currentPlayer = globals.Player.P1
-	print("AI removed edge: ", edge_to_remove)
+	globals.check_win_conditions()
 
-func choose_ai_edge(globals: Node, board_root: Node) -> int:
-	var candidates: Array[int] = []
+	if globals.game_state != globals.GameState.GAME_OVER:
+		globals.currentPlayer = GlobalVariables.Player.P1
 
-	for child in board_root.get_children():
-		if child is Edge and not child.is_captured and globals.edges.has(child.edgeReference):
-			candidates.append(child.edgeReference)
 
-	if candidates.is_empty():
-		return -1
+func choose_ai_edge(edges: Dictionary, edge_states: Dictionary, points: Array) -> int:
+	var best_move: int = -1
+	var best_score: int = -9999
 
-	var best_edge := candidates[0]
-	var best_score := -1
+	# Try every free edge the AI could cut
+	for ai_edge in edges.keys():
+		if edge_states.get(ai_edge, "free") != "free":
+			continue
 
-	for edge_id in candidates:
-		var simulated_edges: Dictionary = globals.edges.duplicate(true)
-		simulated_edges.erase(edge_id)
+		var simulated_states: Dictionary = edge_states.duplicate(true)
+		simulated_states[ai_edge] = "cut"
 
-		var distance := shortest_path_length(globals, simulated_edges, terminal_start, terminal_end)
-		var score := 999999 if distance == -1 else distance
+		# Assume the player makes the best reply
+		var worst_player_move: int = 9999
 
-		if score > best_score:
-			best_score = score
-			best_edge = edge_id
+		var has_free_reply: bool = false
 
-	return best_edge
+		for player_edge in edges.keys():
+			if simulated_states.get(player_edge, "free") != "free":
+				continue
 
-func shortest_path_length(globals: Node, edge_dict: Dictionary, start_node: int, end_node: int) -> int:
+			has_free_reply = true
+
+			var player_move_states: Dictionary = simulated_states.duplicate(true)
+			player_move_states[player_edge] = "short"
+
+			var score: int = evaluate_board(edges, player_move_states, points)
+
+			if score < worst_player_move:
+				worst_player_move = score
+
+		if not has_free_reply:
+			worst_player_move = evaluate_board(edges, simulated_states, points)
+
+		if worst_player_move > best_score:
+			best_score = worst_player_move
+			best_move = ai_edge
+
+	return best_move
+
+
+func evaluate_board(edges: Dictionary, edge_states: Dictionary, points: Array) -> int:
+	var path_length: int = shortest_path_length(edges, edge_states, points, terminal_start, terminal_end)
+
+	# No connection left between the two winning points
+	if path_length == -1:
+		return 10000
+
+	# Longer path between the winning points = better for AI
+	return path_length
+
+
+func shortest_path_length(
+	edges: Dictionary,
+	edge_states: Dictionary,
+	points: Array,
+	start_node: int,
+	end_node: int
+) -> int:
 	if start_node == end_node:
 		return 0
 
-	var adjacency := {}
-	for i in range(globals.points.size()):
+	var adjacency: Dictionary = {}
+	for i in range(points.size()):
 		adjacency[i] = []
 
-	for edge_id in edge_dict.keys():
-		var edge = edge_dict[edge_id]
+	# Use every edge that is not cut
+	for edge_id in edges.keys():
+		var state: String = edge_states.get(edge_id, "free")
+		if state == "cut":
+			continue
+
+		var edge: Dictionary = edges[edge_id]
 		var a: int = edge["start"]
 		var b: int = edge["end"]
 		adjacency[a].append(b)
 		adjacency[b].append(a)
 
-	var visited := {}
+	var visited: Dictionary = {}
 	var queue: Array = [[start_node, 0]]
 	visited[start_node] = true
 
 	while not queue.is_empty():
-		var item = queue.pop_front()
-		var node: int = item[0]
-		var distance: int = item[1]
+		var current: Array = queue.pop_front()
+		var node: int = current[0]
+		var dist: int = current[1]
+
+		if node == end_node:
+			return dist
 
 		for neighbour in adjacency[node]:
-			if visited.has(neighbour):
-				continue
-			if neighbour == end_node:
-				return distance + 1
-
-			visited[neighbour] = true
-			queue.append([neighbour, distance + 1])
+			if not visited.has(neighbour):
+				visited[neighbour] = true
+				queue.append([neighbour, dist + 1])
 
 	return -1
