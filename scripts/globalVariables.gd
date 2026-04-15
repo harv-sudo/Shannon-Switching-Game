@@ -1,6 +1,6 @@
 extends Node2D
 
-# This script contains global variables that are loaded by the auto loader when the game runs..
+# This script contains global variables that are loaded by the auto loader when the game runs.
 # This allows us to access the variables declared within in other script files, allowing for 
 # seperation of concerns.
 
@@ -11,25 +11,35 @@ enum Player { P1 = 0, P2 = 1 }
 var currentPlayer = Player.P1
 
 var points = [
-	{"position": Vector2(200, 200)},
-	{"position": Vector2(450, 150)},
-	{"position": Vector2(650, 250)},
-	{"position": Vector2(350, 450)},
-	{"position": Vector2(660, 550)},
+	{"position": Vector2(120, 280)}, # 0 - S
+	{"position": Vector2(240, 180)}, # 1
+	{"position": Vector2(240, 380)}, # 2
+	{"position": Vector2(420, 160)}, # 3
+	{"position": Vector2(420, 420)}, # 4
+	{"position": Vector2(600, 280)}, # 5
+	{"position": Vector2(740, 280)}  # 6 - G
 ]
 
 var edges = {
-	0: {"start": 0, "end": 1},
-	1: {"start": 0, "end": 2},
-	2: {"start": 0, "end": 3},
-	3: {"start": 1, "end":  2},
-	4: {"start": 3, "end":  4},
-	5: {"start": 2, "end":  4},
+	0:  {"start": 0, "end": 1},
+	1:  {"start": 0, "end": 2},
+	2:  {"start": 1, "end": 2},
+	3:  {"start": 1, "end": 3},
+	4:  {"start": 2, "end": 4},
+	5:  {"start": 1, "end": 4},
+	6:  {"start": 2, "end": 3},
+	7:  {"start": 3, "end": 4},
+	8:  {"start": 3, "end": 5},
+	9:  {"start": 4, "end": 5},
+	10: {"start": 3, "end": 6},
+	11: {"start": 4, "end": 6},
+	12: {"start": 5, "end": 6}
 }
 
-var edgesRemaining = 0
+var start_node = 0
+var end_node = 6
 
-func is_game_over():
-	if edgesRemaining == 0:
-		get_tree().change_scene_to_file("res://gameOverScreen.tscn")
-	pass
+var short_edges = {}
+
+func game_over():
+	get_tree().change_scene_to_file("res://gameOverScreen.tscn")

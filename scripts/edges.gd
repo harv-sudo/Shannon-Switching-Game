@@ -4,7 +4,7 @@ class_name Edge
 
 var start_position: Vector2
 var end_position: Vector2
-var width: float = 3.0
+var width: float = 10.0
 var colour: Color = Color.BLACK
 var edgeReference: int
 
@@ -15,12 +15,12 @@ var hovered_colour: Color = Color.GRAY
 var area: Area2D 
 var collision: CollisionShape2D
 
-func _init(start: Vector2, end: Vector2, index: int):
+func _init(start: Vector2, end: Vector2, index: int) -> void:
 	self.start_position = start
 	self.end_position = end
 	self.edgeReference = index
 
-func createCollision():
+func createCollision() -> void:
 	area = Area2D.new()
 	add_child(area)
 	
@@ -28,7 +28,7 @@ func createCollision():
 	
 	var rectangle = RectangleShape2D.new()
 	var length = (start_position - end_position).length()
-	rectangle.size = Vector2(length, 10 * width)
+	rectangle.size = Vector2(length, width)
 	
 	collision = CollisionShape2D.new()
 	collision.shape = rectangle
@@ -55,7 +55,7 @@ func _on_mouse_exited() -> void:
 	is_hovered = false
 	queue_redraw()
 
-func _draw():
+func _draw() ->void:
 	var checkColour: Color
 	
 	# Changes colour of edge if selected by the short player (P1)
@@ -87,7 +87,7 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 		match (GlobalVariables.currentPlayer):
 			# Edge selected by short player (P1) turns green
 			0:
-				print("Player 1s turn")
+				print("\n\nPlayer 1s turn")
 				# Enables the re-colouring of the edge
 				is_captured = true
 				GlobalVariables.currentPlayer = GlobalVariables.Player.P2
@@ -96,7 +96,7 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 				
 			# Edge selected by player 2 is deleted from scene tree
 			1:
-				print("Player 2s turn")
+				print("\n\nPlayer 2s turn")
 				#Removes the edge from the edges global array
 				GlobalVariables.currentPlayer = GlobalVariables.Player.P1
 				# Removes the edge from the scene
@@ -104,13 +104,19 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 		
 		# The section below is used to remove the clickable area for an edge
 		# when selected
+		var gameState = WinConditions.new()
+		var currentState = gameState.is_game_over(GlobalVariables.start_node, GlobalVariables.end_node, GlobalVariables.points, GlobalVariables.edges)
 		
-		GlobalVariables.edges.erase(edgeReference)
-		GlobalVariables.edgesRemaining = GlobalVariables.edgesRemaining - 1
+		if GlobalVariables.currentPlayer == 1:
+			GlobalVariables.edges.erase(edgeReference)
+		#else:
+			#GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
+		#GlobalVariables.edgesRemaining = GlobalVariables.edgesRemaining - 1
 		area.input_pickable = false
 		is_hovered = false
 		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 		
-		print(GlobalVariables.edges)
-		GlobalVariables.is_game_over()
+
+		if !currentState:
+			GlobalVariables.game_over()
 		
