@@ -60,16 +60,6 @@ text = "Number of Edges: "
 [node name="SpinBox" type="SpinBox" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/EdgesRow" unique_id=20231730]
 layout_mode = 2
 
-[node name="ModeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1785452102]
-layout_mode = 2
-
-[node name="ModeLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ModeRow" unique_id=241370721]
-layout_mode = 2
-text = "Game mode: "
-
-[node name="ModeOptionButton" type="OptionButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ModeRow" unique_id=1215012392]
-layout_mode = 2
-
 [node name="ButtonsRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=859534166]
 layout_mode = 2
 theme_override_constants/separation = 141
