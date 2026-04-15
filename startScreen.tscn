@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://p3l8gso0185x"]
+
+[ext_resource type="Script" uid="uid://divcwsnjmev5l" path="res://scripts/startGame.gd" id="1_3cdud"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_3pj0e"]
+font_size = 28
+
+[node name="Control" type="Control" unique_id=671787327]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3cdud")
+
+[node name="Label" type="Label" parent="." unique_id=280927272]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -172.0
+offset_top = 12.0
+offset_right = 172.0
+offset_bottom = 102.0
+grow_horizontal = 2
+text = "Team 4
+Shannon Switching Game"
+label_settings = SubResource("LabelSettings_3pj0e")
+horizontal_alignment = 1
