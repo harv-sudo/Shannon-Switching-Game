@@ -107,7 +107,6 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 			GlobalVariables.edges.erase(edgeReference)
 		else:
 			GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
-			print(GlobalVariables.short_edges[edgeReference])
 		
 		var gameState = WinConditions.new()
 		var currentState = gameState.is_game_over(GlobalVariables.start_node, GlobalVariables.end_node, GlobalVariables.points, GlobalVariables.edges)
@@ -116,4 +115,8 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 		area.input_pickable = false
 		is_hovered = false
 		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+		
+		if currentState == true:
+			get_tree().change_scene_to_file("res://gameOverScreen.tscn")
+			
 		

@@ -27,4 +27,7 @@ func totalEdges():
 
 func _ready():
 	drawGraph()
-	#GlobalVariables.edgesRemaining = totalEdges()
+
+func gameOver(message: String):
+	get_tree().change_scene_to_file("res://gameOverScreen.tscn")
+	pass

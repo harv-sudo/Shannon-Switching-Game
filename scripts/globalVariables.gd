@@ -6,7 +6,6 @@ extends Node2D
 
 # This makes it easier to keep track of what data structures we are using for testing purposes
 # We need to implement this dynamically programatically creating different types of graphs
-
 enum Player { P1 = 0, P2 = 1 }
 var currentPlayer = Player.P1
 
@@ -41,5 +40,4 @@ var end_node: int = 6
 
 var short_edges = {}
 
-func game_over():
-	get_tree().change_scene_to_file("res://gameOverScreen.tscn")
+var winner_label:String = ""

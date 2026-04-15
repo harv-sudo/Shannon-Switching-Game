@@ -15,23 +15,13 @@ func build_adjacency(points : Array, edges: Dictionary) -> Dictionary:
 		adjacency[start_node].append(end_node)
 		adjacency[end_node].append(start_node)
 		
-		
-	#for adj in adjacency:
-		#print(adj,": ", adjacency[adj])
-	#print("\n------------------")
 	return adjacency
 
 func _dfs(current_node: int, target_node: int, adjacency: Dictionary, visited: Dictionary) -> bool:
 	if current_node == target_node:
 		return true
-	
-	# Change to a set?
+		
 	visited[current_node] = true
-	
-	#print("\n\n")
-	#print("current node: ", current_node)
-	#print(adjacency)
-	#print("visited:, ", visited)
 	
 	for neighbour in adjacency.get(current_node, []):
 		#print("neighbour: ", neighbour)
@@ -50,20 +40,14 @@ func path_exists(start_node: int, target_node: int, adjacency: Dictionary) -> bo
 func is_game_over(start_node: int, target_node: int, points: Array, edges: Dictionary) -> bool:
 	var adjacency = build_adjacency(points, edges)
 	
-	#for adj in adjacency:
-		#print(adj, ": ", adjacency[adj])
-		
 	if path_exists(start_node, target_node, adjacency):
 		#Player 1s dictionary of moves
 		var shortAdjacency = build_adjacency(points, GlobalVariables.short_edges)
 		
-		for adj in shortAdjacency:
-			print(adj,": ", shortAdjacency[adj])
-			
-		print(path_exists(start_node, target_node, shortAdjacency))
 		if path_exists(start_node, target_node, shortAdjacency):
-			print("Player 1 wins");
-		return true
-	else:
-		print("Player 2 wins");
+			GlobalVariables.winner_label = "Player 1 wins"
+			return true
 		return false
+	else:
+		GlobalVariables.winner_label = "Player 2 wins"
+		return true
