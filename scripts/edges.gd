@@ -87,17 +87,10 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 		match (GlobalVariables.currentPlayer):
 			# Edge selected by short player (P1) turns green
 			0:
-				print("\n\nPlayer 1s turn")
 				# Enables the re-colouring of the edge
 				is_captured = true
-				# Tells the engine to redraw the canvas item
 				queue_redraw()
-				
-			# Edge selected by player 2 is deleted from scene tree
 			1:
-				print("\n\nPlayer 2s turn")
-				#Removes the edge from the edges global array
-				# Removes the edge from the scene
 				queue_free()
 		
 		# The section below is used to remove the clickable area for an edge
