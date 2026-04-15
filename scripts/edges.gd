@@ -90,7 +90,6 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 				print("\n\nPlayer 1s turn")
 				# Enables the re-colouring of the edge
 				is_captured = true
-				GlobalVariables.currentPlayer = GlobalVariables.Player.P2
 				# Tells the engine to redraw the canvas item
 				queue_redraw()
 				
@@ -98,25 +97,23 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 			1:
 				print("\n\nPlayer 2s turn")
 				#Removes the edge from the edges global array
-				GlobalVariables.currentPlayer = GlobalVariables.Player.P1
 				# Removes the edge from the scene
 				queue_free()
 		
 		# The section below is used to remove the clickable area for an edge
 		# when selected
-		var gameState = WinConditions.new()
-		var currentState = gameState.is_game_over(GlobalVariables.start_node, GlobalVariables.end_node, GlobalVariables.points, GlobalVariables.edges)
 		
 		if GlobalVariables.currentPlayer == 1:
 			GlobalVariables.edges.erase(edgeReference)
-		#else:
-			#GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
-		#GlobalVariables.edgesRemaining = GlobalVariables.edgesRemaining - 1
+		else:
+			GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
+			print(GlobalVariables.short_edges[edgeReference])
+		
+		var gameState = WinConditions.new()
+		var currentState = gameState.is_game_over(GlobalVariables.start_node, GlobalVariables.end_node, GlobalVariables.points, GlobalVariables.edges)
+		
+		GlobalVariables.currentPlayer ^= 1
 		area.input_pickable = false
 		is_hovered = false
 		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
-		
-
-		if !currentState:
-			GlobalVariables.game_over()
 		

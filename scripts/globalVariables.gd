@@ -36,8 +36,8 @@ var edges = {
 	12: {"start": 5, "end": 6}
 }
 
-var start_node = 0
-var end_node = 6
+var start_node: int = 0
+var end_node: int = 6
 
 var short_edges = {}
 

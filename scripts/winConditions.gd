@@ -27,13 +27,14 @@ func _dfs(current_node: int, target_node: int, adjacency: Dictionary, visited: D
 	
 	# Change to a set?
 	visited[current_node] = true
-	print("\\n")
-	print("current node: ", current_node)
-	print(adjacency)
-	print("visited:, ", visited)
+	
+	#print("\n\n")
+	#print("current node: ", current_node)
+	#print(adjacency)
+	#print("visited:, ", visited)
 	
 	for neighbour in adjacency.get(current_node, []):
-		print("neighbour: ", neighbour)
+		#print("neighbour: ", neighbour)
 		if not visited.has(neighbour):
 			if _dfs(neighbour, target_node, adjacency, visited):
 				return true
@@ -54,8 +55,13 @@ func is_game_over(start_node: int, target_node: int, points: Array, edges: Dicti
 		
 	if path_exists(start_node, target_node, adjacency):
 		#Player 1s dictionary of moves
+		var shortAdjacency = build_adjacency(points, GlobalVariables.short_edges)
 		
-		if path_exists(start_node, target_node, GlobalVariables.short_edges):
+		for adj in shortAdjacency:
+			print(adj,": ", shortAdjacency[adj])
+			
+		print(path_exists(start_node, target_node, shortAdjacency))
+		if path_exists(start_node, target_node, shortAdjacency):
 			print("Player 1 wins");
 		return true
 	else:
