@@ -11,13 +11,17 @@ config_version=5
 [application]
 
 config/name="Shannon Switching Game"
-run/main_scene="res://testingScene.tscn"
+run/main_scene="uid://rkun70jouwsb"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="uid://ddxmxgyyfy8mn"
 
 [autoload]
 
 GlobalVariables="*uid://2pm3mnk1c5aj"
+
+[dotnet]
+
+project/assembly_name="Shannon Switching Game"
 
 [physics]
 
