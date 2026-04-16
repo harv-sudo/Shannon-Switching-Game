@@ -9,8 +9,8 @@ extends Node2D
 enum Player { P1 = 0, P2 = 1 }
 enum Mode { PVP = 0, AI = 1}
 enum GameType { SHANNON = 0, GALE = 1}
-var currentPlayer = Player.P1
-var currentGameMode = GameType.SHANNON
+var currentPlayer = Player.P2
+var currentGameMode = GameType.GALE
 
 var presetPoints = { 
 	0:[
@@ -97,4 +97,3 @@ func reset():
 	currentPlayer = 0
 	end_node = points.size() -1
 	short_edges = {}
-	print(edges)

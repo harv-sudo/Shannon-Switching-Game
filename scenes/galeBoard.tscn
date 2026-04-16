@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bccjrtxplhiwk"]
 
-[ext_resource type="Script" uid="uid://bw6ybwafxood3" path="res://scenes/gale_game.gd" id="1_240qd"]
+[ext_resource type="Script" uid="uid://bw6ybwafxood3" path="res://scripts/gale_game.gd" id="1_240qd"]
 
 [node name="GaleBoard" type="Node2D" unique_id=495302597]
 script = ExtResource("1_240qd")

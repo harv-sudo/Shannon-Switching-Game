@@ -47,12 +47,16 @@ func createCollision() -> void:
 func _on_mouse_entered() -> void:
 	Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
 	is_hovered = true
+	if GlobalVariables.currentGameMode == 1:
+		modulate.a = 1.0
 	queue_redraw()
 	
 # Used to remove hover effect for the edge
 func _on_mouse_exited() -> void:
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 	is_hovered = false
+	if GlobalVariables.currentGameMode == 1:
+		modulate.a = 0.0
 	queue_redraw()
 
 func _draw() ->void:
@@ -75,6 +79,8 @@ func _draw() ->void:
 func _ready() -> void:
 	# Adds the collison to the edge, allowing for hover events to trigger
 	createCollision()
+	#if GlobalVariables.currentGameMode == 1:
+		#modulate.a = 0.0
 
 # _ is required infront of variables that are not used, 
 # but they are still need to not flag and error in the debugger
@@ -105,6 +111,7 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 				var gameState = WinConditions.new()
 				var gameIsOver = gameState.is_game_over(GlobalVariables.start_node, GlobalVariables.end_node, GlobalVariables.points, GlobalVariables.edges)
 				
+				## FIX THIS
 				GlobalVariables.currentPlayer ^= 1
 				area.input_pickable = false
 				is_hovered = false
@@ -115,5 +122,5 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 					GlobalVariables.reset()
 					
 			1:
-				
+				#hide()
 				pass
