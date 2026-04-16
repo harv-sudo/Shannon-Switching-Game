@@ -1,5 +1,7 @@
 extends Node2D
 
+class_name GameManager
+
 func drawGraph():
 	draw_edges()
 	draw_nodes()
@@ -28,6 +30,7 @@ func totalEdges():
 func _ready():
 	drawGraph()
 
-func gameOver(message: String):
+
+func gameOver():
 	get_tree().change_scene_to_file("res://gameOverScreen.tscn")
-	pass
+	GlobalVariables.reset()

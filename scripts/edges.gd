@@ -83,34 +83,37 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if (event is InputEventMouseButton 
 	and event.button_index == MOUSE_BUTTON_LEFT
 	and event.pressed):
-		
-		match (GlobalVariables.currentPlayer):
-			# Edge selected by short player (P1) turns green
+		match (GlobalVariables.currentGameMode):
 			0:
-				# Enables the re-colouring of the edge
-				is_captured = true
-				queue_redraw()
+				match (GlobalVariables.currentPlayer):
+				# Edge selected by short player (P1) turns green
+					0:
+						# Enables the re-colouring of the edge
+						is_captured = true
+						queue_redraw()
+					1:
+						queue_free()
+				
+				# The section below is used to remove the clickable area for an edge
+				# when selected
+				
+				if GlobalVariables.currentPlayer == 1:
+					GlobalVariables.edges.erase(edgeReference)
+				else:
+					GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
+				
+				var gameState = WinConditions.new()
+				var gameIsOver = gameState.is_game_over(GlobalVariables.start_node, GlobalVariables.end_node, GlobalVariables.points, GlobalVariables.edges)
+				
+				GlobalVariables.currentPlayer ^= 1
+				area.input_pickable = false
+				is_hovered = false
+				Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+				
+				if gameIsOver == true:
+					get_tree().change_scene_to_file("res://gameOverScreen.tscn")
+					GlobalVariables.reset()
+					
 			1:
-				queue_free()
-		
-		# The section below is used to remove the clickable area for an edge
-		# when selected
-		
-		if GlobalVariables.currentPlayer == 1:
-			GlobalVariables.edges.erase(edgeReference)
-		else:
-			GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
-		
-		var gameState = WinConditions.new()
-		var currentState = gameState.is_game_over(GlobalVariables.start_node, GlobalVariables.end_node, GlobalVariables.points, GlobalVariables.edges)
-		
-		# XOR bit flip to change the current Player
-		GlobalVariables.currentPlayer ^= 1
-		area.input_pickable = false
-		is_hovered = false
-		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
-		
-		if currentState == true:
-			get_tree().change_scene_to_file("res://gameOverScreen.tscn")
-			
-		
+				
+				pass
