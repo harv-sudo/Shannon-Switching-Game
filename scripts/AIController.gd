@@ -186,7 +186,7 @@ func is_terminal(edges: Dictionary, short_edges: Dictionary, points: Array, star
 	#player 1 has won
 	if path_exists(points, short_edges, start_node, end_node):
 		return true
-	#ai has won
+	#ai has won because no winning paths left
 	if not path_exists(points, edges, start_node, end_node):
 		return true
 
