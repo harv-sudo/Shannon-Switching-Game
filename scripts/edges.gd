@@ -72,6 +72,12 @@ func _draw() ->void:
 
 	draw_line(start_position, end_position, checkColour, width)
 
+
+
+
+
+
+
 func _ready() -> void:
 	# Adds the collison to the edge, allowing for hover events to trigger
 	createCollision()

@@ -13,7 +13,10 @@ const AIControllerScript = preload("res://scripts/AIController.gd")
 var ai_controller = AIControllerScript.new()
 
 enum Player { P1 = 0, P2 = 1 }
+enum Mode { PVP, AI }
 var _currentPlayer: int = Player.P1
+var game_mode: int = Mode.PVP
+
 
 var currentPlayer: int:
 	get:
@@ -65,3 +68,6 @@ func _run_ai_turn() -> void:
 
 func ai_take_turn(board_root: Node) -> void:
 	ai_controller.ai_take_turn(board_root, self)
+
+func update_ai_mode() -> void:
+	ai_controller.ai_enabled = (game_mode == Mode.AI)

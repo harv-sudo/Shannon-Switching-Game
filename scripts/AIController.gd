@@ -1,7 +1,7 @@
 extends Node
 class_name AIController
 
-var ai_enabled: bool = true
+var ai_enabled: bool = false
 var ai_player: int = GlobalVariables.Player.P2
 
 #how many turns ahead the ai searches
