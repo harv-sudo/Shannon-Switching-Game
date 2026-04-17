@@ -18,5 +18,5 @@ extends Control
 		#turn_label.text = "Current Turn: Player 2"
 
 func _on_restart_button_pressed():
-	GlobalVariables.currentPlayer = GlobalVariables.Player.P1
+	GlobalVariables.reset()
 	get_tree().reload_current_scene()

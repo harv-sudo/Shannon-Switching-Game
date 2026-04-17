@@ -40,25 +40,103 @@ theme_override_font_sizes/font_size = 28
 text = "Game Setup"
 horizontal_alignment = 1
 
-[node name="NodesRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1964581317]
+[node name="GraphMode" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=152418441]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="GraphLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GraphMode" unique_id=1228832145]
+layout_mode = 2
+text = "Select Graph Mode:"
+
+[node name="ButtonContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GraphMode" unique_id=630712938]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 9
+
+[node name="PresetButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GraphMode/ButtonContainer" unique_id=1947984832]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Select a random graph from a set of prebuilt graphs."
+toggle_mode = true
+button_pressed = true
+text = "Preset Graph"
+
+[node name="DynamicButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GraphMode/ButtonContainer" unique_id=393716292]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Dynamically generate a graph with a random number of points and edges."
+toggle_mode = true
+text = "Dynamic"
+
+[node name="CustomButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GraphMode/ButtonContainer" unique_id=1499438439]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Customise your own graph by placing your own points and edges."
+toggle_mode = true
+text = "Custom"
+
+[node name="AISettings" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1611643195]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="RoleRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings" unique_id=1013946248]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="RoleLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/RoleRow" unique_id=720575061]
+layout_mode = 2
+text = "Select Role: "
+
+[node name="RoleButtons" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/RoleRow" unique_id=846912598]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="ShortButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/RoleRow/RoleButtons" unique_id=11884026]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Build a path from the start to the end."
+toggle_mode = true
+button_pressed = true
+text = "Short"
+
+[node name="CutButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/RoleRow/RoleButtons" unique_id=1314496122]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Remove edges to prevent a path from being built from the start to the end."
+toggle_mode = true
+text = "Cut"
+
+[node name="DifficultyRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings" unique_id=206853705]
 layout_mode = 2
 
-[node name="NodesLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/NodesRow" unique_id=561775710]
+[node name="DifficultyLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/DifficultyRow" unique_id=1779783544]
 layout_mode = 2
-text = "Number of Nodes: "
+text = "AI Difficulty: "
 
-[node name="NodesSpinBox" type="SpinBox" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/NodesRow" unique_id=1464911728]
+[node name="RoleButtons" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/DifficultyRow" unique_id=414263863]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
 
-[node name="EdgesRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1671500886]
+[node name="EasyAIButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/DifficultyRow/RoleButtons" unique_id=1450308581]
 layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_pressed = true
+text = "Easy"
 
-[node name="EdgesLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/EdgesRow" unique_id=1832150015]
+[node name="MediumAIButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/DifficultyRow/RoleButtons" unique_id=874585503]
 layout_mode = 2
-text = "Number of Edges: "
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Medium"
 
-[node name="SpinBox" type="SpinBox" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/EdgesRow" unique_id=20231730]
+[node name="HardAIButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/DifficultyRow/RoleButtons" unique_id=1581637845]
 layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Hard"
 
 [node name="ButtonsRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=859534166]
 layout_mode = 2

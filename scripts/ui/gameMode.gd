@@ -17,10 +17,14 @@ func _on_back_pressed() -> void:
 
 
 func _on_pvp_button_pressed() -> void:
+	GlobalVariables.selected_game_mode = GlobalVariables.GameMode.PVP
+	print("Selected mode: ", GlobalVariables.selected_game_mode)
 	get_tree().change_scene_to_file("res://scenes/gameSetup.tscn")
 
 func _on_pvai_button_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/gameSetupAI.tscn")
+	GlobalVariables.selected_game_mode = GlobalVariables.GameMode.PVAI
+	print("Selected mode: ", GlobalVariables.selected_game_mode)
+	get_tree().change_scene_to_file("res://scenes/gameSetup.tscn")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
