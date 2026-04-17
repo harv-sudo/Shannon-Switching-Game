@@ -120,6 +120,8 @@ func _ready() -> void:
 	
 
 func change_edge(edge):
+	if game_manager.currentPlayer == game_manager.Player.P1:
+		edge.capture()
 	print("Connected!")
 
 func _draw():

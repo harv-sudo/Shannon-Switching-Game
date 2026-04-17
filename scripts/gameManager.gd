@@ -7,8 +7,7 @@ var currentPlayer = Player.P1
 
 func _ready() -> void:
 	var gameLogic: Node
-	
-	
+
 	match App.game_type:
 		App.GameType.SHANNON:
 			gameLogic = ShannonGame.new()
