@@ -2,7 +2,7 @@ extends Node
 class_name AIController
 
 var ai_enabled: bool = false
-var ai_player: int = GlobalVariables.Player.P2
+var ai_player: int = GlobalVariables.Player.P1
 
 #how many turns ahead the ai searches
 var search_depth: int = 5
@@ -19,14 +19,25 @@ func ai_take_turn(board_root: Node, globals) -> void:
 	var best_edge: int = choose_ai_edge(globals.edges, globals.short_edges, globals.points, globals.start_node, globals.end_node)
 	if best_edge == -1:
 		return
-
-	globals.edges.erase(best_edge)
-	
-	#removes matching node
-	for child in board_root.get_children():
-		if child is Edge and child.edgeReference == best_edge:
-			child.queue_free()
-			break
+	if ai_player == GlobalVariables.Player.P2:
+		globals.edges.erase(best_edge)
+		
+		#removes matching node
+		for child in board_root.get_children():
+			if child is Edge and child.edgeReference == best_edge:
+				child.queue_free()
+				break
+		
+		#gives turn back to p1
+		globals.currentPlayer = GlobalVariables.Player.P1
+	else:
+		globals.short_edges[best_edge] = globals.edges[best_edge]
+		for child in board_root.get_children():
+			if child is Edge and child.edgeReference == best_edge:
+				child.is_captured = true
+				child.queue_redraw()
+				break
+		globals.currentPlayer = GlobalVariables.Player.P2
 
 	var game_state = WinConditions.new()
 	var current_state: bool = game_state.is_game_over(
@@ -35,9 +46,7 @@ func ai_take_turn(board_root: Node, globals) -> void:
 		globals.points,
 		globals.edges
 	)
-	#gives turn back to p1
-	globals.currentPlayer = GlobalVariables.Player.P1
-
+	
 	if current_state:
 		board_root.get_tree().change_scene_to_file("res://gameOverScreen.tscn")
 
@@ -70,8 +79,10 @@ func choose_ai_edge(edges: Dictionary, short_edges: Dictionary, points: Array, s
 
 		var simulated_edges: Dictionary = edges.duplicate(true)
 		var simulated_short_edges: Dictionary = short_edges.duplicate(true)
-
-		simulated_edges.erase(edge_id)
+		if ai_player == GlobalVariables.Player.P2:
+			simulated_edges.erase(edge_id)
+		else:
+			simulated_short_edges[edge_id] = simulated_edges[edge_id]
 		# runs the minmax search on the simulated board
 		var score: int = minimax(
 			simulated_edges,
@@ -120,8 +131,10 @@ func minimax(
 
 			var simulated_edges: Dictionary = edges.duplicate(true)
 			var simulated_short_edges: Dictionary = short_edges.duplicate(true)
-
-			simulated_edges.erase(edge_id)
+			if ai_player == GlobalVariables.Player.P2:	
+				simulated_edges.erase(edge_id)
+			else:
+				simulated_short_edges[edge_id] = simulated_edges[edge_id]
 
 			var score: int = minimax(
 				simulated_edges,
@@ -156,7 +169,10 @@ func minimax(
 			var simulated_edges: Dictionary = edges.duplicate(true)
 			var simulated_short_edges: Dictionary = short_edges.duplicate(true)
 			#simulates player claiming edge
-			simulated_short_edges[edge_id] = simulated_edges[edge_id]
+			if ai_player == GlobalVariables.Player.P2:
+				simulated_short_edges[edge_id] = simulated_edges[edge_id]
+			else:
+				simulated_edges.erase(edge_id)
 
 			var score: int = minimax(
 				simulated_edges,
@@ -202,29 +218,42 @@ func is_terminal(edges: Dictionary, short_edges: Dictionary, points: Array, star
 
 func evaluate_board(edges: Dictionary, short_edges: Dictionary, points: Array, start_node: int, end_node: int) -> int:
 	#player connected and won
-	if path_exists(points, short_edges, start_node, end_node):
-		return -win_score
-	
+	var short_wins: bool = path_exists(points, short_edges, start_node, end_node)
 	#Ai has blocked all the paths and won
-	if not path_exists(points, edges, start_node, end_node):
-		return win_score
+	var cut_wins: bool = not path_exists(points, edges, start_node, end_node)
+	if ai_player == GlobalVariables.Player.P2:
+		if short_wins:
+			return -win_score
+		if cut_wins:
+			return win_score
 
-	var remaining_path: int = shortest_path_length(points, edges, start_node, end_node)
-	var claimed_path: int = shortest_path_length(points, short_edges, start_node, end_node)
+		var remaining_path: int = shortest_path_length(points, edges, start_node, end_node)
+		var claimed_path: int = shortest_path_length(points, short_edges, start_node, end_node)
 
-	
-	#if no claimed path yet, just default value
-	if claimed_path == -1:
-		claimed_path = 10
-	
-	#scores based on:
-	# how much of the route is left to be completed
-	# how good the current path is
-	# how many edges the player has claimed so far
-	
-
-	return (remaining_path * 100) + (claimed_path * 60) - (short_edges.size() * 15)
-
+		
+		#if no claimed path yet, just default value
+		if claimed_path == -1:
+			claimed_path = 10
+		
+		#scores based on:
+		# how much of the route is left to be completed
+		# how good the current path is
+		# how many edges the player has claimed so far
+		
+		return (remaining_path * 100) + (claimed_path * 60) - (short_edges.size() * 15)
+	else:
+		if short_wins:
+			return win_score
+		if cut_wins:
+			return -win_score
+		
+		var remaining_path: int = shortest_path_length(points, edges, start_node, end_node)
+		var claimed_path: int = shortest_path_length(points, short_edges, start_node, end_node)
+		
+		if claimed_path == -1:
+			claimed_path = 100
+			
+		return (short_edges.size() * 15) - (claimed_path *80) - (remaining_path * 10)
 
 func shortest_path_length(points: Array, edge_dict: Dictionary, start_node: int, end_node: int) -> int:
 	if start_node == end_node:

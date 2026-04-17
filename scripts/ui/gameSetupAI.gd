@@ -16,6 +16,8 @@ func _on_back_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/gameMode.tscn")
 
 func _on_start_game_pressed() -> void:
+	GlobalVariables.ai_controller.ai_player = GlobalVariables.Player.P1
+	GlobalVariables.currentPlayer = GlobalVariables.Player.P2
 	GlobalVariables.game_mode = GlobalVariables.Mode.AI
 	GlobalVariables.update_ai_mode()
 	get_tree().change_scene_to_file("res://shannonBoard.tscn")

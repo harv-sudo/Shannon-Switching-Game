@@ -14,7 +14,7 @@ var ai_controller = AIControllerScript.new()
 
 enum Player { P1 = 0, P2 = 1 }
 enum Mode { PVP, AI }
-var _currentPlayer: int = Player.P1
+var _currentPlayer: int = Player.P2
 var game_mode: int = Mode.PVP
 
 
@@ -71,3 +71,10 @@ func ai_take_turn(board_root: Node) -> void:
 
 func update_ai_mode() -> void:
 	ai_controller.ai_enabled = (game_mode == Mode.AI)
+func update_ai_player() -> void:
+	if ai_controller.ai_player == Player.P1:
+		ai_controller.ai_player = Player.P2
+		currentPlayer = Player.P1
+	else:
+		ai_controller.ai_player = Player.P1
+		currentPlayer = Player.P2
