@@ -12,6 +12,9 @@ enum GameType { SHANNON = 0, GALE = 1}
 var currentPlayer = Player.P1
 var currentGameMode = GameType.SHANNON
 
+enum GameMode { PVP, PVAI }
+var selected_game_mode = GameMode.PVP
+
 var presetPoints = { 
 	0:[
 		{"position": Vector2(120, 280)}, # 0 - S

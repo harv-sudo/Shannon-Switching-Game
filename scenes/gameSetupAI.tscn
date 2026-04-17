@@ -40,25 +40,31 @@ theme_override_font_sizes/font_size = 28
 text = "Game Setup"
 horizontal_alignment = 1
 
-[node name="NodesRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1964581317]
+[node name="RoleRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=853388767]
 layout_mode = 2
+theme_override_constants/separation = 4
 
-[node name="NodesLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/NodesRow" unique_id=561775710]
+[node name="RoleLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/RoleRow" unique_id=287726638]
 layout_mode = 2
-text = "Number of Nodes: "
+text = "Select Role: "
 
-[node name="NodesSpinBox" type="SpinBox" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/NodesRow" unique_id=1464911728]
+[node name="RoleButtons" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/RoleRow" unique_id=489224211]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
 
-[node name="EdgesRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1671500886]
+[node name="ShortButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/RoleRow/RoleButtons" unique_id=1956782518]
 layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_pressed = true
+text = "Short"
 
-[node name="EdgesLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/EdgesRow" unique_id=1832150015]
+[node name="CutButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/RoleRow/RoleButtons" unique_id=1457243728]
 layout_mode = 2
-text = "Number of Edges: "
-
-[node name="SpinBox" type="SpinBox" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/EdgesRow" unique_id=20231730]
-layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Cut"
 
 [node name="DifficultyRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1785452102]
 layout_mode = 2
