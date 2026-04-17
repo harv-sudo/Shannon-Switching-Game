@@ -45,7 +45,7 @@ func _on_pvai_button_toggled(pressed: bool) -> void:
 		pvp_button.button_pressed = false
 		aivai_button.button_pressed = false
 		role_row.visible = true
-		GlobalVariables.selected_game_mode = GlobalVariables.GameMode.PVAI
+		GlobalVariables.game_mode = GlobalVariables.Mode.AI
 		
 func _on_aivai_button_toggled(pressed: bool) -> void:
 	if pressed:
@@ -82,9 +82,5 @@ func _on_back_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/mainMenu.tscn")
 
 func _on_start_game_pressed() -> void:
-	GlobalVariables.game_mode = GlobalVariables.Mode.PVP
-	GlobalVariables.update_ai_mode()
-	get_tree().change_scene_to_file("res://shannonBoard.tscn")
 	get_tree().change_scene_to_file("res://scenes/Board.tscn")
-	App.start_game(App.GameType.SHANNON)
-	
+	GlobalVariables.game_mode = GlobalVariables.Mode.AI

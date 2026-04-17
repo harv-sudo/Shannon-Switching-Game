@@ -50,8 +50,8 @@ func ai_take_turn(board_root: Node, globals) -> void:
 	if current_state:
 		board_root.get_tree().change_scene_to_file("res://gameOverScreen.tscn")
 
-
 func choose_ai_edge(edges: Dictionary, short_edges: Dictionary, points: Array, start_node: int, end_node: int) -> int:
+	
 	# looks to block any edge that would let actual player win next turn
 	for edge_id in edges.keys():
 		if short_edges.has(edge_id):
@@ -104,7 +104,6 @@ func choose_ai_edge(edges: Dictionary, short_edges: Dictionary, points: Array, s
 			alpha = best_score
 
 	return best_move
-
 
 func minimax(
 	edges: Dictionary,
@@ -197,7 +196,6 @@ func minimax(
 
 		return best_score
 
-
 func is_terminal(edges: Dictionary, short_edges: Dictionary, points: Array, start_node: int, end_node: int) -> bool:
 	#player 1 has won
 	if path_exists(points, short_edges, start_node, end_node):
@@ -214,7 +212,6 @@ func is_terminal(edges: Dictionary, short_edges: Dictionary, points: Array, star
 			break
 
 	return not move_exists
-
 
 func evaluate_board(edges: Dictionary, short_edges: Dictionary, points: Array, start_node: int, end_node: int) -> int:
 	#player connected and won
@@ -280,13 +277,11 @@ func shortest_path_length(points: Array, edge_dict: Dictionary, start_node: int,
 
 	return -1
 
-
 func path_exists(points: Array, edge_dict: Dictionary, start_node: int, end_node: int) -> bool:
 	#builds graph and checks if the is a route between nodes
 	var adjacency: Dictionary = build_adjacency(points, edge_dict)
 	var visited: Dictionary = {}
 	return dfs(start_node, end_node, adjacency, visited)
-
 
 func build_adjacency(points: Array, edge_dict: Dictionary) -> Dictionary:
 	#builds adjacency list from current edges dict
@@ -304,7 +299,6 @@ func build_adjacency(points: Array, edge_dict: Dictionary) -> Dictionary:
 		adjacency[end_n].append(start_n)
 
 	return adjacency
-
 
 func dfs(current_node: int, target_node: int, adjacency: Dictionary, visited: Dictionary) -> bool:
 	#dfs checking if nodes can be reached or not

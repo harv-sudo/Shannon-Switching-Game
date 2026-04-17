@@ -5,9 +5,13 @@ class_name GameManager
 enum Player { P1 , P2 }
 var currentPlayer = Player.P1
 
-func _ready() -> void:
-	var gameLogic: Node
+@onready var ai_controller: AIController = AIController.new()
 
+func _ready() -> void:
+	add_child(ai_controller)
+	
+	var gameLogic: Node
+	
 	match App.game_type:
 		App.GameType.SHANNON:
 			gameLogic = ShannonGame.new()
