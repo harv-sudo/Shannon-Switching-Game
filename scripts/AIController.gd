@@ -1,8 +1,11 @@
 extends Node
 class_name AIController
 
+enum Player { P1 , P2 }
+
 var ai_enabled: bool = false
-var ai_player: int = GlobalVariables.Player.P1
+var ai_player = Player.P1
+
 
 #how many turns ahead the ai searches
 var search_depth: int = 5
@@ -10,45 +13,15 @@ var search_depth: int = 5
 #score returned when the ai wins
 var win_score: int = 10000
 
-func ai_take_turn(board_root: Node, globals) -> void:
-	if not ai_enabled:
-		return
-	if globals.currentPlayer != ai_player:
-		return
-	#picks best edge for ai to erase
-	var best_edge: int = choose_ai_edge(globals.edges, globals.short_edges, globals.points, globals.start_node, globals.end_node)
-	if best_edge == -1:
-		return
-	if ai_player == GlobalVariables.Player.P2:
-		globals.edges.erase(best_edge)
-		
-		#removes matching node
-		for child in board_root.get_children():
-			if child is Edge and child.edgeReference == best_edge:
-				child.queue_free()
-				break
-		
-		#gives turn back to p1
-		globals.currentPlayer = GlobalVariables.Player.P1
-	else:
-		globals.short_edges[best_edge] = globals.edges[best_edge]
-		for child in board_root.get_children():
-			if child is Edge and child.edgeReference == best_edge:
-				child.is_captured = true
-				child.queue_redraw()
-				break
-		globals.currentPlayer = GlobalVariables.Player.P2
-
-	var game_state = WinConditions.new()
-	var current_state: bool = game_state.is_game_over(
-		globals.start_node,
-		globals.end_node,
+func ai_take_turn(board_root: Node, globals)-> int:
+	print("Running ai_take_turn")
+	var best_edge: int = choose_ai_edge(
+		globals.edges,
+		globals.short_edges,
 		globals.points,
-		globals.edges
-	)
-	
-	if current_state:
-		board_root.get_tree().change_scene_to_file("res://gameOverScreen.tscn")
+		globals.start_node,
+		globals.end_node)
+	return best_edge
 
 func choose_ai_edge(edges: Dictionary, short_edges: Dictionary, points: Array, start_node: int, end_node: int) -> int:
 	
