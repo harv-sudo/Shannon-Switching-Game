@@ -4,7 +4,7 @@ class_name AIController
 enum Player { P1 , P2 }
 
 var ai_enabled: bool = false
-var ai_player = Player.P1
+var ai_player = Player.P2
 
 
 #how many turns ahead the ai searches

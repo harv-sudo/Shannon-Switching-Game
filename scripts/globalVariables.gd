@@ -1,4 +1,4 @@
-extends Node2D
+extends Node
 
 # This script contains global variables that are loaded by the auto loader when the game runs.
 # This allows us to access the variables declared within in other script files, allowing for 
@@ -44,7 +44,7 @@ var presetPoints = {
 		{"position": Vector2(420, 420)}, # 4
 		{"position": Vector2(600, 280)}, # 5
 		{"position": Vector2(740, 280)}, # 6
-		{"position": Vector2(420, 420)}, # 7
+		{"position": Vector2(420, 500)}, # 7
 		{"position": Vector2(600, 280)}, # 8
 		{"position": Vector2(740, 280)}  # 9 - G
 	]
@@ -89,7 +89,6 @@ var start_node: int = 0
 var end_node: int = points.size() -1
 
 var short_edges = {}
-
 var winner_label:String = ""
 
 func reset():

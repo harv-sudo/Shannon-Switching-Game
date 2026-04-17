@@ -36,5 +36,5 @@ func switchPlayer() -> void:
 
 # Used to transition the game to the gameOverScreen scene
 func gameOver() -> void:
-	get_tree().change_scene_to_file("res://gameOverScreen.tscn")
+	get_tree().change_scene_to_file("res://scenes/gameOverScreen.tscn")
 	GlobalVariables.reset()

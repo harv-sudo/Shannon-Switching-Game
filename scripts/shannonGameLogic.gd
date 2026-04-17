@@ -40,15 +40,14 @@ func update_edges(edge) -> void:
 	var edgeReference = edge.edgeReference
 	
 	if game_manager.currentPlayer == game_manager.Player.P1:
-
+		GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
 		edge.capture()
 		
 	else:
 		# Tracks the shorts players current selected edges
+		GlobalVariables.edges.erase(edgeReference)
 		edge.remove()
 	
-	GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
-	GlobalVariables.edges.erase(edgeReference)
 	
 	is_game_over()
 	
@@ -61,10 +60,10 @@ func is_game_over() -> void:
 	GlobalVariables.edges
 	)
 	
+	print("-------")
 	print(gameIsOver)
 	if gameIsOver:
-		get_tree().change_scene_to_file("res://scenes/gameOverScreen.tscn")
-		GlobalVariables.reset()
+		game_manager.gameOver()
 	else:
 		game_manager.switchPlayer()
 
@@ -75,7 +74,7 @@ func apply_ai_move(edge_id: int) -> void:
 			child.remove() # or queue_free()
 			if game_manager.currentPlayer == game_manager.Player.P1:
 				GlobalVariables.short_edges[edge_id] = GlobalVariables.edges[edge_id]
-				
+				print("Running")
 			GlobalVariables.edges.erase(edge_id)
 	
 	is_game_over()
