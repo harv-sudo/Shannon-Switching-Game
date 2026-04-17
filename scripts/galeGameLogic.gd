@@ -49,9 +49,9 @@ func generatePoints(player: String):
 			points.append({"position" : point})
 			drawPoint(points.back(), colour)
 
-func drawPoint(point: Dictionary, colour: Color):
-	var drawPoint = Point.new(point["position"][0], point["position"][1], colour)
-	add_child(drawPoint)
+func drawPoint(points: Dictionary, colour: Color):
+	var point = Point.new(points["position"][0], points["position"][1], colour)
+	add_child(point)
 
 # Creates the edges for the game grid and stores them in relevant array
 # Two grids for the two different players
