@@ -8,9 +8,10 @@ var radius: int = 10;
 var colour: Color = Color.BLACK;
 var distance: int = 100;
 	
-func _init(x_pos: int, y_pos: int) -> void:
-	self.x_position = x_pos;
-	self.y_position = y_pos;
+func _init(x_pos: int, y_pos: int, pointColour:Color = Color.BLACK) -> void:
+	self.x_position = x_pos
+	self.y_position = y_pos
+	self.colour = pointColour
 	
 #func _add_image():
 	#var texture: Texture2D = load("res://images/computer-icon.png")
