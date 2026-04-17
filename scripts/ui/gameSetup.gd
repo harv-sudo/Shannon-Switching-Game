@@ -2,57 +2,58 @@ extends Control
 
 @onready var back_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonsRow/BackButton
 @onready var start_game_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonsRow/StartGameButton
-@onready var short_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/RoleRow/RoleButtons/ShortButton
-@onready var cut_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/RoleRow/RoleButtons/CutButton
-@onready var title_label: Label = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TitleLabel
-@onready var ai_settings: VBoxContainer = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings
+@onready var short_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/RoleRow/RoleButtons/ShortButton
+@onready var cut_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/RoleRow/RoleButtons/CutButton
+
 @onready var preset_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GraphMode/ButtonContainer/PresetButton
 @onready var dynamic_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GraphMode/ButtonContainer/DynamicButton
 @onready var custom_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GraphMode/ButtonContainer/CustomButton
-@onready var easy_ai_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/DifficultyRow/RoleButtons/EasyAIButton
-@onready var medium_ai_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/DifficultyRow/RoleButtons/MediumAIButton
-@onready var hard_ai_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/DifficultyRow/RoleButtons/HardAIButton
+
+@onready var pvp_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GameModeRow/GameModeButtons/PVPButton
+@onready var pvai_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GameModeRow/GameModeButtons/PVAIButton
+@onready var aivai_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GameModeRow/GameModeButtons/AIVAIButton
+
+@onready var role_row: HBoxContainer = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/RoleRow
 
 
 func _ready() -> void:
-	setup_screen_for_mode()
-	
+	role_row.visible = false
 	preset_button.toggled.connect(_on_preset_button_toggled)
 	dynamic_button.toggled.connect(_on_dynamic_button_toggled)
 	custom_button.toggled.connect(_on_custom_button_toggled)
 
+	pvp_button.toggled.connect(_on_pvp_button_toggled)
+	pvai_button.toggled.connect(_on_pvai_button_toggled)
+	aivai_button.toggled.connect(_on_aivai_button_toggled)
+
+	short_button.toggled.connect(_on_short_toggled)
+	cut_button.toggled.connect(_on_cut_toggled)
+	
 	back_button.pressed.connect(_on_back_pressed)
 	start_game_button.pressed.connect(_on_start_game_pressed)
 
-func setup_screen_for_mode() -> void:
-	if GlobalVariables.selected_game_mode == GlobalVariables.GameMode.PVP:
-		title_label.text = "Player vs Player Setup"
-		ai_settings.visible = false
-	else:
-		title_label.text = "Player vs AI Setup"
-		ai_settings.visible = true
-		
-		easy_ai_button.toggled.connect(_on_easy_ai_button_toggled)
-		medium_ai_button.toggled.connect(_on_medium_ai_button_toggled)
-		hard_ai_button.toggled.connect(_on_hard_ai_button_toggled)
-		short_button.toggled.connect(_on_short_toggled)
-		cut_button.toggled.connect(_on_cut_toggled)
 
-
-func _on_easy_ai_button_toggled(pressed: bool) -> void:
+func _on_pvp_button_toggled(pressed: bool) -> void:
 	if pressed:
-		medium_ai_button.button_pressed = false
-		hard_ai_button.button_pressed = false
+		pvai_button.button_pressed = false
+		aivai_button.button_pressed = false
+		role_row.visible = false
+		GlobalVariables.selected_game_mode = GlobalVariables.GameMode.PVP
 		
-func _on_medium_ai_button_toggled(pressed: bool) -> void:
+func _on_pvai_button_toggled(pressed: bool) -> void:
 	if pressed:
-		easy_ai_button.button_pressed = false
-		hard_ai_button.button_pressed = false
+		pvp_button.button_pressed = false
+		aivai_button.button_pressed = false
+		role_row.visible = true
+		GlobalVariables.selected_game_mode = GlobalVariables.GameMode.PVAI
 		
-func _on_hard_ai_button_toggled(pressed: bool) -> void:
+func _on_aivai_button_toggled(pressed: bool) -> void:
 	if pressed:
-		medium_ai_button.button_pressed = false
-		easy_ai_button.button_pressed = false
+		pvp_button.button_pressed = false
+		pvai_button.button_pressed = false
+		role_row.visible = false
+		GlobalVariables.selected_game_mode = GlobalVariables.GameMode.AIVAI
+		
 
 func _on_short_toggled(pressed: bool) -> void:
 	if pressed:

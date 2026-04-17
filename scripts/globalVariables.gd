@@ -11,7 +11,7 @@ enum Mode { PVP = 0, AI = 1}
 enum GameType { SHANNON = 0, GALE = 1}
 var currentGameType :GameType
 
-enum GameMode { PVP, PVAI }
+enum GameMode { PVP, PVAI, AIVAI }
 var selected_game_mode = GameMode.PVP
 
 var presetPoints = { 
