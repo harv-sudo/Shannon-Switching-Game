@@ -1,7 +1,7 @@
 class_name WinConditions
 
 # Builds an adjaceny list to see if a winning path has been found
-func build_adjacency(points : Array, edges: Dictionary) -> Dictionary:
+static func build_adjacency(points : Array, edges: Dictionary) -> Dictionary:
 	var adjacency: Dictionary = {}
 	
 	for point_id in range(points.size()):
@@ -17,7 +17,7 @@ func build_adjacency(points : Array, edges: Dictionary) -> Dictionary:
 		
 	return adjacency
 
-func _dfs(current_node: int, target_node: int, adjacency: Dictionary, visited: Dictionary) -> bool:
+static func _dfs(current_node: int, target_node: int, adjacency: Dictionary, visited: Dictionary) -> bool:
 	if current_node == target_node:
 		return true
 		
@@ -30,13 +30,12 @@ func _dfs(current_node: int, target_node: int, adjacency: Dictionary, visited: D
 				return true
 	
 	return false
-	
-func path_exists(start_node: int, target_node: int, adjacency: Dictionary) -> bool:
+
+static func path_exists(start_node: int, target_node: int, adjacency: Dictionary) -> bool:
 	var visited: Dictionary = {}
 	return _dfs(start_node, target_node, adjacency, visited)
-		
 
-func is_game_over(start_node: int, target_node: int, points: Array, edges: Dictionary) -> bool:
+static func is_game_over(start_node: int, target_node: int, points: Array, edges: Dictionary) -> bool:
 	var adjacency = build_adjacency(points, edges)
 	
 	# Check to see if the "short" player can still win the game, if not "cut" player wins

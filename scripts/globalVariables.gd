@@ -6,11 +6,10 @@ extends Node2D
 
 # This makes it easier to keep track of what data structures we are using for testing purposes
 # We need to implement this dynamically programatically creating different types of graphs
-enum Player { P1 = 0, P2 = 1 }
+
 enum Mode { PVP = 0, AI = 1}
 enum GameType { SHANNON = 0, GALE = 1}
-var currentPlayer = Player.P2
-var currentGameMode = GameType.GALE
+var currentGameMode = GameType.SHANNON
 
 var presetPoints = { 
 	0:[
@@ -94,6 +93,5 @@ func reset():
 	points = presetPoints[0].duplicate(true)
 	edges = presetEdges[0].duplicate(true)
 	start_node = 0
-	currentPlayer = 0
 	end_node = points.size() -1
 	short_edges = {}

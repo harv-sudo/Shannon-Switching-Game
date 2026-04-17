@@ -1,36 +1,25 @@
 extends Node2D
 
-class_name GameManager
+enum Player { P1 , P2 }
+var currentPlayer = Player.P1
 
-func drawGraph():
-	draw_edges()
-	draw_nodes()
-
-func draw_edges() -> void:
-	for i in GlobalVariables.edges.size():
-		var startPointIndex = GlobalVariables.edges[i]["start"]
-		var endPointIndex = GlobalVariables.edges[i]["end"]
+func _ready() -> void:
+	var gameLogic: Node
+	
+	match App.game_type:
+		App.GameType.SHANNON:
+			gameLogic = ShannonGame.new()
 		
-		var startPosition:Vector2 = GlobalVariables.points[startPointIndex]["position"]
-		var endPosition:Vector2 = GlobalVariables.points[endPointIndex]["position"]
-		add_child(Edge.new(startPosition, endPosition, i))
+		App.GameType.GALE:
+			gameLogic = GaleGame.new()
 	
-func draw_nodes():
-	var numberOfNodes = GlobalVariables.points.size()
-	
-	for i in numberOfNodes:
-		add_child(Point.new(GlobalVariables.points[i]["position"][0], GlobalVariables.points[i]["position"][1]))
+	add_child(gameLogic)
 
-func totalEdges():
-	var count: int
-	for i in GlobalVariables.edges:
-		count = count + 1
-	return count
+# Function is called in shannonGameLogic.updateEdges()
+func switchPlayer() -> void:
+	currentPlayer = Player.P1 if currentPlayer == Player.P2 else Player.P2
 
-func _ready():
-	drawGraph()
-
-
-func gameOver():
+# Used to transition the game to the gameOverScreen scene
+func gameOver() -> void:
 	get_tree().change_scene_to_file("res://gameOverScreen.tscn")
 	GlobalVariables.reset()

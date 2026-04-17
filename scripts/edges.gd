@@ -1,6 +1,7 @@
 extends Node2D
 
 class_name Edge
+signal edge_clicked(edge)
 
 var start_position: Vector2
 var end_position: Vector2
@@ -57,14 +58,27 @@ func _on_mouse_exited() -> void:
 	is_hovered = false
 	if GlobalVariables.currentGameMode == 1:
 		modulate.a = 0.0
+	queue_redraw()	
+
+func capture():
+	is_captured = true
+	area.input_pickable = false
 	queue_redraw()
+
+func remove():
+	queue_free()
 
 func _draw() ->void:
 	var checkColour: Color
 	
 	# Changes colour of edge if selected by the short player (P1)
 	if is_captured:
-		checkColour = Color.GREEN
+		if GlobalVariables.currentGameMode == 0:
+			checkColour = Color.GREEN
+		elif GlobalVariables.currentGameMode == 1:
+			
+			checkColour = Color.BLUE if GlobalVariables.currentPlayer == 0 else Color.RED
+			
 		area.mouse_entered.disconnect(_on_mouse_entered)
 		area.mouse_exited.disconnect(_on_mouse_exited)
 
@@ -79,8 +93,8 @@ func _draw() ->void:
 func _ready() -> void:
 	# Adds the collison to the edge, allowing for hover events to trigger
 	createCollision()
-	#if GlobalVariables.currentGameMode == 1:
-		#modulate.a = 0.0
+	if GlobalVariables.currentGameMode == 1:
+		modulate.a = 0.0
 
 # _ is required infront of variables that are not used, 
 # but they are still need to not flag and error in the debugger
@@ -89,38 +103,4 @@ func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if (event is InputEventMouseButton 
 	and event.button_index == MOUSE_BUTTON_LEFT
 	and event.pressed):
-		match (GlobalVariables.currentGameMode):
-			0:
-				match (GlobalVariables.currentPlayer):
-				# Edge selected by short player (P1) turns green
-					0:
-						# Enables the re-colouring of the edge
-						is_captured = true
-						queue_redraw()
-					1:
-						queue_free()
-				
-				# The section below is used to remove the clickable area for an edge
-				# when selected
-				
-				if GlobalVariables.currentPlayer == 1:
-					GlobalVariables.edges.erase(edgeReference)
-				else:
-					GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
-				
-				var gameState = WinConditions.new()
-				var gameIsOver = gameState.is_game_over(GlobalVariables.start_node, GlobalVariables.end_node, GlobalVariables.points, GlobalVariables.edges)
-				
-				## FIX THIS
-				GlobalVariables.currentPlayer ^= 1
-				area.input_pickable = false
-				is_hovered = false
-				Input.set_default_cursor_shape(Input.CURSOR_ARROW)
-				
-				if gameIsOver == true:
-					get_tree().change_scene_to_file("res://gameOverScreen.tscn")
-					GlobalVariables.reset()
-					
-			1:
-				#hide()
-				pass
+		edge_clicked.emit(self)
