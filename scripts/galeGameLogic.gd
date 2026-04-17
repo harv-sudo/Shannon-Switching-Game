@@ -107,8 +107,8 @@ func _ready() -> void:
 	drawEdges(playerOneEdges)
 
 func _draw():
-	if GlobalVariables.currentPlayer == 0:
+	if GameManager.currentPlayer == 0:
 		drawEdges(playerOneEdges)
-	elif GlobalVariables.currentPlayer == 1:
+	elif GameManager.currentPlayer == 1:
 		drawEdges(playerTwoEdges)
 		
