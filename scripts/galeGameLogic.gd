@@ -124,6 +124,7 @@ func change_edge(edge):
 		edge.capture()
 	print("Connected!")
 
+
 func _draw():
 	pass
 		
