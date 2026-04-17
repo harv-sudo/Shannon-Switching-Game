@@ -7,32 +7,12 @@ extends Node2D
 # This makes it easier to keep track of what data structures we are using for testing purposes
 # We need to implement this dynamically programatically creating different types of graphs
 
-
-const AIControllerScript = preload("res://scripts/AIController.gd")
-
-var ai_controller = AIControllerScript.new()
-
-enum Player { P1 = 0, P2 = 1 }
+enum Player { P1, P2}
 enum Mode { PVP, AI }
 var _currentPlayer: int = Player.P2
 var game_mode: int = Mode.PVP
-
-
-var currentPlayer: int:
-	get:
-		return _currentPlayer
-	set(value):
-		_currentPlayer = value
-		if ai_controller.ai_enabled and _currentPlayer == ai_controller.ai_player:
-			call_deferred("_run_ai_turn")
-
-
-enum Mode { PVP = 0, AI = 1}
-enum GameType { SHANNON = 0, GALE = 1}
+enum GameType { SHANNON, GALE}
 var currentGameType :GameType
-
-enum GameMode { PVP, PVAI, AIVAI }
-var selected_game_mode = GameMode.PVP
 
 var presetPoints = { 
 	0:[
@@ -112,21 +92,9 @@ var short_edges = {}
 
 var winner_label:String = ""
 
-func _run_ai_turn() -> void:
-	var board_root: Node = get_tree().current_scene
-	if board_root == null:
-		return
-	ai_controller.ai_take_turn(board_root, self)
-
-func ai_take_turn(board_root: Node) -> void:
-	ai_controller.ai_take_turn(board_root, self)
-
-func update_ai_mode() -> void:
-	ai_controller.ai_enabled = (game_mode == Mode.AI)
-func update_ai_player() -> void:
-	if ai_controller.ai_player == Player.P1:
-		ai_controller.ai_player = Player.P2
-		currentPlayer = Player.P1
-	else:
-		ai_controller.ai_player = Player.P1
-		currentPlayer = Player.P2
+func reset():
+	points = presetPoints[0].duplicate(true)
+	edges = presetEdges[0].duplicate(true)
+	start_node = 0
+	end_node = points.size() -1
+	short_edges = {}

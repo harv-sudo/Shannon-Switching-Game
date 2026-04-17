@@ -35,7 +35,7 @@ func update_edges(edge) -> void:
 	if game_manager.currentPlayer == game_manager.Player.P1:
 			edge.capture()
 	else:
-			edge.remove()
+		edge.remove()
 	
 	var edgeReference = edge.edgeReference
 	
