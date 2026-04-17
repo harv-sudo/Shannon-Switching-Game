@@ -3,15 +3,17 @@ extends Node2D
 enum Player { P1 , P2 }
 var currentPlayer = Player.P1
 
+
 func _ready() -> void:
 	var gameLogic: Node
+	App.start_game(App.GameType.SHANNON)
 	
 	match App.game_type:
 		App.GameType.SHANNON:
-			gameLogic = ShannonGame.new()
+			gameLogic = ShannonGame.new(self)
 		
 		App.GameType.GALE:
-			gameLogic = GaleGame.new()
+			gameLogic = GaleGame.new(self)
 	
 	add_child(gameLogic)
 

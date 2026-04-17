@@ -2,7 +2,11 @@ extends Node2D
 
 class_name ShannonGame
 
-# Combines the functions that generate the points and edges to the scene
+var game_manager: GameManager
+
+func _init(gm: GameManager) -> void:
+	game_manager = gm
+
 func drawGraph() -> void:
 	draw_edges()
 	draw_nodes()
@@ -28,14 +32,14 @@ func draw_nodes() -> void:
 # This function deals with short/cut edge interction
 func update_edges(edge) -> void:
 	
-	if GameManager.currentPlayer == GameManager.Player.P1:
+	if game_manager.currentPlayer == game_manager.Player.P1:
 			edge.capture()
 	else:
 			edge.remove()
 	
 	var edgeReference = edge.edgeReference
 	
-	if GameManager.currentPlayer == 1:
+	if game_manager.currentPlayer == 1:
 		GlobalVariables.edges.erase(edgeReference)
 	else:
 		# Tracks the shorts players current selected edges
@@ -53,7 +57,7 @@ func update_edges(edge) -> void:
 		get_tree().change_scene_to_file("res://gameOverScreen.tscn")
 		GlobalVariables.reset()
 	
-	GameManager.switchPlayer()
+	game_manager.switchPlayer()
 
 # When the node is added to the scene, the function is called
 func _ready() -> void:

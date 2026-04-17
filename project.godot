@@ -18,7 +18,6 @@ config/icon="uid://ddxmxgyyfy8mn"
 [autoload]
 
 GlobalVariables="*uid://2pm3mnk1c5aj"
-GameManager="*uid://df235a5857rg"
 App="*uid://eov815ib73p1"
 
 [physics]

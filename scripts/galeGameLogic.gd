@@ -8,6 +8,15 @@ var playerTwoPoints: Array = []
 var playerOneEdges: Dictionary = {}
 var playerTwoEdges: Dictionary = {}
 
+var game_manager: GameManager
+
+func _init(gm: GameManager) -> void:
+	game_manager = gm
+
+func drawGraph():
+	generatePoints("One")
+	generatePoints("Two")
+
 func generatePoints(player: String):
 	var startX: int
 	var startY: int
@@ -41,7 +50,6 @@ func generatePoints(player: String):
 			drawPoint(points.back(), colour)
 
 func drawPoint(point: Dictionary, colour: Color):
-	print(point)
 	var drawPoint = Point.new(point["position"][0], point["position"][1], colour)
 	add_child(drawPoint)
 
@@ -96,19 +104,24 @@ func drawEdges(edges: Dictionary):
 			edgeIndex
 		)
 		
-		add_child(edge)
 		# Adds a function to the edge_clicked signal in the Edge class
-		edge.edge_clicked.connect()
+		edge.edge_clicked.connect(change_edge)
+		add_child(edge)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	generatePoints("One")
-	generatePoints("Two")
+	print("GaleGame instance:", get_instance_id())
+	
+	#print()
+	drawGraph()
+	playerOneEdges = createEdges("One")
+	#playerTwoEdges = createEdges("Two")
 	drawEdges(playerOneEdges)
+	
+
+func change_edge(edge):
+	print("Connected!")
 
 func _draw():
-	if GameManager.currentPlayer == 0:
-		drawEdges(playerOneEdges)
-	elif GameManager.currentPlayer == 1:
-		drawEdges(playerTwoEdges)
+	pass
 		
