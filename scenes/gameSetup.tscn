@@ -40,6 +40,65 @@ theme_override_font_sizes/font_size = 28
 text = "Game Setup"
 horizontal_alignment = 1
 
+[node name="GameModeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=206853705]
+layout_mode = 2
+
+[node name="GameModeLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GameModeRow" unique_id=1779783544]
+layout_mode = 2
+text = "Game Mode: "
+
+[node name="GameModeButtons" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GameModeRow" unique_id=414263863]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="PVPButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GameModeRow/GameModeButtons" unique_id=1450308581]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_pressed = true
+text = "P vs P"
+
+[node name="PVAIButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GameModeRow/GameModeButtons" unique_id=874585503]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "P vs AI"
+
+[node name="AIVAIButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GameModeRow/GameModeButtons" unique_id=1581637845]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "AI vs AI"
+
+[node name="RoleRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1013946248]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="RoleLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/RoleRow" unique_id=720575061]
+layout_mode = 2
+text = "Select Role: "
+
+[node name="RoleButtons" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/RoleRow" unique_id=846912598]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="ShortButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/RoleRow/RoleButtons" unique_id=11884026]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Build a path from the start to the end."
+toggle_mode = true
+button_pressed = true
+text = "Short"
+
+[node name="CutButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/RoleRow/RoleButtons" unique_id=1314496122]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Remove edges to prevent a path from being built from the start to the end."
+toggle_mode = true
+text = "Cut"
+
 [node name="GraphMode" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=152418441]
 layout_mode = 2
 theme_override_constants/separation = 10
@@ -74,69 +133,6 @@ size_flags_horizontal = 3
 tooltip_text = "Customise your own graph by placing your own points and edges."
 toggle_mode = true
 text = "Custom"
-
-[node name="AISettings" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1611643195]
-layout_mode = 2
-theme_override_constants/separation = 20
-
-[node name="RoleRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings" unique_id=1013946248]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="RoleLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/RoleRow" unique_id=720575061]
-layout_mode = 2
-text = "Select Role: "
-
-[node name="RoleButtons" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/RoleRow" unique_id=846912598]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 12
-
-[node name="ShortButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/RoleRow/RoleButtons" unique_id=11884026]
-layout_mode = 2
-size_flags_horizontal = 3
-tooltip_text = "Build a path from the start to the end."
-toggle_mode = true
-button_pressed = true
-text = "Short"
-
-[node name="CutButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/RoleRow/RoleButtons" unique_id=1314496122]
-layout_mode = 2
-size_flags_horizontal = 3
-tooltip_text = "Remove edges to prevent a path from being built from the start to the end."
-toggle_mode = true
-text = "Cut"
-
-[node name="DifficultyRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings" unique_id=206853705]
-layout_mode = 2
-
-[node name="DifficultyLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/DifficultyRow" unique_id=1779783544]
-layout_mode = 2
-text = "AI Difficulty: "
-
-[node name="RoleButtons" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/DifficultyRow" unique_id=414263863]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 12
-
-[node name="EasyAIButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/DifficultyRow/RoleButtons" unique_id=1450308581]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-button_pressed = true
-text = "Easy"
-
-[node name="MediumAIButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/DifficultyRow/RoleButtons" unique_id=874585503]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-text = "Medium"
-
-[node name="HardAIButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/AISettings/DifficultyRow/RoleButtons" unique_id=1581637845]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-text = "Hard"
 
 [node name="ButtonsRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=859534166]
 layout_mode = 2
