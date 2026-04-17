@@ -4,10 +4,10 @@ extends Control
 @onready var status_label = $StatusLabel
 @onready var restart_button = $RestartButton
 
-#func _ready() -> void:
-	#restart_button.pressed.connect(_on_restart_button_pressed)
+func _ready() -> void:
+	restart_button.pressed.connect(_on_restart_button_pressed)
 	#update_turn_label()
-#
+
 #func _process(_delta: float) -> void:
 	#update_turn_label()
 #

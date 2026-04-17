@@ -9,7 +9,7 @@ extends Node2D
 
 enum Mode { PVP = 0, AI = 1}
 enum GameType { SHANNON = 0, GALE = 1}
-var currentGameMode = GameType.SHANNON
+var currentGameType = GameType.SHANNON
 
 enum GameMode { PVP, PVAI }
 var selected_game_mode = GameMode.PVP

@@ -48,7 +48,7 @@ func createCollision() -> void:
 func _on_mouse_entered() -> void:
 	Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
 	is_hovered = true
-	if GlobalVariables.currentGameMode == 1:
+	if GlobalVariables.currentGameType == 1:
 		modulate.a = 1.0
 	queue_redraw()
 	
@@ -56,7 +56,7 @@ func _on_mouse_entered() -> void:
 func _on_mouse_exited() -> void:
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 	is_hovered = false
-	if GlobalVariables.currentGameMode == 1:
+	if GlobalVariables.currentGameType == 1:
 		modulate.a = 0.0
 	queue_redraw()	
 
@@ -73,9 +73,9 @@ func _draw() ->void:
 	
 	# Changes colour of edge if selected by the short player (P1)
 	if is_captured:
-		if GlobalVariables.currentGameMode == 0:
+		if GlobalVariables.currentGameType == GlobalVariables.GameType.SHANNON:
 			checkColour = Color.GREEN
-		elif GlobalVariables.currentGameMode == 1:
+		elif GlobalVariables.currentGameMode == GlobalVariables.GameType.GALE:
 			
 			checkColour = Color.BLUE if GlobalVariables.currentPlayer == 0 else Color.RED
 			
@@ -93,7 +93,7 @@ func _draw() ->void:
 func _ready() -> void:
 	# Adds the collison to the edge, allowing for hover events to trigger
 	createCollision()
-	if GlobalVariables.currentGameMode == 1:
+	if GlobalVariables.currentGameType == GlobalVariables.GameType.GALE:
 		modulate.a = 0.0
 
 # _ is required infront of variables that are not used, 

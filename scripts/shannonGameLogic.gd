@@ -4,7 +4,7 @@ class_name ShannonGame
 
 var game_manager: GameManager
 
-func _init(gm: GameManager) -> void:
+func set_game_manager(gm: GameManager) -> void:
 	game_manager = gm
 
 func drawGraph() -> void:
@@ -54,7 +54,7 @@ func update_edges(edge) -> void:
 	)
 	
 	if gameIsOver:
-		get_tree().change_scene_to_file("res://gameOverScreen.tscn")
+		get_tree().change_scene_to_file("res://scenes/gameOverScreen.tscn")
 		GlobalVariables.reset()
 	
 	game_manager.switchPlayer()

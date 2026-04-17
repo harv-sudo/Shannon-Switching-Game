@@ -1,21 +1,23 @@
 extends Node2D
 
+class_name GameManager
+
 enum Player { P1 , P2 }
 var currentPlayer = Player.P1
 
-
 func _ready() -> void:
 	var gameLogic: Node
-	App.start_game(App.GameType.SHANNON)
+	
 	
 	match App.game_type:
 		App.GameType.SHANNON:
-			gameLogic = ShannonGame.new(self)
+			gameLogic = ShannonGame.new()
 		
 		App.GameType.GALE:
-			gameLogic = GaleGame.new(self)
+			gameLogic = GaleGame.new()
 	
 	add_child(gameLogic)
+	gameLogic.set_game_manager(self)
 
 # Function is called in shannonGameLogic.updateEdges()
 func switchPlayer() -> void:

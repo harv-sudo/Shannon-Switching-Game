@@ -10,7 +10,7 @@ var playerTwoEdges: Dictionary = {}
 
 var game_manager: GameManager
 
-func _init(gm: GameManager) -> void:
+func set_game_manager(gm: GameManager) -> void:
 	game_manager = gm
 
 func drawGraph():

@@ -78,8 +78,9 @@ func _on_custom_button_toggled(pressed: bool) -> void:
 		dynamic_button.button_pressed = false
 
 func _on_back_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/gameMode.tscn")
+	get_tree().change_scene_to_file("res://scenes/mainMenu.tscn")
 
 func _on_start_game_pressed() -> void:
-	get_tree().change_scene_to_file("res://testingScene.tscn")
+	get_tree().change_scene_to_file("res://scenes/Board.tscn")
+	App.start_game(App.GameType.SHANNON)
 	
