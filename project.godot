@@ -20,6 +20,10 @@ config/icon="uid://ddxmxgyyfy8mn"
 GlobalVariables="*uid://2pm3mnk1c5aj"
 App="*uid://eov815ib73p1"
 
+[dotnet]
+
+project/assembly_name="Shannon Switching Game"
+
 [physics]
 
 3d/physics_engine="Jolt Physics"
