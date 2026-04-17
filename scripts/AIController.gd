@@ -13,8 +13,7 @@ var search_depth: int = 5
 #score returned when the ai wins
 var win_score: int = 10000
 
-func ai_take_turn(board_root: Node, globals)-> int:
-	print("Running ai_take_turn")
+func ai_take_turn(globals)-> int:
 	var best_edge: int = choose_ai_edge(
 		globals.edges,
 		globals.short_edges,

@@ -48,9 +48,7 @@ func update_edges(edge) -> void:
 		GlobalVariables.edges.erase(edgeReference)
 		edge.remove()
 	
-	
 	is_game_over()
-	
 
 func is_game_over() -> void:
 	var gameIsOver = WinConditions.is_game_over(
@@ -60,13 +58,10 @@ func is_game_over() -> void:
 	GlobalVariables.edges
 	)
 	
-	print("-------")
-	print(gameIsOver)
 	if gameIsOver:
 		game_manager.gameOver()
 	else:
 		game_manager.switchPlayer()
-
 
 func apply_ai_move(edge_id: int) -> void:
 	for child in get_children():
@@ -74,7 +69,7 @@ func apply_ai_move(edge_id: int) -> void:
 			child.remove() # or queue_free()
 			if game_manager.currentPlayer == game_manager.Player.P1:
 				GlobalVariables.short_edges[edge_id] = GlobalVariables.edges[edge_id]
-				print("Running")
+			
 			GlobalVariables.edges.erase(edge_id)
 	
 	is_game_over()

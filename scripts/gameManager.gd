@@ -30,7 +30,7 @@ func switchPlayer() -> void:
 	
 	#Below currently breaks the game when the AI is actively playing
 	if currentPlayer == Player.P2:
-		var best_edge = ai_controller.ai_take_turn(current_scene, GlobalVariables)
+		var best_edge = ai_controller.ai_take_turn(GlobalVariables)
 		(gameLogic as ShannonGame).apply_ai_move(best_edge)
 
 
