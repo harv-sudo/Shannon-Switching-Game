@@ -10,10 +10,5 @@ func _ready() -> void:
 	winnerLabel.text = GlobalVariables.winner_label
 	restartButton.pressed.connect(return_to_main_menu)
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-
 func return_to_main_menu():
 	get_tree().change_scene_to_file("res://scenes/mainMenu.tscn")
