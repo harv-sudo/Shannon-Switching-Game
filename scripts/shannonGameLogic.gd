@@ -19,6 +19,7 @@ func draw_edges() -> void:
 		var startPosition:Vector2 = GlobalVariables.points[startPointIndex]["position"]
 		var endPosition:Vector2 = GlobalVariables.points[endPointIndex]["position"]
 		var edge = Edge.new(startPosition, endPosition, i)
+		edge.name = "edge-" + str(i)
 		add_child(edge)
 		edge.edge_clicked.connect(update_edges)
 
@@ -26,38 +27,79 @@ func draw_nodes() -> void:
 	var numberOfNodes = GlobalVariables.points.size()
 	
 	for i in numberOfNodes:
-		add_child(Point.new(GlobalVariables.points[i]["position"][0], GlobalVariables.points[i]["position"][1]))
+		var point = Point.new(
+			GlobalVariables.points[i]["position"][0],
+			GlobalVariables.points[i]["position"][1])
+		
+		point.name = "point-" + str(i)
+		add_child(point)
 
 # NEEDS BETTER NAME
 # This function deals with short/cut edge interction
 func update_edges(edge) -> void:
-	
-	if game_manager.currentPlayer == game_manager.Player.P1:
-			edge.capture()
-	else:
-		edge.remove()
-	
 	var edgeReference = edge.edgeReference
 	
-	if game_manager.currentPlayer == 1:
-		GlobalVariables.edges.erase(edgeReference)
+	
+	#DEBUG
+	#print("PLAYER CLICKED EDGE: ", edgeReference)
+
+	if game_manager.currentPlayer == game_manager.Player.P1:
+		GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
+		edge.capture()
+		#print("short_edges keys after player click: ", GlobalVariables.short_edges.keys())
+		#print("short_edges has clicked edge? ", GlobalVariables.short_edges.has(edgeReference))
+		
+		
 	else:
 		# Tracks the shorts players current selected edges
-		GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
+		GlobalVariables.edges.erase(edgeReference)
+		edge.remove()
 	
-	
+	#print("After update - edges has edge? ", GlobalVariables.edges.has(edgeReference))
+	#print("After update - short_edges has edge? ", GlobalVariables.short_edges.has(edgeReference))
+
+	is_game_over()
+
+func is_game_over() -> void:
 	var gameIsOver = WinConditions.is_game_over(
-		GlobalVariables.start_node,
-		GlobalVariables.end_node,
-		GlobalVariables.points,
-		GlobalVariables.edges
+	GlobalVariables.start_node,
+	GlobalVariables.end_node,
+	GlobalVariables.points,
+	GlobalVariables.edges
 	)
 	
 	if gameIsOver:
-		get_tree().change_scene_to_file("res://scenes/gameOverScreen.tscn")
-		GlobalVariables.reset()
+		game_manager.gameOver()
+	else:
+		game_manager.switchPlayer()
+
+func apply_ai_move(edge_id: int) -> void:
 	
-	game_manager.switchPlayer()
+	#DEBUG:
+	#print("\nApplying AI move:", edge_id)
+	#var found := false
+
+	for child in get_children():
+		if child is Edge and child.edgeReference == edge_id:
+			#DEBUG:
+			#found = true
+			#print("Found matching scene edge for AI:", edge_id)
+
+			child.remove()
+			GlobalVariables.edges.erase(edge_id)
+
+			#DEBUG:
+			#print("After AI erase, edges keys are now: ", GlobalVariables.edges.keys())
+
+			if game_manager.currentPlayer == game_manager.Player.P1:
+				GlobalVariables.short_edges[edge_id] = GlobalVariables.edges[edge_id]
+
+			break
+	#DEBUG:
+	#if not found:
+		#print("ERROR: No matching scene edge found for AI edge:", edge_id)
+
+	is_game_over()
 
 # When the node is added to the scene, the function is called
 func _ready() -> void:
