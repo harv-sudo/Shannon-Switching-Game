@@ -14,12 +14,23 @@ var search_depth: int = 5
 var win_score: int = 10000
 
 func ai_take_turn(globals)-> int:
+	
+	#DEBUG:
+	#print("\nAI TURN")
+	#print("edges keys: ", globals.edges.keys())
+	#print("short_edges keys: ", globals.short_edges.keys())
+
 	var best_edge: int = choose_ai_edge(
 		globals.edges,
 		globals.short_edges,
 		globals.points,
 		globals.start_node,
 		globals.end_node)
+	
+	#DEBUG:	
+	#print("AI chose: ", best_edge)
+	#print("AI chose an edge in short_edges? ", globals.short_edges.has(best_edge))
+
 	return best_edge
 
 func choose_ai_edge(edges: Dictionary, short_edges: Dictionary, points: Array, start_node: int, end_node: int) -> int:
@@ -67,8 +78,15 @@ func choose_ai_edge(edges: Dictionary, short_edges: Dictionary, points: Array, s
 			alpha,
 			beta
 		)
-
-		if score > best_score:
+		
+		# The AI never picked a move because all scores matched the initial value of -1,
+		# so the comparison never updated best_move
+		#if score > best_score:
+			#best_score = score
+			#best_move = edge_id
+		#
+		#FIXED:
+		if best_move == -1 or score > best_score:
 			best_score = score
 			best_move = edge_id
 

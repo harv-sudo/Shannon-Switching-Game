@@ -39,15 +39,25 @@ func draw_nodes() -> void:
 func update_edges(edge) -> void:
 	var edgeReference = edge.edgeReference
 	
+	
+	#DEBUG
+	#print("PLAYER CLICKED EDGE: ", edgeReference)
+
 	if game_manager.currentPlayer == game_manager.Player.P1:
 		GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
 		edge.capture()
+		#print("short_edges keys after player click: ", GlobalVariables.short_edges.keys())
+		#print("short_edges has clicked edge? ", GlobalVariables.short_edges.has(edgeReference))
+		
 		
 	else:
 		# Tracks the shorts players current selected edges
 		GlobalVariables.edges.erase(edgeReference)
 		edge.remove()
 	
+	#print("After update - edges has edge? ", GlobalVariables.edges.has(edgeReference))
+	#print("After update - short_edges has edge? ", GlobalVariables.short_edges.has(edgeReference))
+
 	is_game_over()
 
 func is_game_over() -> void:
@@ -64,14 +74,31 @@ func is_game_over() -> void:
 		game_manager.switchPlayer()
 
 func apply_ai_move(edge_id: int) -> void:
+	
+	#DEBUG:
+	#print("\nApplying AI move:", edge_id)
+	#var found := false
+
 	for child in get_children():
 		if child is Edge and child.edgeReference == edge_id:
-			child.remove() # or queue_free()
+			#DEBUG:
+			#found = true
+			#print("Found matching scene edge for AI:", edge_id)
+
+			child.remove()
+			GlobalVariables.edges.erase(edge_id)
+
+			#DEBUG:
+			#print("After AI erase, edges keys are now: ", GlobalVariables.edges.keys())
+
 			if game_manager.currentPlayer == game_manager.Player.P1:
 				GlobalVariables.short_edges[edge_id] = GlobalVariables.edges[edge_id]
-			
-			GlobalVariables.edges.erase(edge_id)
-	
+
+			break
+	#DEBUG:
+	#if not found:
+		#print("ERROR: No matching scene edge found for AI edge:", edge_id)
+
 	is_game_over()
 
 # When the node is added to the scene, the function is called
