@@ -84,3 +84,4 @@ func _on_back_pressed() -> void:
 func _on_start_game_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/Board.tscn")
 	GlobalVariables.game_mode = GlobalVariables.Mode.AI
+	App.start_game(App.GameType.SHANNON)

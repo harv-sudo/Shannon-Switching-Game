@@ -41,7 +41,7 @@ func update_edges(edge) -> void:
 	
 	if game_manager.currentPlayer == game_manager.Player.P1:
 		GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
-		edge.capture()
+		edge.capture(Color.GREEN)
 		
 	else:
 		# Tracks the shorts players current selected edges
