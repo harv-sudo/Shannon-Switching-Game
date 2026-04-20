@@ -1,11 +1,8 @@
 extends Node
 class_name AIController
 
-enum Player { P1 , P2 }
-
 var ai_enabled: bool = false
-var ai_player = Player.P2
-
+var ai_player: int = GlobalVariables.Player.P2
 
 #how many turns ahead the ai searches
 var search_depth: int = 5
@@ -13,29 +10,26 @@ var search_depth: int = 5
 #score returned when the ai wins
 var win_score: int = 10000
 
-func ai_take_turn(globals)-> int:
-	
-	#DEBUG:
-	#print("\nAI TURN")
-	#print("edges keys: ", globals.edges.keys())
-	#print("short_edges keys: ", globals.short_edges.keys())
+func ai_take_turn(globals) -> int:
+	if not ai_enabled:
+		return -1
+	if globals == null:
+		return -1
 
+	#picks best edge for ai move
 	var best_edge: int = choose_ai_edge(
 		globals.edges,
 		globals.short_edges,
 		globals.points,
 		globals.start_node,
-		globals.end_node)
-	
-	#DEBUG:	
-	#print("AI chose: ", best_edge)
-	#print("AI chose an edge in short_edges? ", globals.short_edges.has(best_edge))
+		globals.end_node
+	)
 
 	return best_edge
 
+
 func choose_ai_edge(edges: Dictionary, short_edges: Dictionary, points: Array, start_node: int, end_node: int) -> int:
-	
-	# looks to block any edge that would let actual player win next turn
+	#looks to block any edge that would let actual player win next turn
 	for edge_id in edges.keys():
 		if short_edges.has(edge_id):
 			continue
@@ -49,24 +43,25 @@ func choose_ai_edge(edges: Dictionary, short_edges: Dictionary, points: Array, s
 	var best_move: int = -1
 	var best_score: int = -9999
 	
-	# alpha stores best score for ai can guarantee so far
+	#alpha stores best score for ai can guarantee so far
 	var alpha: int = -9999
-	# beta stores best score actual player can get so far
+	#beta stores best score actual player can get so far
 	var beta: int = 9999
 	
-	
-	# tries every edge that ai could remove
+	#tries every edge that ai could use
 	for edge_id in edges.keys():
 		if short_edges.has(edge_id):
 			continue
 
 		var simulated_edges: Dictionary = edges.duplicate(true)
 		var simulated_short_edges: Dictionary = short_edges.duplicate(true)
+
 		if ai_player == GlobalVariables.Player.P2:
 			simulated_edges.erase(edge_id)
 		else:
 			simulated_short_edges[edge_id] = simulated_edges[edge_id]
-		# runs the minmax search on the simulated board
+
+		#runs the minmax search on the simulated board
 		var score: int = minimax(
 			simulated_edges,
 			simulated_short_edges,
@@ -78,14 +73,7 @@ func choose_ai_edge(edges: Dictionary, short_edges: Dictionary, points: Array, s
 			alpha,
 			beta
 		)
-		
-		# The AI never picked a move because all scores matched the initial value of -1,
-		# so the comparison never updated best_move
-		#if score > best_score:
-			#best_score = score
-			#best_move = edge_id
-		#
-		#FIXED:
+
 		if best_move == -1 or score > best_score:
 			best_score = score
 			best_move = edge_id
@@ -94,6 +82,7 @@ func choose_ai_edge(edges: Dictionary, short_edges: Dictionary, points: Array, s
 			alpha = best_score
 
 	return best_move
+
 
 func minimax(
 	edges: Dictionary,
@@ -106,7 +95,7 @@ func minimax(
 	alpha: int,
 	beta: int
 ) -> int:
-	# if depth is 0 or game ends, search stops
+	#if depth is 0 or game ends, search stops
 	if depth == 0 or is_terminal(edges, short_edges, points, start_node, end_node):
 		return evaluate_board(edges, short_edges, points, start_node, end_node)
 		
@@ -120,7 +109,8 @@ func minimax(
 
 			var simulated_edges: Dictionary = edges.duplicate(true)
 			var simulated_short_edges: Dictionary = short_edges.duplicate(true)
-			if ai_player == GlobalVariables.Player.P2:	
+
+			if ai_player == GlobalVariables.Player.P2:
 				simulated_edges.erase(edge_id)
 			else:
 				simulated_short_edges[edge_id] = simulated_edges[edge_id]
@@ -142,12 +132,14 @@ func minimax(
 
 			if best_score > alpha:
 				alpha = best_score
-			# stops checking the branches that will not improve ai score
+
+			#stops checking the branches that will not improve ai score
 			if beta <= alpha:
 				break
 
 		return best_score
-		#players turn to minimise score
+
+	#players turn to minimise score
 	else:
 		var best_score: int = 9999
 
@@ -157,7 +149,8 @@ func minimax(
 
 			var simulated_edges: Dictionary = edges.duplicate(true)
 			var simulated_short_edges: Dictionary = short_edges.duplicate(true)
-			#simulates player claiming edge
+
+			#simulates player move
 			if ai_player == GlobalVariables.Player.P2:
 				simulated_short_edges[edge_id] = simulated_edges[edge_id]
 			else:
@@ -181,16 +174,19 @@ func minimax(
 			if best_score < beta:
 				beta = best_score
 
+			#stops checking the branches that will not improve player score
 			if beta <= alpha:
 				break
 
 		return best_score
 
+
 func is_terminal(edges: Dictionary, short_edges: Dictionary, points: Array, start_node: int, end_node: int) -> bool:
 	#player 1 has won
 	if path_exists(points, short_edges, start_node, end_node):
 		return true
-	#ai has won because no winning paths left
+
+	#cut has won because no winning paths left
 	if not path_exists(points, edges, start_node, end_node):
 		return true
 
@@ -203,22 +199,26 @@ func is_terminal(edges: Dictionary, short_edges: Dictionary, points: Array, star
 
 	return not move_exists
 
+
 func evaluate_board(edges: Dictionary, short_edges: Dictionary, points: Array, start_node: int, end_node: int) -> int:
-	#player connected and won
 	var short_wins: bool = path_exists(points, short_edges, start_node, end_node)
-	#Ai has blocked all the paths and won
 	var cut_wins: bool = not path_exists(points, edges, start_node, end_node)
+
 	if ai_player == GlobalVariables.Player.P2:
+		#player connected and won
 		if short_wins:
 			return -win_score
+		#ai has blocked all the paths and won
 		if cut_wins:
 			return win_score
 
+		#shortest path left on the board
 		var remaining_path: int = shortest_path_length(points, edges, start_node, end_node)
+
+		#shortest path using only player claimed edges
 		var claimed_path: int = shortest_path_length(points, short_edges, start_node, end_node)
 
-		
-		#if no claimed path yet, just default value
+		#if no claimed path exists yet, use a default value
 		if claimed_path == -1:
 			claimed_path = 10
 		
@@ -226,21 +226,31 @@ func evaluate_board(edges: Dictionary, short_edges: Dictionary, points: Array, s
 		# how much of the route is left to be completed
 		# how good the current path is
 		# how many edges the player has claimed so far
-		
 		return (remaining_path * 100) + (claimed_path * 60) - (short_edges.size() * 15)
 	else:
+		#ai as short connected and won
 		if short_wins:
 			return win_score
+		#player as cut blocked all the paths
 		if cut_wins:
 			return -win_score
-		
+
+		#shortest path left on the board
 		var remaining_path: int = shortest_path_length(points, edges, start_node, end_node)
+
+		#shortest path using only player claimed edges
 		var claimed_path: int = shortest_path_length(points, short_edges, start_node, end_node)
-		
+
+		#if no claimed path exists yet, use a default value
 		if claimed_path == -1:
 			claimed_path = 100
-			
-		return (short_edges.size() * 15) - (claimed_path *80) - (remaining_path * 10)
+
+		#scores based on:
+		# how many edges short has claimed so far
+		# how close the claimed path is to winning
+		# how much route is still left overall
+		return (short_edges.size() * 15) - (claimed_path * 80) - (remaining_path * 10)
+
 
 func shortest_path_length(points: Array, edge_dict: Dictionary, start_node: int, end_node: int) -> int:
 	if start_node == end_node:
@@ -267,11 +277,13 @@ func shortest_path_length(points: Array, edge_dict: Dictionary, start_node: int,
 
 	return -1
 
+
 func path_exists(points: Array, edge_dict: Dictionary, start_node: int, end_node: int) -> bool:
-	#builds graph and checks if the is a route between nodes
+	#builds graph and checks if there is a route between nodes
 	var adjacency: Dictionary = build_adjacency(points, edge_dict)
 	var visited: Dictionary = {}
 	return dfs(start_node, end_node, adjacency, visited)
+
 
 func build_adjacency(points: Array, edge_dict: Dictionary) -> Dictionary:
 	#builds adjacency list from current edges dict
@@ -289,6 +301,7 @@ func build_adjacency(points: Array, edge_dict: Dictionary) -> Dictionary:
 		adjacency[end_n].append(start_n)
 
 	return adjacency
+
 
 func dfs(current_node: int, target_node: int, adjacency: Dictionary, visited: Dictionary) -> bool:
 	#dfs checking if nodes can be reached or not

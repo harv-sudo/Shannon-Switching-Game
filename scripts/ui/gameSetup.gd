@@ -18,6 +18,10 @@ extends Control
 
 func _ready() -> void:
 	role_row.visible = false
+	short_button.button_pressed = true
+	cut_button.button_pressed = false
+	GlobalVariables.selected_role = "short"
+	
 	preset_button.toggled.connect(_on_preset_button_toggled)
 	dynamic_button.toggled.connect(_on_dynamic_button_toggled)
 	custom_button.toggled.connect(_on_custom_button_toggled)
@@ -38,7 +42,7 @@ func _on_pvp_button_toggled(pressed: bool) -> void:
 		pvai_button.button_pressed = false
 		aivai_button.button_pressed = false
 		role_row.visible = false
-		GlobalVariables.selected_game_mode = GlobalVariables.GameMode.PVP
+		GlobalVariables.game_mode = GlobalVariables.Mode.AI
 		
 func _on_pvai_button_toggled(pressed: bool) -> void:
 	if pressed:
@@ -52,17 +56,19 @@ func _on_aivai_button_toggled(pressed: bool) -> void:
 		pvp_button.button_pressed = false
 		pvai_button.button_pressed = false
 		role_row.visible = false
-		GlobalVariables.selected_game_mode = GlobalVariables.GameMode.AIVAI
+		GlobalVariables.game_mode = GlobalVariables.Mode.AIVSAI
+		
 		
 
 func _on_short_toggled(pressed: bool) -> void:
 	if pressed:
 		cut_button.button_pressed = false
+		GlobalVariables.selected_role = "Short"
 
 func _on_cut_toggled(pressed: bool) -> void:
 	if pressed:
 		short_button.button_pressed = false
-
+		GlobalVariables.selected_role = "Cut"
 func _on_preset_button_toggled(pressed: bool) -> void:
 	if pressed:
 		dynamic_button.button_pressed = false
@@ -82,5 +88,9 @@ func _on_back_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/mainMenu.tscn")
 
 func _on_start_game_pressed() -> void:
+	if short_button.button_pressed:
+		GlobalVariables.selected_role = "Short"
+	elif cut_button.button_pressed:
+		GlobalVariables.selected_role = "Cut"
 	get_tree().change_scene_to_file("res://scenes/Board.tscn")
-	GlobalVariables.game_mode = GlobalVariables.Mode.AI
+	
