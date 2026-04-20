@@ -1,17 +1,5 @@
-extends Node
+extends Node2D
 class_name GaleGame
-
-
-#Logic for creating the edge is incorrect
-# it will work for the visuals atm but not for the dfs
-# This is because the dfs uses id to reference points
-# Then using those refernces to draw the edges
-# I have currently drawn the edges using grid math
-# This needs to change to call the points positions instead
-# To generate the edges
-# Once this is done winConditions should trigger
-# May just need to check if I have the correct
-# start and end positions
 
 var playerOnePoints: Array = []
 var playerTwoPoints: Array = []
@@ -36,6 +24,7 @@ func drawGraph():
 	#print(playerOnePoints)
 	drawEdges(playerOnePoints, playerOneEdges, "Blue", true)
 	drawEdges(playerTwoPoints, playerTwoEdges, "Red", false)
+
 
 
 func generatePoints(player: String):
@@ -125,40 +114,55 @@ func drawEdges(points: Array, edges: Dictionary, player_colour: String, visibili
 		draw_horizontal_edges(points, edges, ROWS, COLS, player_colour, visibility)
 
 func draw_horizontal_edges(points: Array, edges: Dictionary, ROWS: int, COLS: int, player_colour: String, visibility: bool):
-	var offset: int
-	if edges == playerTwoEdges:
-		offset = 0
+	var index: int = 0
+	var offset: int = 0
+	var first_row: int = COLS - 1
+	var last_row: int = (ROWS  - 1) * COLS
+	
+	if player_colour == "Blue":
+		offset = (ROWS * (COLS - 1)) + 1 # Number of horizontal edges
 	else:
-		offset = (ROWS * COLS) # Number of horizontal edges
-	for i in range(points.size()):
+		offset = 0
+	
+	for i in range(points.size() - 1):
 		if i % COLS == COLS - 1:
 			continue
 		var start_position = points[i]["position"]
 		var end_position = points[i + 1]["position"]
-		make_edge(points, start_position, end_position,player_colour,visibility,offset)
+		if player_colour == "Blue" and (i <= first_row or i >= last_row):
+			## Currently doesn't work due to needing to be called in _draw()
+			draw_visual_edge(start_position, end_position,Color.BLUE)
+			continue
+		make_edge(points, start_position, end_position, player_colour, visibility, offset)
 		edges[offset] = {"start": i, "end": i+1}
 		offset += 1
 
 func draw_vertical_edges(points: Array, edges: Dictionary, ROWS, COLS: int, player_colour: String, visibility: bool):
 	var offset: int
-	if edges == playerOneEdges:
-		print("running")
+
+	if player_colour == "Blue":
 		offset = 0
 	else:
+		offset = (ROWS * (COLS - 1)) # Number of horizontal edges
 		
-		offset = (ROWS * COLS) # Number of horizontal edges
-	
-	for j in range(points.size() - COLS):				
+	for j in range(points.size() - COLS):
 		var start_position = points[j]["position"]
 		var end_position = points[j + COLS]["position"]
+		if player_colour == "Red" and ((j % COLS == 0) or (j % COLS == COLS - 1)):
+			draw_visual_edge(start_position, end_position, Color.RED)
+			continue
 		make_edge(points, start_position, end_position, player_colour,visibility,offset)
-		if edges == playerTwoEdges:
-			if j % COLS - 1 == 0:
-				continue
-		else:
-			edges[offset] = {"start": j, "end": j+COLS}
+
+		edges[offset] = {"start": j, "end": j+COLS}
 		offset += 1
 
+func draw_visual_edge(start_point: Vector2,end_point: Vector2, colour: Color):
+	var line: Line2D = Line2D.new()
+	line.width = 10
+	line.default_color = colour
+	line.points = [start_point, end_point]
+	add_child(line)
+	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	drawGraph()
