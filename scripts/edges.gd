@@ -48,19 +48,16 @@ func createCollision() -> void:
 func _on_mouse_entered() -> void:
 	Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
 	is_hovered = true
-	if GlobalVariables.currentGameType == 1:
-		modulate.a = 1.0
 	queue_redraw()
 	
 # Used to remove hover effect for the edge
 func _on_mouse_exited() -> void:
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 	is_hovered = false
-	if GlobalVariables.currentGameType == 1:
-		modulate.a = 0.0
 	queue_redraw()	
 
-func capture():
+func capture(change_color: Color):
+	colour = change_color
 	is_captured = true
 	area.input_pickable = false
 	queue_redraw()
@@ -68,25 +65,28 @@ func capture():
 func remove():
 	queue_free()
 
+
+# function needs to be fixed so that it works with SHANNON GAME
+# Will just be a case of changing how Edge.capture() is called.
 func _draw() ->void:
 	var checkColour: Color
 	
 	# Changes colour of edge if selected by the short player (P1)
 	if is_captured:
-		if GlobalVariables.currentGameType == GlobalVariables.GameType.SHANNON:
-			checkColour = Color.GREEN
-		elif GlobalVariables.currentGameMode == GlobalVariables.GameType.GALE:
-			
-			checkColour = Color.BLUE if GlobalVariables.currentPlayer == 0 else Color.RED
-			
+		#if GlobalVariables.currentGameType == GlobalVariables.GameType.SHANNON:
+			#checkColour = Color.GREEN
+		#elif GlobalVariables.currentGameMode == GlobalVariables.GameType.GALE:
+			#
+			#
+		checkColour = colour
 		area.mouse_entered.disconnect(_on_mouse_entered)
 		area.mouse_exited.disconnect(_on_mouse_exited)
 
 	elif is_hovered:
 		checkColour = hovered_colour
 		
-	else:
-		checkColour = colour
+	#else:
+		#checkColour = colour
 
 	draw_line(start_position, end_position, checkColour, width)
 

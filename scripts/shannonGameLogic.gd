@@ -45,10 +45,7 @@ func update_edges(edge) -> void:
 
 	if game_manager.currentPlayer == game_manager.Player.P1:
 		GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
-		edge.capture()
-		#print("short_edges keys after player click: ", GlobalVariables.short_edges.keys())
-		#print("short_edges has clicked edge? ", GlobalVariables.short_edges.has(edgeReference))
-		
+		edge.capture(Color.GREEN)
 		
 	else:
 		# Tracks the shorts players current selected edges

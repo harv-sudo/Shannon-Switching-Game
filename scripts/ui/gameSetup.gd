@@ -93,4 +93,5 @@ func _on_start_game_pressed() -> void:
 	elif cut_button.button_pressed:
 		GlobalVariables.selected_role = "Cut"
 	get_tree().change_scene_to_file("res://scenes/Board.tscn")
-	
+	GlobalVariables.game_mode = GlobalVariables.Mode.AI
+	App.start_game(App.GameType.SHANNON)
