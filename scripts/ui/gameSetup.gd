@@ -11,7 +11,7 @@ extends Control
 
 @onready var pvp_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GameModeRow/GameModeButtons/PVPButton
 @onready var pvai_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GameModeRow/GameModeButtons/PVAIButton
-@onready var aivai_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GameModeRow/GameModeButtons/AIVAIButton
+@onready var aivsai_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GameModeRow/GameModeButtons/AIVAIButton
 
 @onready var role_row: HBoxContainer = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/RoleRow
 
@@ -21,6 +21,8 @@ func _ready() -> void:
 	short_button.button_pressed = true
 	cut_button.button_pressed = false
 	GlobalVariables.selected_role = "short"
+	pvp_button.button_pressed = true
+	GlobalVariables.game_mode = GlobalVariables.Mode.PVP
 	
 	preset_button.toggled.connect(_on_preset_button_toggled)
 	dynamic_button.toggled.connect(_on_dynamic_button_toggled)
@@ -28,7 +30,7 @@ func _ready() -> void:
 
 	pvp_button.toggled.connect(_on_pvp_button_toggled)
 	pvai_button.toggled.connect(_on_pvai_button_toggled)
-	aivai_button.toggled.connect(_on_aivai_button_toggled)
+	aivsai_button.toggled.connect(_on_aivsai_button_toggled)
 
 	short_button.toggled.connect(_on_short_toggled)
 	cut_button.toggled.connect(_on_cut_toggled)
@@ -40,24 +42,24 @@ func _ready() -> void:
 func _on_pvp_button_toggled(pressed: bool) -> void:
 	if pressed:
 		pvai_button.button_pressed = false
-		aivai_button.button_pressed = false
+		aivsai_button.button_pressed = false
 		role_row.visible = false
-		GlobalVariables.game_mode = GlobalVariables.Mode.AI
+		GlobalVariables.game_mode = GlobalVariables.Mode.PVP
 		
 func _on_pvai_button_toggled(pressed: bool) -> void:
 	if pressed:
 		pvp_button.button_pressed = false
-		aivai_button.button_pressed = false
+		aivsai_button.button_pressed = false
 		role_row.visible = true
 		GlobalVariables.game_mode = GlobalVariables.Mode.AI
 		
-func _on_aivai_button_toggled(pressed: bool) -> void:
+func _on_aivsai_button_toggled(pressed: bool) -> void:
 	if pressed:
 		pvp_button.button_pressed = false
 		pvai_button.button_pressed = false
 		role_row.visible = false
 		GlobalVariables.game_mode = GlobalVariables.Mode.AIVSAI
-		
+
 		
 
 func _on_short_toggled(pressed: bool) -> void:
@@ -93,5 +95,4 @@ func _on_start_game_pressed() -> void:
 	elif cut_button.button_pressed:
 		GlobalVariables.selected_role = "Cut"
 	get_tree().change_scene_to_file("res://scenes/Board.tscn")
-	GlobalVariables.game_mode = GlobalVariables.Mode.AI
 	App.start_game(App.GameType.SHANNON)

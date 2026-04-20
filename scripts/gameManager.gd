@@ -16,6 +16,7 @@ func _ready() -> void:
 	GlobalVariables.game_mode == GlobalVariables.Mode.AI
 	or GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI)
 	
+	
 	if GlobalVariables.selected_role == "Cut":
 
 		set_cut_roles()

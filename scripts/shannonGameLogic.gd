@@ -75,7 +75,7 @@ func apply_ai_move(edge_id: int, acting_player: int) -> void:
 		if child is Edge and child.edgeReference == edge_id:
 			if acting_player == game_manager.Player.P1:
 				GlobalVariables.short_edges[edge_id] = GlobalVariables.edges[edge_id]
-				child.capture()
+				child.capture(Color.GREEN)
 			else:
 				GlobalVariables.edges.erase(edge_id)
 				child.remove()
@@ -89,6 +89,8 @@ func _start_ai_vs_ai() -> void:
 	if best_edge != -1:
 		apply_ai_move(best_edge, game_manager.currentPlayer)
 
-# When the node is added to the scene, the function is called
+# When the node is added to the scene, the function is called	
 func _ready() -> void:
 	drawGraph()
+	if GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
+		call_deferred("_start_ai_vs_ai")
