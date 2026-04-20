@@ -259,7 +259,7 @@ func shortest_path_length(points: Array, edge_dict: Dictionary, start_node: int,
 		return 0
 
 	#creates graph from remaining edges
-	var adjacency: Dictionary = build_adjacency(points, edge_dict)
+	var adjacency: Dictionary = WinConditions.build_adjacency(points, edge_dict)
 	var visited: Dictionary = {}
 	var queue: Array = [[start_node, 0]]
 	visited[start_node] = true
@@ -282,39 +282,5 @@ func shortest_path_length(points: Array, edge_dict: Dictionary, start_node: int,
 
 func path_exists(points: Array, edge_dict: Dictionary, start_node: int, end_node: int) -> bool:
 	#builds graph and checks if there is a route between nodes
-	var adjacency: Dictionary = build_adjacency(points, edge_dict)
-	var visited: Dictionary = {}
-	return dfs(start_node, end_node, adjacency, visited)
-
-
-func build_adjacency(points: Array, edge_dict: Dictionary) -> Dictionary:
-	#builds adjacency list from current edges dict
-	var adjacency: Dictionary = {}
-
-	for point_id in range(points.size()):
-		adjacency[point_id] = []
-
-	for edge_id in edge_dict.keys():
-		var edge: Dictionary = edge_dict[edge_id]
-		var start_n: int = edge["start"]
-		var end_n: int = edge["end"]
-
-		adjacency[start_n].append(end_n)
-		adjacency[end_n].append(start_n)
-
-	return adjacency
-
-
-func dfs(current_node: int, target_node: int, adjacency: Dictionary, visited: Dictionary) -> bool:
-	#dfs checking if nodes can be reached or not
-	if current_node == target_node:
-		return true
-
-	visited[current_node] = true
-
-	for neighbour in adjacency.get(current_node, []):
-		if not visited.has(neighbour):
-			if dfs(neighbour, target_node, adjacency, visited):
-				return true
-
-	return false
+	var adjacency: Dictionary = WinConditions.build_adjacency(points, edge_dict)
+	return WinConditions.path_exists(start_node, end_node, adjacency)
