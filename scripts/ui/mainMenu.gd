@@ -1,6 +1,5 @@
 extends Control
 
-@onready var start_button: Button = $CenterContainer/VBoxContainer/VBoxButtonContainer/StartButton
 @onready var quit_button: Button = $CenterContainer/VBoxContainer/VBoxButtonContainer/QuitButton
 @onready var shannon_panel_container: PanelContainer = $CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow/ShannonPanelContainer
 @onready var gale_panel_container: PanelContainer = $CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow/GalePanelContainer
@@ -12,9 +11,7 @@ var normal_style: StyleBoxFlat
 var hover_style: StyleBoxFlat
 
 func _ready() -> void:
-	start_button.pressed.connect(_on_start_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
-
 	shannon_button.pressed.connect(_on_shannon_pressed)
 	gale_button.pressed.connect(_on_gale_pressed)
 
@@ -70,15 +67,14 @@ func _set_button_hover(button: TextureButton, hovered: bool) -> void:
 
 #TODO: Wire up properly
 func _on_shannon_pressed() -> void:
-	pass
+	get_tree().change_scene_to_file("res://scenes/gameSetup.tscn")
+	App.game_type = App.GameType.SHANNON
 	
 #TODO: Wire up properly
 func _on_gale_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/Board.tscn")
+	App.game_type = App.GameType.GALE
 	pass
-
-#TODO: comment out once above buttons are completed
-func _on_start_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/gameSetup.tscn")
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
