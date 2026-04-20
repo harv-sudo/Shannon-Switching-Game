@@ -85,7 +85,7 @@ func apply_ai_move(edge_id: int, acting_player: int) -> void:
 			break
 
 	is_game_over()
-
+#starts AI vs AI
 func _start_ai_vs_ai() -> void:
 	game_manager.ai_controller.ai_player = game_manager.currentPlayer
 	var best_edge: int = game_manager.ai_controller.ai_take_turn(GlobalVariables)

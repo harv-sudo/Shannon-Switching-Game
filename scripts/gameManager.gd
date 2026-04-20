@@ -36,7 +36,7 @@ func _ready() -> void:
 
 func switchPlayer() -> void:
 	currentPlayer = Player.P1 if currentPlayer == Player.P2 else Player.P2
-	
+	#if its ai vs ai mode: swaps the players but also has a time delay of 1 seconds
 	if ai_controller.ai_enabled:
 		if GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
 			ai_controller.ai_player = currentPlayer
@@ -44,11 +44,13 @@ func switchPlayer() -> void:
 			var best_edge: int = ai_controller.ai_take_turn(GlobalVariables)
 			if best_edge != -1:
 				(gameLogic as ShannonGame).apply_ai_move(best_edge, currentPlayer)
+		#PvAI swaps normally between players
 		elif currentPlayer == ai_controller.ai_player:
 			var best_edge: int = ai_controller.ai_take_turn(GlobalVariables)
 			if best_edge != -1:
 				(gameLogic as ShannonGame).apply_ai_move(best_edge, currentPlayer)
 				
+
 func set_short_roles() -> void:
 
 	ai_controller.ai_player = GlobalVariables.Player.P2

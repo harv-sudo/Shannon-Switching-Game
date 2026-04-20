@@ -16,7 +16,7 @@ func ai_take_turn(globals) -> int:
 	if globals == null:
 		return -1
 
-	#picks best edge for ai move
+	#returns best edge for AI
 	var best_edge: int = choose_ai_edge(
 		globals.edges,
 		globals.short_edges,
@@ -52,7 +52,8 @@ func choose_ai_edge(edges: Dictionary, short_edges: Dictionary, points: Array, s
 	for edge_id in edges.keys():
 		if short_edges.has(edge_id):
 			continue
-
+		
+		#simulates ai move depending on ais role
 		var simulated_edges: Dictionary = edges.duplicate(true)
 		var simulated_short_edges: Dictionary = short_edges.duplicate(true)
 
@@ -73,7 +74,7 @@ func choose_ai_edge(edges: Dictionary, short_edges: Dictionary, points: Array, s
 			alpha,
 			beta
 		)
-
+		#keeps best score move
 		if best_move == -1 or score > best_score:
 			best_score = score
 			best_move = edge_id
@@ -126,7 +127,7 @@ func minimax(
 				alpha,
 				beta
 			)
-
+			#keeps best move for ai to win
 			if score > best_score:
 				best_score = score
 
@@ -167,7 +168,7 @@ func minimax(
 				alpha,
 				beta
 			)
-
+			#keeps lowest score because player was beating ai
 			if score < best_score:
 				best_score = score
 
@@ -180,7 +181,7 @@ func minimax(
 
 		return best_score
 
-
+#checks if game is over before looking deeper into graph
 func is_terminal(edges: Dictionary, short_edges: Dictionary, points: Array, start_node: int, end_node: int) -> bool:
 	#player 1 has won
 	if path_exists(points, short_edges, start_node, end_node):
@@ -201,6 +202,7 @@ func is_terminal(edges: Dictionary, short_edges: Dictionary, points: Array, star
 
 
 func evaluate_board(edges: Dictionary, short_edges: Dictionary, points: Array, start_node: int, end_node: int) -> int:
+	#checks if short has won and checks if cut has won
 	var short_wins: bool = path_exists(points, short_edges, start_node, end_node)
 	var cut_wins: bool = not path_exists(points, edges, start_node, end_node)
 
