@@ -1,7 +1,6 @@
 extends Control
 
 @onready var turn_label = $TurnLabel
-@onready var status_label = $StatusLabel
 @onready var restart_button = $RestartButton
 
 func _ready() -> void:

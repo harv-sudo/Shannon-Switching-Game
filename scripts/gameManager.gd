@@ -1,7 +1,6 @@
 extends Node2D
 class_name GameManager
 
-
 enum Player { P1 , P2 }
 var currentPlayer = Player.P1
 
@@ -28,13 +27,12 @@ func _ready() -> void:
 	
 
 # Function is called in shannonGameLogic.updateEdges()
-
 func switchPlayer() -> void:
 	currentPlayer = Player.P1 if currentPlayer == Player.P2 else Player.P2
 	
-	if currentPlayer == Player.P2:
-		var best_edge = ai_controller.ai_take_turn(GlobalVariables)
-		(gameLogic as ShannonGame).apply_ai_move(best_edge)
+	#if currentPlayer == Player.P2:
+		#var best_edge = ai_controller.ai_take_turn(GlobalVariables)
+		#(gameLogic as ShannonGame).apply_ai_move(best_edge)
 
 
 # Used to transition the game to the gameOverScreen scene

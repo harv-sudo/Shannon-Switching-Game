@@ -4,6 +4,9 @@ class_name ShannonGame
 
 var game_manager: GameManager
 
+@onready var cut_sound_effect = preload("res://audio/cut_sound_effect.mp3")
+@onready var short_sound_effect = preload("res://audio/short_sound_effect.mp3")
+
 func set_game_manager(gm: GameManager) -> void:
 	game_manager = gm
 
@@ -41,11 +44,15 @@ func update_edges(edge) -> void:
 	if game_manager.currentPlayer == game_manager.Player.P1:
 		GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
 		edge.capture(Color.GREEN)
+		AudioPlayer.play_sound_effect(short_sound_effect)
 		
 	else:
+		AudioPlayer.play_sound_effect(cut_sound_effect)
+		
 		# Tracks the shorts players current selected edges
 		GlobalVariables.edges.erase(edgeReference)
-		edge.remove()
+		#await get_tree().create_timer(0.5).timeout
+		edge.visible = false
 		
 	is_game_over()
 
@@ -58,6 +65,7 @@ func is_game_over() -> void:
 	)
 	
 	if gameIsOver:
+		await get_tree().create_timer(0.5).timeout
 		game_manager.gameOver()
 	else:
 		game_manager.switchPlayer()

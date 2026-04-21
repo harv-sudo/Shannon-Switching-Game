@@ -8,6 +8,7 @@ var end_position: Vector2
 var width: float = 10.0
 var colour: Color = Color.BLACK
 var edgeReference: int
+var audio: AudioStreamPlayer
 
 var is_hovered: bool = false
 var is_captured: bool = false
