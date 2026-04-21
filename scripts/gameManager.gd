@@ -42,6 +42,9 @@ func _ready() -> void:
 func switchPlayer() -> void:
 	currentPlayer = Player.P1 if currentPlayer == Player.P2 else Player.P2
 	#if its ai vs ai mode: swaps the players but also has a time delay of 1 seconds
+	if App.game_type != App.GameType.SHANNON:
+		return
+		
 	if ai_controller.ai_enabled:
 		if GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
 			ai_controller.ai_player = currentPlayer
