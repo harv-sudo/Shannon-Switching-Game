@@ -1,7 +1,6 @@
 extends Node2D
 class_name GameManager
 
-
 enum Player { P1 , P2 }
 var currentPlayer = Player.P1
 
@@ -38,7 +37,6 @@ func _ready() -> void:
 	
 
 # Function is called in shannonGameLogic.updateEdges()
-
 func switchPlayer() -> void:
 	currentPlayer = Player.P1 if currentPlayer == Player.P2 else Player.P2
 	#if its ai vs ai mode: swaps the players but also has a time delay of 1 seconds

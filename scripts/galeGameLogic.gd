@@ -2,19 +2,20 @@ extends Node2D
 class_name GaleGame
 
 var playerOnePoints: Array = []
-var playerTwoPoints: Array = []
-
 var playerOneEdges: Dictionary = {}
-var playerTwoEdges: Dictionary = {}
-
 var playerOneCapturedEdges: Dictionary = {}
-var playerTwoCapturedEdges: Dictionary = {}
-
 var start_points = [0, 1, 2, 3, 4]
 var goal_points = [25, 26, 27, 28, 29]
 
+var playerTwoPoints: Array = []
+var playerTwoEdges: Dictionary = {}
+var playerTwoCapturedEdges: Dictionary = {}
 var player_two_start_points = [0, 6, 12, 18, 24]
 var player_two_goal_points = [5, 11, 17, 23, 29]
+
+var game_manager: GameManager
+
+@onready var select_sound_effect = preload("res://audio/short_sound_effect.mp3")
 
 func drawGraph():
 	generatePoints("One")
@@ -29,7 +30,6 @@ func generatePoints(player: String):
 	var cols: int
 	var points: Array
 	var colour: Color
-	var pointReference: int = 0
 	
 	if player == "One":
 		startX = 300
@@ -56,7 +56,6 @@ func generatePoints(player: String):
 			points.append({"position" : point, "row" : str(i), "col" : str(j)})
 			drawPoint(points.back(), colour, i, j)
 
-var game_manager: GameManager
 
 func set_game_manager(gm: GameManager) -> void:
 	game_manager = gm
@@ -74,7 +73,7 @@ func drawPoint(points: Dictionary, colour: Color, row: int, col: int):
 	
 	add_child(point)
 
-func make_edge(points: Array, start_point: Vector2, end_point: Vector2, player_colour: String, visibility: bool, edgeReference: int):
+func make_edge(start_point: Vector2, end_point: Vector2, player_colour: String, visibility: bool, edgeReference: int):
 		var edge = Edge.new(start_point, end_point, edgeReference)
 		
 		edge.name = str(player_colour) + "_" + str(edgeReference)
@@ -119,7 +118,6 @@ func drawEdges(points: Array, edges: Dictionary, player_colour: String, visibili
 		draw_horizontal_edges(points, edges, ROWS, COLS, player_colour, visibility)
 
 func draw_horizontal_edges(points: Array, edges: Dictionary, ROWS: int, COLS: int, player_colour: String, visibility: bool):
-	var index: int = 0
 	var offset: int = 0
 	var first_row: int = COLS - 1
 	var last_row: int = (ROWS  - 1) * COLS
@@ -138,7 +136,7 @@ func draw_horizontal_edges(points: Array, edges: Dictionary, ROWS: int, COLS: in
 			## Currently doesn't work due to needing to be called in _draw()
 			draw_visual_edge(start_position, end_position,Color.BLUE)
 			continue
-		make_edge(points, start_position, end_position, player_colour, visibility, offset)
+		make_edge(start_position, end_position, player_colour, visibility, offset)
 		edges[offset] = {"start": i, "end": i+1}
 		offset += 1
 
@@ -156,7 +154,7 @@ func draw_vertical_edges(points: Array, edges: Dictionary, ROWS, COLS: int, play
 		if player_colour == "Red" and ((j % COLS == 0) or (j % COLS == COLS - 1)):
 			draw_visual_edge(start_position, end_position, Color.RED)
 			continue
-		make_edge(points, start_position, end_position, player_colour,visibility,offset)
+		make_edge(start_position, end_position, player_colour,visibility,offset)
 
 		edges[offset] = {"start": j, "end": j+COLS}
 		offset += 1
@@ -175,14 +173,13 @@ func _ready() -> void:
 func change_edge(edge):
 	var edgeReference = edge.edgeReference
 	var hide_child: String
-	var winner = WinConditions.new()
-	
+	AudioPlayer.play_sound_effect(select_sound_effect)
 	if game_manager.currentPlayer == game_manager.Player.P1:
 		hide_child = "Red_" + str(edgeReference)
 		edge.capture(Color.BLUE)
 		playerOneCapturedEdges[edgeReference] = playerOneEdges[edgeReference]
 		
-		var player_one_wins = winner.is_game_over_Gale(start_points,
+		var player_one_wins = WinConditions.is_game_over_Gale(start_points,
 			goal_points,
 			playerOnePoints,
 			playerOneCapturedEdges)
@@ -196,7 +193,7 @@ func change_edge(edge):
 		edge.capture(Color.RED)
 		playerTwoCapturedEdges[edgeReference] = playerTwoEdges[edgeReference]
 		
-		var player_two_wins = winner.is_game_over_Gale(player_two_start_points,
+		var player_two_wins = WinConditions.is_game_over_Gale(player_two_start_points,
 			player_two_goal_points,
 			playerTwoPoints,
 			playerTwoCapturedEdges)

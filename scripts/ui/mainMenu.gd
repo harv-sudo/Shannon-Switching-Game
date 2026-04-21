@@ -6,11 +6,11 @@ extends Control
 @onready var shannon_button: TextureButton = $CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow/ShannonPanelContainer/ShannonMarginContainer/ShannonCard/ShannonButton
 @onready var gale_button: TextureButton = $CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow/GalePanelContainer/GaleMarginContainer/GaleCard/GaleButton
 
-
 var normal_style: StyleBoxFlat
 var hover_style: StyleBoxFlat
 
 func _ready() -> void:
+	AudioPlayer.play_music_level()
 	quit_button.pressed.connect(_on_quit_pressed)
 	shannon_button.pressed.connect(_on_shannon_pressed)
 	gale_button.pressed.connect(_on_gale_pressed)
@@ -21,7 +21,6 @@ func _ready() -> void:
 	gale_button.mouse_exited.connect(func(): _set_card_hover(gale_panel_container, false))
 
 	_setup_styles()
-
 
 func _setup_styles() -> void:
 	normal_style = StyleBoxFlat.new()
@@ -53,7 +52,6 @@ func _set_card_hover(panel: PanelContainer, hovered: bool) -> void:
 		panel.add_theme_stylebox_override("panel", normal_style)
 		panel.scale = Vector2(1, 1)
 
-
 func _set_button_hover(button: TextureButton, hovered: bool) -> void:
 	if hovered:
 		# slightly darken
@@ -62,8 +60,6 @@ func _set_button_hover(button: TextureButton, hovered: bool) -> void:
 	else:
 		button.modulate = Color(1, 1, 1, 1)
 		button.scale = Vector2(1, 1)
-
-
 
 #TODO: Wire up properly
 func _on_shannon_pressed() -> void:
