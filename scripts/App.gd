@@ -1,7 +1,7 @@
 extends Node
 
 enum GameType { SHANNON, GALE }
-var game_type: GameType
+var game_type: GameType = GameType.SHANNON
 
 func start_game(type: GameType):
 	game_type = type

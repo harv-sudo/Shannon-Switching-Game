@@ -70,17 +70,27 @@ func is_game_over() -> void:
 	else:
 		game_manager.switchPlayer()
 
-func apply_ai_move(edge_id: int) -> void:
+func apply_ai_move(edge_id: int, acting_player: int) -> void:
 	for child in get_children():
 		if child is Edge and child.edgeReference == edge_id:
-			child.remove()
-			GlobalVariables.edges.erase(edge_id)
-			if game_manager.currentPlayer == game_manager.Player.P1:
+			if acting_player == game_manager.Player.P1:
 				GlobalVariables.short_edges[edge_id] = GlobalVariables.edges[edge_id]
+				child.capture(Color.GREEN)
+			else:
+				GlobalVariables.edges.erase(edge_id)
+				child.remove()
 			break
-	
-	is_game_over()
 
-# When the node is added to the scene, the function is called
+	is_game_over()
+#starts AI vs AI
+func _start_ai_vs_ai() -> void:
+	game_manager.ai_controller.ai_player = game_manager.currentPlayer
+	var best_edge: int = game_manager.ai_controller.ai_take_turn(GlobalVariables)
+	if best_edge != -1:
+		apply_ai_move(best_edge, game_manager.currentPlayer)
+
+# When the node is added to the scene, the function is called	
 func _ready() -> void:
 	drawGraph()
+	if GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
+		call_deferred("_start_ai_vs_ai")

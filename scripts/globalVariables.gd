@@ -8,11 +8,12 @@ extends Node
 # We need to implement this dynamically programatically creating different types of graphs
 
 enum Player { P1, P2 }
-enum Mode { PVP, AI }
+enum Mode { PVP, AI, AIVSAI }
 
 var game_mode: int = Mode.PVP
 enum GameType { SHANNON, GALE}
 var currentGameType :GameType
+var selected_role: String = "Short"
 
 var presetPoints = { 
 	0:[
