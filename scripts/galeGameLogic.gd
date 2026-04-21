@@ -7,25 +7,20 @@ var playerTwoPoints: Array = []
 var playerOneEdges: Dictionary = {}
 var playerTwoEdges: Dictionary = {}
 
-var playerOneCapturedEdges: Dictionary
-var playerTwoCapturedEdges: Dictionary
+var playerOneCapturedEdges: Dictionary = {}
+var playerTwoCapturedEdges: Dictionary = {}
 
-var game_manager: GameManager
+var start_points = [0, 1, 2, 3, 4]
+var goal_points = [25, 26, 27, 28, 29]
 
-var start = 300
-var goal = 900
-
-func set_game_manager(gm: GameManager) -> void:
-	game_manager = gm
+var player_two_start_points = [0, 6, 12, 18, 24]
+var player_two_goal_points = [5, 11, 17, 23, 29]
 
 func drawGraph():
 	generatePoints("One")
 	generatePoints("Two")
-	#print(playerOnePoints)
 	drawEdges(playerOnePoints, playerOneEdges, "Blue", true)
 	drawEdges(playerTwoPoints, playerTwoEdges, "Red", false)
-
-
 
 func generatePoints(player: String):
 	var startX: int
@@ -61,6 +56,11 @@ func generatePoints(player: String):
 			points.append({"position" : point, "row" : str(i), "col" : str(j)})
 			drawPoint(points.back(), colour, i, j)
 
+var game_manager: GameManager
+
+func set_game_manager(gm: GameManager) -> void:
+	game_manager = gm
+
 func drawPoint(points: Dictionary, colour: Color, row: int, col: int):
 	var point = Point.new(points["position"][0], points["position"][1], colour)
 	var colour_name: String
@@ -70,7 +70,6 @@ func drawPoint(points: Dictionary, colour: Color, row: int, col: int):
 	else:
 		colour_name = "R"
 	
-	#point.name = colour_name + "| r:" + str(row) + ", c: " + str(col)
 	point.name = "{colour_name} | r: {row}, c: {col}".format({"colour_name" : colour_name, "row": row, "col": col})
 	
 	add_child(point)
@@ -80,7 +79,13 @@ func make_edge(points: Array, start_point: Vector2, end_point: Vector2, player_c
 		
 		edge.name = str(player_colour) + "_" + str(edgeReference)
 		edge.visible = visibility
-
+		# Hides the grid from the player
+		#edge.modulate.a = 0.0
+		if player_colour == "Blue":
+			edge.hovered_colour = Color.BLUE
+		else:
+			edge.hovered_colour = Color.RED
+		
 		## Adds a function to the edge_clicked signal in the Edge class
 		edge.edge_clicked.connect(change_edge)
 		add_child(edge)
@@ -169,33 +174,44 @@ func _ready() -> void:
 
 func change_edge(edge):
 	var edgeReference = edge.edgeReference
-	var remove_child: String
+	var hide_child: String
 	var winner = WinConditions.new()
+	
 	if game_manager.currentPlayer == game_manager.Player.P1:
-		remove_child = "Red_" + str(edgeReference)
+		hide_child = "Red_" + str(edgeReference)
 		edge.capture(Color.BLUE)
 		playerOneCapturedEdges[edgeReference] = playerOneEdges[edgeReference]
 		
+		var player_one_wins = winner.is_game_over_Gale(start_points,
+			goal_points,
+			playerOnePoints,
+			playerOneCapturedEdges)
 		
-		#winner.is_game_over(start,
-			#goal,
-			#playerOnePoints,
-			#playerOneCapturedEdges)
+		if player_one_wins:
+			get_tree().change_scene_to_file("res://scenes/gameOverScreen.tscn")
+			GlobalVariables.winner_label = "Player 1 wins!"
+
 	else:
-		remove_child = "Blue_" + str(edgeReference)
+		hide_child = "Blue_" + str(edgeReference)
 		edge.capture(Color.RED)
 		playerTwoCapturedEdges[edgeReference] = playerTwoEdges[edgeReference]
-		#winner.is_game_over(start,
-			#goal,
-			#playerTwoPoints,
-			#playerTwoCapturedEdges)
 		
+		var player_two_wins = winner.is_game_over_Gale(player_two_start_points,
+			player_two_goal_points,
+			playerTwoPoints,
+			playerTwoCapturedEdges)
+		if player_two_wins:
+			get_tree().change_scene_to_file("res://scenes/gameOverScreen.tscn")
+			GlobalVariables.winner_label = "Player 2 wins!"
+			
+
+			
 	# Edge name is changed to prevent its visibility changing, leaving the played move on the board
 	edge.name = "CAPTURE: " + edge.name
 	
 	# Removes the node for the other player, stopping them from selecting that edge on their game grid
-	var hide_node = get_node("/root/Board/GaleGame/" + remove_child)
-	hide_node.name = "hidden" + remove_child
+	var hide_node = get_node(hide_child)
+	hide_node.name = "hidden" + hide_child
 	hide_node.visible = false
 	
 	# Toggles the visability of each player's grid
@@ -210,10 +226,3 @@ func change_edge(edge):
 	playerTwoEdges.erase(edgeReference)
 	
 	game_manager.switchPlayer()
-
-#func _draw():
-	#if game_manager.currentPlayer == game_manager.Player.P1:
-		#drawEdges(playerOneEdges, "Blue", true)
-	#else:
-		#drawEdges(playerTwoEdges, "Red", true)
-		#
