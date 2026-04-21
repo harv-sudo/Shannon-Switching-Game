@@ -1,15 +1,15 @@
 extends Node2D
 class_name GaleGame
 
-var playerOnePoints: Array = []
-var playerOneEdges: Dictionary = {}
-var playerOneCapturedEdges: Dictionary = {}
-var start_points = [0, 1, 2, 3, 4]
-var goal_points = [25, 26, 27, 28, 29]
+var player_one_points: Array = []
+var player_one_edges: Dictionary = {}
+var player_one_captured_edges: Dictionary = {}
+var player_one_start_points = [0, 1, 2, 3, 4]
+var player_one_goal_points = [25, 26, 27, 28, 29]
 
-var playerTwoPoints: Array = []
-var playerTwoEdges: Dictionary = {}
-var playerTwoCapturedEdges: Dictionary = {}
+var player_two_points: Array = []
+var player_two_edges: Dictionary = {}
+var player_two_captured_edges: Dictionary = {}
 var player_two_start_points = [0, 6, 12, 18, 24]
 var player_two_goal_points = [5, 11, 17, 23, 29]
 
@@ -17,34 +17,34 @@ var game_manager: GameManager
 
 @onready var select_sound_effect = preload("res://audio/short_sound_effect.mp3")
 
-func drawGraph():
-	generatePoints("One")
-	generatePoints("Two")
-	drawEdges(playerOnePoints, playerOneEdges, "Blue", true)
-	drawEdges(playerTwoPoints, playerTwoEdges, "Red", false)
+func _draw_graph():
+	_generate_points("One")
+	_generate_points("Two")
+	_draw_edges(player_one_points, player_one_edges, "Blue", true)
+	_draw_edges(player_two_points, player_two_edges, "Red", false)
 
-func generatePoints(player: String):
-	var startX: int
-	var startY: int
+func _generate_points(player: String):
+	var start_x: int
+	var start_y: int
 	var rows: int
 	var cols: int
 	var points: Array
 	var colour: Color
 	
 	if player == "One":
-		startX = 300
-		startY = 100
+		start_x = 300
+		start_y = 100
 		rows = 6
 		cols = 5
-		points = playerOnePoints
+		points = player_one_points
 		colour = Color.BLUE
 		
 	elif player == "Two":
-		startX = 250
-		startY = 150
+		start_x = 250
+		start_y = 150
 		rows = 5
 		cols = 6
-		points = playerTwoPoints
+		points = player_two_points
 		colour = Color.RED
 		
 	else:
@@ -52,15 +52,14 @@ func generatePoints(player: String):
 		
 	for i in range(rows):
 		for j in range(cols):
-			var point = Vector2(startX + (j * 100), startY + (100 * i))
+			var point = Vector2(start_x + (j * 100), start_y + (100 * i))
 			points.append({"position" : point, "row" : str(i), "col" : str(j)})
-			drawPoint(points.back(), colour, i, j)
-
+			_draw_point(points.back(), colour, i, j)
 
 func set_game_manager(gm: GameManager) -> void:
 	game_manager = gm
 
-func drawPoint(points: Dictionary, colour: Color, row: int, col: int):
+func _draw_point(points: Dictionary, colour: Color, row: int, col: int):
 	var point = Point.new(points["position"][0], points["position"][1], colour)
 	var colour_name: String
 	
@@ -73,9 +72,13 @@ func drawPoint(points: Dictionary, colour: Color, row: int, col: int):
 	
 	add_child(point)
 
-func make_edge(start_point: Vector2, end_point: Vector2, player_colour: String, visibility: bool, edgeReference: int):
-		var edge = Edge.new(start_point, end_point, edgeReference)
+func _make_edge(start_point: Vector2,
+	end_point: Vector2,
+	player_colour: String,
+	visibility: bool,
+	edgeReference: int):
 		
+		var edge = Edge.new(start_point, end_point, edgeReference)
 		edge.name = str(player_colour) + "_" + str(edgeReference)
 		edge.visible = visibility
 		# Hides the grid from the player
@@ -85,104 +88,154 @@ func make_edge(start_point: Vector2, end_point: Vector2, player_colour: String, 
 		else:
 			edge.hovered_colour = Color.RED
 		
-		## Adds a function to the edge_clicked signal in the Edge class
+		# Adds a function to the edge_clicked signal in the Edge class
 		edge.edge_clicked.connect(change_edge)
 		add_child(edge)
 
 # Draws the edges array for each player
-func drawEdges(points: Array, edges: Dictionary, player_colour: String, visibility: bool):
-	var ROWS
-	var COLS
+func _draw_edges(points: Array,
+	edges: Dictionary,
+	player_colour: String,
+	visibility: bool):
+	
+	var rows
+	var cols
 	var horizontal_first
 	
-	if points == playerOnePoints:
-		ROWS = 6
-		COLS = 5
+	if points == player_one_points:
+		rows = 6
+		cols = 5
 		horizontal_first = false
 		
-	if points == playerTwoPoints:
-		ROWS = 5
-		COLS = 6
+	if points == player_two_points:
+		rows = 5
+		cols = 6
 		horizontal_first = true
 	
 	# Red: left/right
 	# Blue: up/down
 	if horizontal_first:
-		draw_horizontal_edges(points, edges, ROWS, COLS, player_colour, visibility)
-		draw_vertical_edges(points, edges, ROWS, COLS, player_colour, visibility)
+		_draw_horizontal_edges(points,
+			edges,
+			rows,
+			cols,
+			player_colour,
+			visibility)
+			
+		_draw_vertical_edges(points,
+			edges,
+			rows,
+			cols,
+			player_colour,
+			visibility)
+	
 	# Red up/down
 	# Blue: left/right
 	else:
-		
-		draw_vertical_edges(points, edges, ROWS, COLS, player_colour, visibility)	
-		draw_horizontal_edges(points, edges, ROWS, COLS, player_colour, visibility)
+		_draw_vertical_edges(points, edges, rows, cols, player_colour, visibility)	
+		_draw_horizontal_edges(points, edges, rows, cols, player_colour, visibility)
 
-func draw_horizontal_edges(points: Array, edges: Dictionary, ROWS: int, COLS: int, player_colour: String, visibility: bool):
+func _draw_horizontal_edges(points: Array,
+	edges: Dictionary,
+	rows: int,
+	cols: int,
+	player_colour: String,
+	visibility: bool):
+	
 	var offset: int = 0
-	var first_row: int = COLS - 1
-	var last_row: int = (ROWS  - 1) * COLS
+	var first_row: int = cols - 1
+	var last_row: int = (rows  - 1) * cols
 	
 	if player_colour == "Blue":
-		offset = (ROWS * (COLS - 1)) + 1 # Number of horizontal edges
+		offset = (rows * (cols - 1)) + 1 # Number of horizontal edges
 	else:
 		offset = 0
 	
 	for i in range(points.size() - 1):
-		if i % COLS == COLS - 1:
-			continue
 		var start_position = points[i]["position"]
 		var end_position = points[i + 1]["position"]
-		if player_colour == "Blue" and (i <= first_row or i >= last_row):
-			## Currently doesn't work due to needing to be called in _draw()
-			draw_visual_edge(start_position, end_position,Color.BLUE)
+		
+		if i % cols == cols - 1:
 			continue
-		make_edge(start_position, end_position, player_colour, visibility, offset)
+		
+		# Connects all of Player One's starting points and goal points
+		# VISUAL ONLY
+		if player_colour == "Blue" and (i <= first_row or i >= last_row):
+			_draw_visual_edge(start_position, end_position,Color.BLUE)
+			continue # These edges are not added to the player's edge dictionary
+		
+		_make_edge(start_position,
+			end_position,
+			player_colour,
+			visibility,
+			offset)
+		
 		edges[offset] = {"start": i, "end": i+1}
 		offset += 1
 
-func draw_vertical_edges(points: Array, edges: Dictionary, ROWS, COLS: int, player_colour: String, visibility: bool):
+func _draw_vertical_edges(points: Array,
+	edges: Dictionary,
+	rows: int,
+	cols: int,
+	player_colour: String,
+	visibility: bool):
+	
 	var offset: int
-
+	
 	if player_colour == "Blue":
 		offset = 0
 	else:
-		offset = (ROWS * (COLS - 1)) # Number of horizontal edges
-		
-	for j in range(points.size() - COLS):
+		offset = (rows * (cols - 1)) # Number of horizontal edges
+	
+	for j in range(points.size() - cols):
 		var start_position = points[j]["position"]
-		var end_position = points[j + COLS]["position"]
-		if player_colour == "Red" and ((j % COLS == 0) or (j % COLS == COLS - 1)):
-			draw_visual_edge(start_position, end_position, Color.RED)
-			continue
-		make_edge(start_position, end_position, player_colour,visibility,offset)
+		var end_position = points[j + cols]["position"]
+		
+		# Connects all of Player Two's starting points and goal points
+		# VISUAL ONLY
+		if player_colour == "Red" and ((j % cols == 0) or (j % cols == cols - 1)):
+			_draw_visual_edge(start_position, end_position, Color.RED)
+			continue # These edges are not added to the player's edge dictionary
+		
+		_make_edge(start_position,
+			end_position,
+			player_colour,
+			visibility,
+			offset)
 
-		edges[offset] = {"start": j, "end": j+COLS}
+		edges[offset] = {"start": j, "end": j+cols}
 		offset += 1
 
-func draw_visual_edge(start_point: Vector2,end_point: Vector2, colour: Color):
+func _draw_visual_edge(start_point: Vector2,
+	end_point: Vector2,
+	colour: Color):
+	
 	var line: Line2D = Line2D.new()
 	line.width = 10
 	line.default_color = colour
 	line.points = [start_point, end_point]
 	add_child(line)
-	
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	drawGraph()
+	_draw_graph()
 
 func change_edge(edge):
 	var edgeReference = edge.edgeReference
 	var hide_child: String
+	
+	# Uses the AudioPlayer global to play sound effects
 	AudioPlayer.play_sound_effect(select_sound_effect)
+	
 	if game_manager.currentPlayer == game_manager.Player.P1:
 		hide_child = "Red_" + str(edgeReference)
 		edge.capture(Color.BLUE)
-		playerOneCapturedEdges[edgeReference] = playerOneEdges[edgeReference]
+		player_one_captured_edges[edgeReference] = player_one_edges[edgeReference]
 		
-		var player_one_wins = WinConditions.is_game_over_Gale(start_points,
-			goal_points,
-			playerOnePoints,
-			playerOneCapturedEdges)
+		var player_one_wins = WinConditions.is_game_over_Gale(player_one_start_points,
+			player_one_goal_points,
+			player_one_points,
+			player_one_captured_edges)
 		
 		if player_one_wins:
 			get_tree().change_scene_to_file("res://scenes/gameOverScreen.tscn")
@@ -191,22 +244,23 @@ func change_edge(edge):
 	else:
 		hide_child = "Blue_" + str(edgeReference)
 		edge.capture(Color.RED)
-		playerTwoCapturedEdges[edgeReference] = playerTwoEdges[edgeReference]
+		player_two_captured_edges[edgeReference] = player_two_edges[edgeReference]
 		
 		var player_two_wins = WinConditions.is_game_over_Gale(player_two_start_points,
 			player_two_goal_points,
-			playerTwoPoints,
-			playerTwoCapturedEdges)
+			player_two_points,
+			player_two_captured_edges)
+		
 		if player_two_wins:
 			get_tree().change_scene_to_file("res://scenes/gameOverScreen.tscn")
 			GlobalVariables.winner_label = "Player 2 wins!"
 			
-
-			
-	# Edge name is changed to prevent its visibility changing, leaving the played move on the board
+	# Edge name is changed to so that it become permanently visible
+	# for the rest of the game
 	edge.name = "CAPTURE: " + edge.name
 	
-	# Removes the node for the other player, stopping them from selecting that edge on their game grid
+	# Hides the node for the other player in the game scene, 
+	# stopping them from selecting that edge on their game grid
 	var hide_node = get_node(hide_child)
 	hide_node.name = "hidden" + hide_child
 	hide_node.visible = false
@@ -219,7 +273,9 @@ func change_edge(edge):
 			else:
 				node_edge.visible = true
 	
-	playerOneEdges.erase(edgeReference)
-	playerTwoEdges.erase(edgeReference)
+	# Removes the selected edge from each players possible
+	# moves, as edges that overlap share the same id
+	player_one_edges.erase(edgeReference)
+	player_two_edges.erase(edgeReference)
 	
 	game_manager.switchPlayer()
