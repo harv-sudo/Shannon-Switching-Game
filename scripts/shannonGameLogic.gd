@@ -38,11 +38,6 @@ func draw_nodes() -> void:
 # This function deals with short/cut edge interction
 func update_edges(edge) -> void:
 	var edgeReference = edge.edgeReference
-	
-	
-	#DEBUG
-	#print("PLAYER CLICKED EDGE: ", edgeReference)
-
 	if game_manager.currentPlayer == game_manager.Player.P1:
 		GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
 		edge.capture(Color.GREEN)
@@ -51,10 +46,7 @@ func update_edges(edge) -> void:
 		# Tracks the shorts players current selected edges
 		GlobalVariables.edges.erase(edgeReference)
 		edge.remove()
-	
-	#print("After update - edges has edge? ", GlobalVariables.edges.has(edgeReference))
-	#print("After update - short_edges has edge? ", GlobalVariables.short_edges.has(edgeReference))
-
+		
 	is_game_over()
 
 func is_game_over() -> void:

@@ -50,3 +50,20 @@ static func is_game_over(start_node: int, target_node: int, points: Array, edges
 	else:
 		GlobalVariables.winner_label = "Player 2 wins"
 		return true
+
+static func is_game_over_Gale(starting_nodes: Array,
+	goal_nodes: Array,
+	points: Array,
+	edges: Dictionary) -> bool:
+		
+	var adjacency = build_adjacency(points, edges)
+	var winning_path_found: bool
+	for start in starting_nodes:
+		for goal in goal_nodes:
+			if path_exists(start, goal, adjacency):
+				winning_path_found = true
+				return winning_path_found
+			else:
+				winning_path_found = false
+					
+	return winning_path_found

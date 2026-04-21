@@ -1,17 +1,5 @@
-extends Node
+extends Node2D
 class_name GaleGame
-
-
-#Logic for creating the edge is incorrect
-# it will work for the visuals atm but not for the dfs
-# This is because the dfs uses id to reference points
-# Then using those refernces to draw the edges
-# I have currently drawn the edges using grid math
-# This needs to change to call the points positions instead
-# To generate the edges
-# Once this is done winConditions should trigger
-# May just need to check if I have the correct
-# start and end positions
 
 var playerOnePoints: Array = []
 var playerTwoPoints: Array = []
@@ -19,24 +7,20 @@ var playerTwoPoints: Array = []
 var playerOneEdges: Dictionary = {}
 var playerTwoEdges: Dictionary = {}
 
-var playerOneCapturedEdges: Dictionary
-var playerTwoCapturedEdges: Dictionary
+var playerOneCapturedEdges: Dictionary = {}
+var playerTwoCapturedEdges: Dictionary = {}
 
-var game_manager: GameManager
+var start_points = [0, 1, 2, 3, 4]
+var goal_points = [25, 26, 27, 28, 29]
 
-var start = 300
-var goal = 900
-
-func set_game_manager(gm: GameManager) -> void:
-	game_manager = gm
+var player_two_start_points = [0, 6, 12, 18, 24]
+var player_two_goal_points = [5, 11, 17, 23, 29]
 
 func drawGraph():
 	generatePoints("One")
 	generatePoints("Two")
-	#print(playerOnePoints)
 	drawEdges(playerOnePoints, playerOneEdges, "Blue", true)
 	drawEdges(playerTwoPoints, playerTwoEdges, "Red", false)
-
 
 func generatePoints(player: String):
 	var startX: int
@@ -72,6 +56,11 @@ func generatePoints(player: String):
 			points.append({"position" : point, "row" : str(i), "col" : str(j)})
 			drawPoint(points.back(), colour, i, j)
 
+var game_manager: GameManager
+
+func set_game_manager(gm: GameManager) -> void:
+	game_manager = gm
+
 func drawPoint(points: Dictionary, colour: Color, row: int, col: int):
 	var point = Point.new(points["position"][0], points["position"][1], colour)
 	var colour_name: String
@@ -81,7 +70,6 @@ func drawPoint(points: Dictionary, colour: Color, row: int, col: int):
 	else:
 		colour_name = "R"
 	
-	#point.name = colour_name + "| r:" + str(row) + ", c: " + str(col)
 	point.name = "{colour_name} | r: {row}, c: {col}".format({"colour_name" : colour_name, "row": row, "col": col})
 	
 	add_child(point)
@@ -91,7 +79,13 @@ func make_edge(points: Array, start_point: Vector2, end_point: Vector2, player_c
 		
 		edge.name = str(player_colour) + "_" + str(edgeReference)
 		edge.visible = visibility
-
+		# Hides the grid from the player
+		#edge.modulate.a = 0.0
+		if player_colour == "Blue":
+			edge.hovered_colour = Color.BLUE
+		else:
+			edge.hovered_colour = Color.RED
+		
 		## Adds a function to the edge_clicked signal in the Edge class
 		edge.edge_clicked.connect(change_edge)
 		add_child(edge)
@@ -125,73 +119,99 @@ func drawEdges(points: Array, edges: Dictionary, player_colour: String, visibili
 		draw_horizontal_edges(points, edges, ROWS, COLS, player_colour, visibility)
 
 func draw_horizontal_edges(points: Array, edges: Dictionary, ROWS: int, COLS: int, player_colour: String, visibility: bool):
-	var offset: int
-	if edges == playerTwoEdges:
-		offset = 0
+	var index: int = 0
+	var offset: int = 0
+	var first_row: int = COLS - 1
+	var last_row: int = (ROWS  - 1) * COLS
+	
+	if player_colour == "Blue":
+		offset = (ROWS * (COLS - 1)) + 1 # Number of horizontal edges
 	else:
-		offset = (ROWS * COLS) # Number of horizontal edges
-	for i in range(points.size()):
+		offset = 0
+	
+	for i in range(points.size() - 1):
 		if i % COLS == COLS - 1:
 			continue
 		var start_position = points[i]["position"]
 		var end_position = points[i + 1]["position"]
-		make_edge(points, start_position, end_position,player_colour,visibility,offset)
+		if player_colour == "Blue" and (i <= first_row or i >= last_row):
+			## Currently doesn't work due to needing to be called in _draw()
+			draw_visual_edge(start_position, end_position,Color.BLUE)
+			continue
+		make_edge(points, start_position, end_position, player_colour, visibility, offset)
 		edges[offset] = {"start": i, "end": i+1}
 		offset += 1
 
 func draw_vertical_edges(points: Array, edges: Dictionary, ROWS, COLS: int, player_colour: String, visibility: bool):
 	var offset: int
-	if edges == playerOneEdges:
-		print("running")
+
+	if player_colour == "Blue":
 		offset = 0
 	else:
+		offset = (ROWS * (COLS - 1)) # Number of horizontal edges
 		
-		offset = (ROWS * COLS) # Number of horizontal edges
-	
-	for j in range(points.size() - COLS):				
+	for j in range(points.size() - COLS):
 		var start_position = points[j]["position"]
 		var end_position = points[j + COLS]["position"]
+		if player_colour == "Red" and ((j % COLS == 0) or (j % COLS == COLS - 1)):
+			draw_visual_edge(start_position, end_position, Color.RED)
+			continue
 		make_edge(points, start_position, end_position, player_colour,visibility,offset)
-		if edges == playerTwoEdges:
-			if j % COLS - 1 == 0:
-				continue
-		else:
-			edges[offset] = {"start": j, "end": j+COLS}
+
+		edges[offset] = {"start": j, "end": j+COLS}
 		offset += 1
 
+func draw_visual_edge(start_point: Vector2,end_point: Vector2, colour: Color):
+	var line: Line2D = Line2D.new()
+	line.width = 10
+	line.default_color = colour
+	line.points = [start_point, end_point]
+	add_child(line)
+	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	drawGraph()
 
 func change_edge(edge):
 	var edgeReference = edge.edgeReference
-	var remove_child: String
+	var hide_child: String
 	var winner = WinConditions.new()
+	
 	if game_manager.currentPlayer == game_manager.Player.P1:
-		remove_child = "Red_" + str(edgeReference)
+		hide_child = "Red_" + str(edgeReference)
 		edge.capture(Color.BLUE)
 		playerOneCapturedEdges[edgeReference] = playerOneEdges[edgeReference]
 		
+		var player_one_wins = winner.is_game_over_Gale(start_points,
+			goal_points,
+			playerOnePoints,
+			playerOneCapturedEdges)
 		
-		#winner.is_game_over(start,
-			#goal,
-			#playerOnePoints,
-			#playerOneCapturedEdges)
+		if player_one_wins:
+			get_tree().change_scene_to_file("res://scenes/gameOverScreen.tscn")
+			GlobalVariables.winner_label = "Player 1 wins!"
+
 	else:
-		remove_child = "Blue_" + str(edgeReference)
+		hide_child = "Blue_" + str(edgeReference)
 		edge.capture(Color.RED)
 		playerTwoCapturedEdges[edgeReference] = playerTwoEdges[edgeReference]
-		#winner.is_game_over(start,
-			#goal,
-			#playerTwoPoints,
-			#playerTwoCapturedEdges)
 		
+		var player_two_wins = winner.is_game_over_Gale(player_two_start_points,
+			player_two_goal_points,
+			playerTwoPoints,
+			playerTwoCapturedEdges)
+		if player_two_wins:
+			get_tree().change_scene_to_file("res://scenes/gameOverScreen.tscn")
+			GlobalVariables.winner_label = "Player 2 wins!"
+			
+
+			
 	# Edge name is changed to prevent its visibility changing, leaving the played move on the board
 	edge.name = "CAPTURE: " + edge.name
 	
 	# Removes the node for the other player, stopping them from selecting that edge on their game grid
-	var hide_node = get_node("/root/Board/GaleGame/" + remove_child)
-	hide_node.name = "hidden" + remove_child
+	var hide_node = get_node(hide_child)
+	hide_node.name = "hidden" + hide_child
 	hide_node.visible = false
 	
 	# Toggles the visability of each player's grid
@@ -206,10 +226,3 @@ func change_edge(edge):
 	playerTwoEdges.erase(edgeReference)
 	
 	game_manager.switchPlayer()
-
-#func _draw():
-	#if game_manager.currentPlayer == game_manager.Player.P1:
-		#drawEdges(playerOneEdges, "Blue", true)
-	#else:
-		#drawEdges(playerTwoEdges, "Red", true)
-		#
