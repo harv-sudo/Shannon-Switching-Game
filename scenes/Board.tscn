@@ -1,9 +1,0 @@
-[gd_scene format=3 uid="uid://0fbh0ep5yaa8"]
-
-[ext_resource type="Script" uid="uid://df235a5857rg" path="res://scripts/gameManager.gd" id="1_qails"]
-[ext_resource type="PackedScene" uid="uid://bpoq46xddnv4o" path="res://scenes/hud.tscn" id="2_hs2ul"]
-
-[node name="Board" type="Node2D" unique_id=1845223269]
-script = ExtResource("1_qails")
-
-[node name="Hud" parent="." unique_id=1043753000 instance=ExtResource("2_hs2ul")]
