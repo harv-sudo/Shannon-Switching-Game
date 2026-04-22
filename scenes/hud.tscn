@@ -45,3 +45,11 @@ label_settings = SubResource("LabelSettings_ahhtf")
 layout_mode = 2
 text = "Player 1"
 label_settings = SubResource("LabelSettings_oo0fn")
+
+[node name="MenuButton" type="Button" parent="." unique_id=1918604502]
+layout_mode = 0
+offset_left = 993.0
+offset_top = 521.0
+offset_right = 1142.0
+offset_bottom = 575.0
+text = "Main Menu"

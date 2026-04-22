@@ -159,14 +159,17 @@ func _draw_horizontal_edges(points: Array,
 		if i % cols == cols - 1:
 			continue
 		
+		var new_start_position = Vector2(points[i]["position"][0] + 10, points[i]["position"][1])
+		var new_end_position = Vector2(points[i+1]["position"][0] - 10, points[i+1]["position"][1])
+		
 		# Connects all of Player One's starting points and goal points
 		# VISUAL ONLY
 		if player_colour == "Blue" and (i <= first_row or i >= last_row):
 			_draw_visual_edge(start_position, end_position,Color.BLUE)
 			continue # These edges are not added to the player's edge dictionary
 		
-		_make_edge(start_position,
-			end_position,
+		_make_edge(new_start_position,
+			new_end_position,
 			player_colour,
 			visibility,
 			offset)
@@ -192,14 +195,17 @@ func _draw_vertical_edges(points: Array,
 		var start_position = points[j]["position"]
 		var end_position = points[j + cols]["position"]
 		
+		var new_start_position = Vector2(points[j]["position"][0], points[j]["position"][1] + 10)
+		var new_end_position = Vector2(points[j+cols]["position"][0], points[j+cols]["position"][1] - 10)
+		
 		# Connects all of Player Two's starting points and goal points
 		# VISUAL ONLY
 		if player_colour == "Red" and ((j % cols == 0) or (j % cols == cols - 1)):
 			_draw_visual_edge(start_position, end_position, Color.RED)
 			continue # These edges are not added to the player's edge dictionary
 		
-		_make_edge(start_position,
-			end_position,
+		_make_edge(new_start_position,
+			new_end_position,
 			player_colour,
 			visibility,
 			offset)
