@@ -4,10 +4,12 @@ var game_manager: GameManager
 
 @onready var turn_label = $HBoxContainer/TurnLabel
 @onready var restart_button = $RestartButton
+@onready var menu_button = $MenuButton
+
 
 func _ready() -> void:
 	restart_button.pressed.connect(_on_restart_button_pressed)
-	#update_turn_label()
+	menu_button.pressed.connect(_on_menu_button_pressed)
 
 func set_game_manager(gm: GameManager) -> void:
 	game_manager = gm
@@ -24,3 +26,8 @@ func update_turn_label():
 func _on_restart_button_pressed():
 	GlobalVariables.reset()
 	get_tree().reload_current_scene()
+
+func _on_menu_button_pressed():
+	GlobalVariables.reset()
+	get_tree().change_scene_to_file("res://scenes/mainMenu.tscn")
+	
