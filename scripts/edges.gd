@@ -74,8 +74,6 @@ func capture(change_color: Color):
 func remove():
 	queue_free()
 
-# function needs to be fixed so that it works with SHANNON GAME
-# Will just be a case of changing how Edge.capture() is called.
 func _draw() ->void:
 	var current_colour: Color
 	if is_hovered:
