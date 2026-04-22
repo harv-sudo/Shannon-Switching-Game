@@ -2,6 +2,22 @@
 
 [ext_resource type="Script" uid="uid://rv7p7byyxj37" path="res://scripts/ui/gameSetup.gd" id="1_hcxev"]
 
+[sub_resource type="ButtonGroup" id="ButtonGroup_hcxev"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_vxh1w"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_wu7h3"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_ppmdo"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_7st55"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_0tmv6"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_7pacf"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_vkauo"]
+
 [node name="GameSetup" type="Control" unique_id=744022010]
 layout_mode = 3
 anchors_preset = 15
@@ -57,18 +73,21 @@ layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 button_pressed = true
+button_group = SubResource("ButtonGroup_hcxev")
 text = "P vs P"
 
 [node name="PVAIButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GameModeRow/GameModeButtons" unique_id=874585503]
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
+button_group = SubResource("ButtonGroup_vxh1w")
 text = "P vs AI"
 
 [node name="AIVAIButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GameModeRow/GameModeButtons" unique_id=1581637845]
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
+button_group = SubResource("ButtonGroup_wu7h3")
 text = "AI vs AI"
 
 [node name="RoleRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1013946248]
@@ -90,6 +109,7 @@ size_flags_horizontal = 3
 tooltip_text = "Build a path from the start to the end."
 toggle_mode = true
 button_pressed = true
+button_group = SubResource("ButtonGroup_ppmdo")
 text = "Short"
 
 [node name="CutButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/RoleRow/RoleButtons" unique_id=1314496122]
@@ -97,6 +117,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "Remove edges to prevent a path from being built from the start to the end."
 toggle_mode = true
+button_group = SubResource("ButtonGroup_7st55")
 text = "Cut"
 
 [node name="GraphMode" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=152418441]
@@ -118,6 +139,7 @@ size_flags_horizontal = 3
 tooltip_text = "Select a random graph from a set of prebuilt graphs."
 toggle_mode = true
 button_pressed = true
+button_group = SubResource("ButtonGroup_0tmv6")
 text = "Preset Graph"
 
 [node name="DynamicButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GraphMode/ButtonContainer" unique_id=393716292]
@@ -125,6 +147,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "Dynamically generate a graph with a random number of points and edges."
 toggle_mode = true
+button_group = SubResource("ButtonGroup_7pacf")
 text = "Dynamic"
 
 [node name="CustomButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GraphMode/ButtonContainer" unique_id=1499438439]
@@ -132,6 +155,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "Customise your own graph by placing your own points and edges."
 toggle_mode = true
+button_group = SubResource("ButtonGroup_vkauo")
 text = "Custom"
 
 [node name="ButtonsRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=859534166]
