@@ -41,12 +41,10 @@ offset_bottom = 58.0
 [node name="CurrentTurn" type="Label" parent="HBoxContainer" unique_id=1265549483]
 layout_mode = 2
 text = "Current Turn: "
-label_settings = SubResource("LabelSettings_ahhtf")
 
 [node name="TurnLabel" type="Label" parent="HBoxContainer" unique_id=1985684326]
 layout_mode = 2
 text = "Player 1"
-label_settings = SubResource("LabelSettings_oo0fn")
 
 [node name="MenuButton" type="Button" parent="." unique_id=1918604502]
 layout_mode = 0
