@@ -8,12 +8,11 @@ extends Node
 # We need to implement this dynamically programatically creating different types of graphs
 
 enum Player { P1, P2 }
-enum Mode { PVP, AI, AIVSAI }
+enum Mode { PVP, AI }
 
 var game_mode: int = Mode.PVP
 enum GameType { SHANNON, GALE}
 var currentGameType :GameType
-var selected_role: String = "Short"
 
 var presetPoints = { 
 	0:[
@@ -93,8 +92,19 @@ var short_edges = {}
 var winner_label:String = ""
 
 func reset():
-	points = presetPoints[0].duplicate(true)
-	edges = presetEdges[0].duplicate(true)
+	if use_custom_graph and custom_points.size() > 0:
+		points = custom_points.duplicate(true)
+		edges = custom_edges.duplicate(true)
+	else:
+		points = presetPoints[0].duplicate(true)
+		edges = presetEdges[0].duplicate(true)
+
 	start_node = 0
-	end_node = points.size() -1
+	end_node = points.size() - 1
 	short_edges = {}
+	winner_label = ""
+
+# Custom graph
+var use_custom_graph: bool = false
+var custom_points: Array = []
+var custom_edges: Dictionary = {}
