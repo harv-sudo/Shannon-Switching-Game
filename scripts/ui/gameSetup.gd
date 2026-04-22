@@ -38,29 +38,26 @@ func _ready() -> void:
 	back_button.pressed.connect(_on_back_pressed)
 	start_game_button.pressed.connect(_on_start_game_pressed)
 
-
 func _on_pvp_button_toggled(pressed: bool) -> void:
 	if pressed:
 		pvai_button.button_pressed = false
 		aivsai_button.button_pressed = false
 		role_row.visible = false
 		GlobalVariables.game_mode = GlobalVariables.Mode.PVP
-		
+
 func _on_pvai_button_toggled(pressed: bool) -> void:
 	if pressed:
 		pvp_button.button_pressed = false
 		aivsai_button.button_pressed = false
 		role_row.visible = true
 		GlobalVariables.game_mode = GlobalVariables.Mode.AI
-		
+
 func _on_aivsai_button_toggled(pressed: bool) -> void:
 	if pressed:
 		pvp_button.button_pressed = false
 		pvai_button.button_pressed = false
 		role_row.visible = false
 		GlobalVariables.game_mode = GlobalVariables.Mode.AIVSAI
-
-		
 
 func _on_short_toggled(pressed: bool) -> void:
 	if pressed:
@@ -71,6 +68,7 @@ func _on_cut_toggled(pressed: bool) -> void:
 	if pressed:
 		short_button.button_pressed = false
 		GlobalVariables.selected_role = "Cut"
+
 func _on_preset_button_toggled(pressed: bool) -> void:
 	if pressed:
 		dynamic_button.button_pressed = false
@@ -94,5 +92,5 @@ func _on_start_game_pressed() -> void:
 		GlobalVariables.selected_role = "Short"
 	elif cut_button.button_pressed:
 		GlobalVariables.selected_role = "Cut"
-	get_tree().change_scene_to_file("res://scenes/Board.tscn")
+	get_tree().change_scene_to_file("res://scenes/GameManager.tscn")
 	App.start_game(App.GameType.SHANNON)
