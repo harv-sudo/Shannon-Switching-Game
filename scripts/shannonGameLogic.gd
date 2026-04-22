@@ -56,7 +56,6 @@ func update_edges(edge) -> void:
 		
 		# Tracks the shorts players current selected edges
 		GlobalVariables.edges.erase(edgeReference)
-		await get_tree().create_timer(0.5).timeout
 		edge.visible = false
 		
 	is_game_over()
@@ -94,7 +93,6 @@ func apply_ai_move(edge_id: int, acting_player: int) -> void:
 #starts AI vs AI and the AI when player plays cut in PvAI
 func _start_first_ai_turn() -> void:
 	await get_tree().create_timer(0.5).timeout
-	
 	if GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
 		game_manager.ai_controller.ai_player = game_manager.currentPlayer
 	var best_edge: int = game_manager.ai_controller.ai_take_turn(GlobalVariables)
