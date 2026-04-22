@@ -1,8 +1,6 @@
 extends Control
 
-var game_manager: GameManager
-
-@onready var turn_label = $HBoxContainer/TurnLabel
+@onready var turn_label = $TurnLabel
 @onready var restart_button = $RestartButton
 @onready var menu_button = $MenuButton
 
@@ -11,17 +9,14 @@ func _ready() -> void:
 	restart_button.pressed.connect(_on_restart_button_pressed)
 	menu_button.pressed.connect(_on_menu_button_pressed)
 
-func set_game_manager(gm: GameManager) -> void:
-	game_manager = gm
-
-func _process(_delta: float) -> void:
-	update_turn_label()
-
-func update_turn_label():
-	if game_manager.currentPlayer == game_manager.Player.P1:
-		turn_label.text = "Player 1"
-	else:
-		turn_label.text = "Player 2"
+#func _process(_delta: float) -> void:
+	#update_turn_label()
+#
+#func update_turn_label():
+	#if GlobalVariables.currentPlayer == GlobalVariables.Player.P1:
+		#turn_label.text = "Current Turn: Player 1"
+	#else:
+		#turn_label.text = "Current Turn: Player 2"
 
 func _on_restart_button_pressed():
 	GlobalVariables.reset()
@@ -31,3 +26,16 @@ func _on_menu_button_pressed():
 	GlobalVariables.reset()
 	get_tree().change_scene_to_file("res://scenes/mainMenu.tscn")
 	
+	# Harsh: Added special restart case for custom graphs
+	if GlobalVariables.use_custom_graph:
+		GlobalVariables.points = GlobalVariables.custom_points.duplicate(true)
+		GlobalVariables.edges = GlobalVariables.custom_edges.duplicate(true)
+		GlobalVariables.short_edges = {}
+		GlobalVariables.start_node = -1
+		GlobalVariables.end_node = -1
+		GlobalVariables.winner_label = ""
+
+		get_tree().change_scene_to_file("res://scenes/customGraphSetup.tscn")
+	else:
+		GlobalVariables.reset()
+		get_tree().reload_current_scene()
