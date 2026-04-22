@@ -10,7 +10,7 @@ var normal_style: StyleBoxFlat
 var hover_style: StyleBoxFlat
 
 func _ready() -> void:
-	AudioPlayer.play_music_level()
+	# AudioPlayer.play_music_level()
 	quit_button.pressed.connect(_on_quit_pressed)
 	shannon_button.pressed.connect(_on_shannon_pressed)
 	gale_button.pressed.connect(_on_gale_pressed)

@@ -15,7 +15,7 @@ func drawGraph() -> void:
 	draw_nodes()
 
 func draw_edges() -> void:
-	for i in GlobalVariables.edges.size():
+	for i in GlobalVariables.edges.keys():
 		var startPointIndex = GlobalVariables.edges[i]["start"]
 		var endPointIndex = GlobalVariables.edges[i]["end"]
 		
@@ -49,10 +49,10 @@ func update_edges(edge) -> void:
 	if game_manager.currentPlayer == game_manager.Player.P1:
 		GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
 		edge.capture(Color.GREEN)
-		AudioPlayer.play_sound_effect(short_sound_effect)
+		#AudioPlayer.play_sound_effect(short_sound_effect)
 		
 	else:
-		AudioPlayer.play_sound_effect(cut_sound_effect)
+		#AudioPlayer.play_sound_effect(cut_sound_effect)
 		
 		# Tracks the shorts players current selected edges
 		GlobalVariables.edges.erase(edgeReference)
@@ -81,11 +81,11 @@ func apply_ai_move(edge_id: int, acting_player: int) -> void:
 			if acting_player == game_manager.Player.P1:
 				GlobalVariables.short_edges[edge_id] = GlobalVariables.edges[edge_id]
 				child.capture(Color.GREEN)
-				AudioPlayer.play_sound_effect(short_sound_effect)
+				#AudioPlayer.play_sound_effect(short_sound_effect)
 			else:
 				GlobalVariables.edges.erase(edge_id)
 				child.remove()
-				AudioPlayer.play_sound_effect(cut_sound_effect)
+				#AudioPlayer.play_sound_effect(cut_sound_effect)
 			break
 
 	is_game_over()

@@ -70,5 +70,5 @@ func set_cut_roles() -> void:
 # Used to transition the game to the gameOverScreen scene
 func gameOver() -> void:
 	get_tree().change_scene_to_file("res://scenes/gameOverScreen.tscn")
-	AudioPlayer.play_sound_effect(victory_sound_effect)
+	#AudioPlayer.play_sound_effect(victory_sound_effect)
 	GlobalVariables.reset()

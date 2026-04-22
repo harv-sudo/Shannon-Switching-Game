@@ -226,7 +226,7 @@ func change_edge(edge):
 	var hide_child: String
 	
 	# Uses the AudioPlayer global to play sound effects
-	AudioPlayer.play_sound_effect(select_sound_effect)
+	#AudioPlayer.play_sound_effect(select_sound_effect)
 	
 	if game_manager.currentPlayer == game_manager.Player.P1:
 		hide_child = "Red_" + str(edgeReference)

@@ -54,7 +54,7 @@ func generate_points(count, width, height, min_dist):
 
 		var valid = true
 		for p in pts:
-			if p.position.distance_to(pos) < min_dist:
+			if p["position"].distance_to(pos) < min_dist:
 				valid = false
 				break
 
@@ -99,7 +99,7 @@ func assign_start_and_end(points):
 	var end_node = 0
 
 	for i in range(points.size()):
-		var x = points[i].position.x
+		var x = points[i]["position"].x
 
 		if x < min_x:
 			min_x = x
@@ -142,8 +142,8 @@ func is_edge_valid(points, edges, a, b):
 	var p2 = points[b].position
 
 	for e in edges.values():
-		var c = e.start
-		var d = e.end
+		var c = e["start"]
+		var d = e["end"]
 
 		if a == c or a == d or b == c or b == d:
 			continue
