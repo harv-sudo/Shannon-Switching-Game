@@ -130,7 +130,7 @@ func _handle_terminal_selection_input(event):
 			GlobalVariables.winner_label = ""
 
 			App.game_type = App.GameType.SHANNON
-			get_tree().change_scene_to_file("res://scenes/Board.tscn")
+			get_tree().change_scene_to_file("res://scenes/GameManager.tscn")
 
 func _on_add_node_button_pressed():
 	editor_mode = EditorMode.ADD_NODE
