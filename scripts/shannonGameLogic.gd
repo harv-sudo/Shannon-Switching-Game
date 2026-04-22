@@ -82,9 +82,10 @@ func apply_ai_move(edge_id: int, acting_player: int) -> void:
 			break
 
 	is_game_over()
-#starts AI vs AI
-func _start_ai_vs_ai() -> void:
-	game_manager.ai_controller.ai_player = game_manager.currentPlayer
+#starts AI vs AI and the AI when player plays cut in PvAI
+func _start_first_ai_turn() -> void:
+	if GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
+		game_manager.ai_controller.ai_player = game_manager.currentPlayer
 	var best_edge: int = game_manager.ai_controller.ai_take_turn(GlobalVariables)
 	if best_edge != -1:
 		apply_ai_move(best_edge, game_manager.currentPlayer)
@@ -93,4 +94,6 @@ func _start_ai_vs_ai() -> void:
 func _ready() -> void:
 	drawGraph()
 	if GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
-		call_deferred("_start_ai_vs_ai")
+		call_deferred("_start_first_ai_turn")
+	elif game_manager.ai_controller.ai_enabled and game_manager.currentPlayer == game_manager.ai_controller.ai_player:
+		call_deferred("_start_first_ai_turn")

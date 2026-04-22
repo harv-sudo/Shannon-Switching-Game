@@ -31,8 +31,8 @@ func _ready() -> void:
 			gameLogic = GaleGame.new()
 			gameLogic.name = "GaleGame"
 	
-	add_child(gameLogic)
 	gameLogic.set_game_manager(self)
+	add_child(gameLogic)
 	ai_controller.name = "AI"
 	
 
@@ -65,7 +65,7 @@ func set_short_roles() -> void:
 func set_cut_roles() -> void:
 
 	ai_controller.ai_player = GlobalVariables.Player.P1
-	currentPlayer = Player.P2
+	currentPlayer = Player.P1
 
 
 # Used to transition the game to the gameOverScreen scene
