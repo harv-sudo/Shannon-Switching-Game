@@ -76,6 +76,7 @@ func is_game_over() -> void:
 		game_manager.switchPlayer()
 
 func apply_ai_move(edge_id: int, acting_player: int) -> void:
+	await get_tree().create_timer(0.5).timeout
 	for child in get_children():
 		if child is Edge and child.edgeReference == edge_id:
 			if acting_player == game_manager.Player.P1:
