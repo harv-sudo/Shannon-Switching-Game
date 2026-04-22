@@ -1,7 +1,7 @@
 extends Control
 
-@onready var winnerLabel = $Label
-@onready var restartButton = $Button
+@onready var winnerLabel = $VBoxContainer/Label
+@onready var restartButton = $VBoxContainer/Button
 
 
 
