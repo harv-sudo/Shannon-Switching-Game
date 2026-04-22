@@ -5,9 +5,7 @@ class_name DynamicGraph
 # -----------------------------
 # MAIN ENTRY
 # -----------------------------
-
-
-func generate(node_count: int, edge_count: int) -> void: #CHANGE | Dictionary -> void
+func generate(node_count: int, edge_count: int) -> Dictionary: #CHANGE | Dictionary -> void
 	var width = 800
 	var height = 600
 
@@ -23,12 +21,12 @@ func generate(node_count: int, edge_count: int) -> void: #CHANGE | Dictionary ->
 	var edges = generate_mst(points, start_node, end_node)
 	edges = add_extra_edges(points, edges, edge_count, start_node, end_node)
 
-	#return {
-		#"points": points,
-		#"edges": edges,
-		#"start": start_node,
-		#"end": end_node
-	#}
+	return {
+		"points": points,
+		"edges": edges,
+		"start": start_node,
+		"end": end_node
+	}
 
 # -----------------------------
 # NODE GENERATION (CENTERED AREA)
