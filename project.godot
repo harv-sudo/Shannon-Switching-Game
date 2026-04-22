@@ -21,6 +21,10 @@ GlobalVariables="*uid://2pm3mnk1c5aj"
 App="*uid://eov815ib73p1"
 AudioPlayer="*uid://4x8kwvniw3d1"
 
+[display]
+
+window/stretch/mode="viewport"
+
 [dotnet]
 
 project/assembly_name="Shannon Switching Game"

@@ -8,6 +8,8 @@ var gameLogic: Node
 
 @onready var ai_controller: AIController = AIController.new()
 @onready var current_scene = get_tree().current_scene
+@onready var victory_sound_effect = preload("res://audio/victory_sound_effect.mp3")
+
 
 func _ready() -> void:
 	add_child(ai_controller)
@@ -39,10 +41,11 @@ func _ready() -> void:
 # Function is called in shannonGameLogic.updateEdges()
 func switchPlayer() -> void:
 	currentPlayer = Player.P1 if currentPlayer == Player.P2 else Player.P2
+	
 	#if its ai vs ai mode: swaps the players but also has a time delay of 1 seconds
 	if App.game_type != App.GameType.SHANNON:
 		return
-		
+	
 	if ai_controller.ai_enabled:
 		if GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
 			ai_controller.ai_player = currentPlayer
@@ -58,12 +61,10 @@ func switchPlayer() -> void:
 				
 
 func set_short_roles() -> void:
-
 	ai_controller.ai_player = GlobalVariables.Player.P2
 	currentPlayer = Player.P1
 
 func set_cut_roles() -> void:
-
 	ai_controller.ai_player = GlobalVariables.Player.P1
 	currentPlayer = Player.P2
 
@@ -71,4 +72,5 @@ func set_cut_roles() -> void:
 # Used to transition the game to the gameOverScreen scene
 func gameOver() -> void:
 	get_tree().change_scene_to_file("res://scenes/gameOverScreen.tscn")
+	AudioPlayer.play_sound_effect(victory_sound_effect)
 	GlobalVariables.reset()

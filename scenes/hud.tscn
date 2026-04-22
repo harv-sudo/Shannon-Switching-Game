@@ -2,6 +2,12 @@
 
 [ext_resource type="Script" uid="uid://btq4qkjv27occ" path="res://scripts/ui/hud.gd" id="1_ahhtf"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_ahhtf"]
+font_size = 32
+
+[sub_resource type="LabelSettings" id="LabelSettings_oo0fn"]
+font_size = 32
+
 [node name="Hud" type="Control" unique_id=1043753000]
 layout_mode = 3
 anchors_preset = 15
@@ -11,14 +17,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_ahhtf")
-
-[node name="TurnLabel" type="Label" parent="." unique_id=1265549483]
-layout_mode = 0
-offset_left = 5.0
-offset_top = 620.0
-offset_right = 176.0
-offset_bottom = 643.0
-text = "Current Turn: Player 1"
 
 [node name="RestartButton" type="Button" parent="." unique_id=51825584]
 layout_mode = 1
@@ -30,3 +28,20 @@ offset_top = 580.0
 offset_right = 1077.488
 offset_bottom = 604.896
 text = "Restart"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=810184533]
+layout_mode = 0
+offset_left = 395.0
+offset_top = 13.0
+offset_right = 741.0
+offset_bottom = 58.0
+
+[node name="CurrentTurn" type="Label" parent="HBoxContainer" unique_id=1265549483]
+layout_mode = 2
+text = "Current Turn: "
+label_settings = SubResource("LabelSettings_ahhtf")
+
+[node name="TurnLabel" type="Label" parent="HBoxContainer" unique_id=1985684326]
+layout_mode = 2
+text = "Player 1"
+label_settings = SubResource("LabelSettings_oo0fn")
