@@ -30,9 +30,14 @@ func draw_nodes() -> void:
 	var numberOfNodes = GlobalVariables.points.size()
 	
 	for i in numberOfNodes:
+
 		var point = Point.new(
 			GlobalVariables.points[i]["position"][0],
 			GlobalVariables.points[i]["position"][1])
+		
+		if (i == GlobalVariables.start_node 
+			or i == GlobalVariables.end_node):
+			point.colour = Color.GOLD
 		
 		point.name = "point-" + str(i)
 		add_child(point)
