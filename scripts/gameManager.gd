@@ -10,13 +10,12 @@ var gameLogic: Node
 @onready var current_scene = get_tree().current_scene
 @onready var victory_sound_effect = preload("res://audio/victory_sound_effect.mp3")
 
-
 func _ready() -> void:
+	$Hud.set_game_manager(self)
 	add_child(ai_controller)
 	ai_controller.ai_enabled = (
 	GlobalVariables.game_mode == GlobalVariables.Mode.AI
 	or GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI)
-	
 	
 	if GlobalVariables.selected_role == "Cut":
 
@@ -58,7 +57,7 @@ func switchPlayer() -> void:
 			var best_edge: int = ai_controller.ai_take_turn(GlobalVariables)
 			if best_edge != -1:
 				(gameLogic as ShannonGame).apply_ai_move(best_edge, currentPlayer)
-				
+
 
 func set_short_roles() -> void:
 	ai_controller.ai_player = GlobalVariables.Player.P2
@@ -67,7 +66,6 @@ func set_short_roles() -> void:
 func set_cut_roles() -> void:
 	ai_controller.ai_player = GlobalVariables.Player.P1
 	currentPlayer = Player.P1
-
 
 # Used to transition the game to the gameOverScreen scene
 func gameOver() -> void:

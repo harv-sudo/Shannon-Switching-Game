@@ -76,14 +76,19 @@ func apply_ai_move(edge_id: int, acting_player: int) -> void:
 			if acting_player == game_manager.Player.P1:
 				GlobalVariables.short_edges[edge_id] = GlobalVariables.edges[edge_id]
 				child.capture(Color.GREEN)
+				AudioPlayer.play_sound_effect(short_sound_effect)
 			else:
 				GlobalVariables.edges.erase(edge_id)
 				child.remove()
+				AudioPlayer.play_sound_effect(cut_sound_effect)
 			break
 
 	is_game_over()
+
 #starts AI vs AI and the AI when player plays cut in PvAI
 func _start_first_ai_turn() -> void:
+	await get_tree().create_timer(0.5).timeout
+	
 	if GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
 		game_manager.ai_controller.ai_player = game_manager.currentPlayer
 	var best_edge: int = game_manager.ai_controller.ai_take_turn(GlobalVariables)
