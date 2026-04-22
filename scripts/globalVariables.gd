@@ -14,6 +14,11 @@ var game_mode: int = Mode.PVP
 enum GameType { SHANNON, GALE}
 var currentGameType :GameType
 
+# DYNAMIC GRAPHS VARIABLES
+var use_dynamic_graph: bool = false
+var dynamic_node_count: int = 7
+var dynamic_edge_count: int = 12
+
 var presetPoints = { 
 	0:[
 		{"position": Vector2(120, 280)}, # 0 - S
@@ -108,3 +113,30 @@ func reset():
 var use_custom_graph: bool = false
 var custom_points: Array = []
 var custom_edges: Dictionary = {}
+
+func setup_dynamic_graph(node_count: int, edge_count: int) -> void:
+	var generator = DynamicGraph.new()
+	var graph = generator.generate(node_count, edge_count)
+
+	points = graph["points"]
+	edges = graph["edges"]
+	start_node = graph["start"]
+	end_node = graph["end"]
+
+	dynamic_node_count = node_count
+	dynamic_edge_count = edge_count
+
+	short_edges = {}
+	use_dynamic_graph = true
+	
+	
+func reset():
+	short_edges = {}
+	# If using dynamic graph
+	if use_dynamic_graph:
+		setup_dynamic_graph(dynamic_node_count, dynamic_edge_count)
+	else:
+		points = presetPoints[0].duplicate(true)
+		edges = presetEdges[0].duplicate(true)
+		start_node = 0
+		end_node = points.size() - 1

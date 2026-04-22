@@ -5,9 +5,7 @@ class_name DynamicGraph
 # -----------------------------
 # MAIN ENTRY
 # -----------------------------
-
-
-func generate(node_count: int, edge_count: int) -> void: #CHANGE | Dictionary -> void
+func generate(node_count: int, edge_count: int) -> Dictionary: #CHANGE | Dictionary -> void
 	var width = 800
 	var height = 600
 
@@ -23,12 +21,12 @@ func generate(node_count: int, edge_count: int) -> void: #CHANGE | Dictionary ->
 	var edges = generate_mst(points, start_node, end_node)
 	edges = add_extra_edges(points, edges, edge_count, start_node, end_node)
 
-	#return {
-		#"points": points,
-		#"edges": edges,
-		#"start": start_node,
-		#"end": end_node
-	#}
+	return {
+		"points": points,
+		"edges": edges,
+		"start": start_node,
+		"end": end_node
+	}
 
 # -----------------------------
 # NODE GENERATION (CENTERED AREA)
@@ -56,7 +54,7 @@ func generate_points(count, width, height, min_dist):
 
 		var valid = true
 		for p in pts:
-			if p.position.distance_to(pos) < min_dist:
+			if p["position"].distance_to(pos) < min_dist:
 				valid = false
 				break
 
@@ -101,7 +99,7 @@ func assign_start_and_end(points):
 	var end_node = 0
 
 	for i in range(points.size()):
-		var x = points[i].position.x
+		var x = points[i]["position"].x
 
 		if x < min_x:
 			min_x = x
@@ -144,8 +142,8 @@ func is_edge_valid(points, edges, a, b):
 	var p2 = points[b].position
 
 	for e in edges.values():
-		var c = e.start
-		var d = e.end
+		var c = e["start"]
+		var d = e["end"]
 
 		if a == c or a == d or b == c or b == d:
 			continue

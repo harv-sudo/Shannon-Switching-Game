@@ -17,6 +17,11 @@ extends Control
 
 
 func _ready() -> void:
+	preset_button.button_pressed = true
+	dynamic_button.button_pressed = false
+	custom_button.button_pressed = false
+	GlobalVariables.use_dynamic_graph = false
+	
 	role_row.visible = false
 	preset_button.toggled.connect(_on_preset_button_toggled)
 	dynamic_button.toggled.connect(_on_dynamic_button_toggled)
@@ -67,17 +72,18 @@ func _on_preset_button_toggled(pressed: bool) -> void:
 	if pressed:
 		dynamic_button.button_pressed = false
 		custom_button.button_pressed = false
+		GlobalVariables.use_dynamic_graph = false
 
 func _on_dynamic_button_toggled(pressed: bool) -> void:
 	if pressed:
 		preset_button.button_pressed = false
 		custom_button.button_pressed = false
+		GlobalVariables.use_dynamic_graph = true
 
 func _on_custom_button_toggled(pressed: bool) -> void:
 	if pressed:
 		preset_button.button_pressed = false
 		dynamic_button.button_pressed = false
-
 func _on_back_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/mainMenu.tscn")
 
@@ -87,4 +93,22 @@ func _on_start_game_pressed() -> void:
 		return
 
 	GlobalVariables.use_custom_graph = false
+	if short_button.button_pressed:
+		GlobalVariables.selected_role = "Short"
+	elif cut_button.button_pressed:
+		GlobalVariables.selected_role = "Cut"
+
+	if dynamic_button.button_pressed:
+		GlobalVariables.setup_dynamic_graph(
+			GlobalVariables.dynamic_node_count,
+			GlobalVariables.dynamic_edge_count
+		)
+	else:
+		GlobalVariables.use_dynamic_graph = false
+		GlobalVariables.points = GlobalVariables.presetPoints[0].duplicate(true)
+		GlobalVariables.edges = GlobalVariables.presetEdges[0].duplicate(true)
+		GlobalVariables.start_node = 0
+		GlobalVariables.end_node = GlobalVariables.points.size() - 1
+		GlobalVariables.short_edges = {}
+
 	App.start_game(App.GameType.SHANNON)

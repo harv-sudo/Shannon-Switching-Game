@@ -15,7 +15,7 @@ func drawGraph() -> void:
 	draw_nodes()
 
 func draw_edges() -> void:
-	for i in GlobalVariables.edges.size():
+	for i in GlobalVariables.edges.keys():
 		var startPointIndex = GlobalVariables.edges[i]["start"]
 		var endPointIndex = GlobalVariables.edges[i]["end"]
 
@@ -70,7 +70,6 @@ func update_edges(edge) -> void:
 
 		# Remove the edge from the available graph for Cut
 		GlobalVariables.edges.erase(edgeReference)
-		#await get_tree().create_timer(0.5).timeout
 		edge.visible = false
 
 	is_game_over()
@@ -95,7 +94,8 @@ func is_game_over() -> void:
 	else:
 		game_manager.switchPlayer()
 
-func apply_ai_move(edge_id: int) -> void:
+func apply_ai_move(edge_id: int, acting_player: int) -> void:
+	await get_tree().create_timer(0.5).timeout
 	for child in get_children():
 		if child is Edge and child.edgeReference == edge_id:
 			if game_manager.currentPlayer == game_manager.Player.P1:
@@ -107,6 +107,15 @@ func apply_ai_move(edge_id: int) -> void:
 
 	is_game_over()
 
-# When the node is added to the scene, the function is called
+#starts AI vs AI and the AI when player plays cut in PvAI
+func _start_first_ai_turn() -> void:
+	await get_tree().create_timer(0.5).timeout
+	if GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
+		game_manager.ai_controller.ai_player = game_manager.currentPlayer
+	var best_edge: int = game_manager.ai_controller.ai_take_turn(GlobalVariables)
+	if best_edge != -1:
+		apply_ai_move(best_edge, game_manager.currentPlayer)
+
+# When the node is added to the scene, the function is called	
 func _ready() -> void:
 	drawGraph()
