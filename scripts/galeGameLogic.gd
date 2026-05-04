@@ -244,8 +244,9 @@ func change_edge(edge):
 			player_one_captured_edges)
 		
 		if player_one_wins:
-			get_tree().change_scene_to_file("res://scenes/gameOverScreen.tscn")
 			GlobalVariables.winner_label = "Player 1 wins!"
+			game_manager.gameOver()
+			return
 
 	else:
 		hide_child = "Blue_" + str(edgeReference)
@@ -258,8 +259,9 @@ func change_edge(edge):
 			player_two_captured_edges)
 		
 		if player_two_wins:
-			get_tree().change_scene_to_file("res://scenes/gameOverScreen.tscn")
 			GlobalVariables.winner_label = "Player 2 wins!"
+			game_manager.gameOver()
+			return
 			
 	# Edge name is changed to so that it become permanently visible
 	# for the rest of the game
