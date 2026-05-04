@@ -43,7 +43,7 @@ func _on_pvp_button_toggled(pressed: bool) -> void:
 		pvai_button.button_pressed = false
 		aivai_button.button_pressed = false
 		role_row.visible = false
-		GlobalVariables.selected_game_mode = GlobalVariables.GameMode.PVP
+		GlobalVariables.game_mode = GlobalVariables.Mode.PVP
 		
 func _on_pvai_button_toggled(pressed: bool) -> void:
 	if pressed:
@@ -57,7 +57,7 @@ func _on_aivai_button_toggled(pressed: bool) -> void:
 		pvp_button.button_pressed = false
 		pvai_button.button_pressed = false
 		role_row.visible = false
-		GlobalVariables.selected_game_mode = GlobalVariables.GameMode.AIVAI
+		GlobalVariables.game_mode = GlobalVariables.Mode.AIVSAI
 		
 
 func _on_short_toggled(pressed: bool) -> void:

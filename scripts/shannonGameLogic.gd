@@ -59,6 +59,8 @@ func draw_nodes() -> void:
 # NEEDS BETTER NAME
 # This function deals with short/cut edge interaction
 func update_edges(edge) -> void:
+	if _is_ai_turn():
+		return
 	var edgeReference = edge.edgeReference
 
 	if game_manager.currentPlayer == game_manager.Player.P1:
@@ -94,15 +96,26 @@ func is_game_over() -> void:
 	else:
 		game_manager.switchPlayer()
 
+		# Trigger AI turn in PvAI or AIvAI
+		if _is_ai_turn():
+			_start_first_ai_turn()
+		elif GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
+			_start_first_ai_turn()
+
 func apply_ai_move(edge_id: int, acting_player: int) -> void:
 	await get_tree().create_timer(0.5).timeout
+
 	for child in get_children():
 		if child is Edge and child.edgeReference == edge_id:
-			if game_manager.currentPlayer == game_manager.Player.P1:
+			if acting_player == game_manager.Player.P1:
 				GlobalVariables.short_edges[edge_id] = GlobalVariables.edges[edge_id]
+				child.capture(Color.GREEN)
+				AudioPlayer.play_sound_effect(short_sound_effect)
+			else:
+				GlobalVariables.edges.erase(edge_id)
+				child.visible = false
+				AudioPlayer.play_sound_effect(cut_sound_effect)
 
-			GlobalVariables.edges.erase(edge_id)
-			child.remove()
 			break
 
 	is_game_over()
@@ -110,12 +123,25 @@ func apply_ai_move(edge_id: int, acting_player: int) -> void:
 #starts AI vs AI and the AI when player plays cut in PvAI
 func _start_first_ai_turn() -> void:
 	await get_tree().create_timer(0.5).timeout
-	if GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
-		game_manager.ai_controller.ai_player = game_manager.currentPlayer
-	var best_edge: int = game_manager.ai_controller.ai_take_turn(GlobalVariables)
-	if best_edge != -1:
-		apply_ai_move(best_edge, game_manager.currentPlayer)
 
-# When the node is added to the scene, the function is called	
+	if GlobalVariables.game_mode == GlobalVariables.Mode.AI or GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
+		game_manager.ai_controller.ai_player = game_manager.currentPlayer
+		var best_edge: int = game_manager.ai_controller.ai_take_turn(GlobalVariables)
+		if best_edge != -1:
+			apply_ai_move(best_edge, game_manager.currentPlayer)
+
+func _is_ai_turn() -> bool:
+	if GlobalVariables.game_mode != GlobalVariables.Mode.AI:
+		return false
+
+	if GlobalVariables.selected_role == "Short":
+		return game_manager.currentPlayer == game_manager.Player.P2
+
+	if GlobalVariables.selected_role == "Cut":
+		return game_manager.currentPlayer == game_manager.Player.P1
+
+	return false
+
+# When the node is added to the scene, the function is called
 func _ready() -> void:
 	drawGraph()

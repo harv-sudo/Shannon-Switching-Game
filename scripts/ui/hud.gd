@@ -19,14 +19,6 @@ func _ready() -> void:
 		#turn_label.text = "Current Turn: Player 2"
 
 func _on_restart_button_pressed():
-	GlobalVariables.reset()
-	get_tree().reload_current_scene()
-
-func _on_menu_button_pressed():
-	GlobalVariables.reset()
-	get_tree().change_scene_to_file("res://scenes/mainMenu.tscn")
-	
-	# Harsh: Added special restart case for custom graphs
 	if GlobalVariables.use_custom_graph:
 		GlobalVariables.points = GlobalVariables.custom_points.duplicate(true)
 		GlobalVariables.edges = GlobalVariables.custom_edges.duplicate(true)
@@ -39,3 +31,8 @@ func _on_menu_button_pressed():
 	else:
 		GlobalVariables.reset()
 		get_tree().reload_current_scene()
+
+
+func _on_menu_button_pressed():
+	GlobalVariables.reset()
+	get_tree().change_scene_to_file("res://scenes/mainMenu.tscn")

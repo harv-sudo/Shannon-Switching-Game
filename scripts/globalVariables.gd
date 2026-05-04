@@ -13,6 +13,7 @@ enum Mode { PVP, AI, AIVSAI }
 var game_mode: int = Mode.PVP
 enum GameType { SHANNON, GALE}
 var currentGameType :GameType
+var selected_role: String = "Short"
 
 # DYNAMIC GRAPHS VARIABLES
 var use_dynamic_graph: bool = false

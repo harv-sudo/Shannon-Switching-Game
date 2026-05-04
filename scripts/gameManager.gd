@@ -11,6 +11,7 @@ var gameLogic: Node
 
 func _ready() -> void:
 	add_child(ai_controller)
+	ai_controller.name = "AI"
 	
 	match App.game_type:
 		App.GameType.SHANNON:
@@ -23,8 +24,13 @@ func _ready() -> void:
 	
 	add_child(gameLogic)
 	gameLogic.set_game_manager(self)
-	ai_controller.name = "AI"
-	
+
+	if App.game_type == App.GameType.SHANNON:
+		if GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
+			(gameLogic as ShannonGame)._start_first_ai_turn()
+		elif GlobalVariables.game_mode == GlobalVariables.Mode.AI and GlobalVariables.selected_role == "Cut":
+			currentPlayer = Player.P1
+			(gameLogic as ShannonGame)._start_first_ai_turn()
 
 # Function is called in shannonGameLogic.updateEdges()
 func switchPlayer() -> void:
