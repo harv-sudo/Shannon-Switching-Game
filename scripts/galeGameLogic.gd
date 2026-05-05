@@ -244,7 +244,7 @@ func change_edge(edge):
 			player_one_captured_edges)
 		
 		if player_one_wins:
-			GlobalVariables.winner_label = "Player 1 wins!"
+			GlobalVariables.winner_label = "Blue wins!"
 			game_manager.gameOver()
 			return
 
@@ -259,7 +259,7 @@ func change_edge(edge):
 			player_two_captured_edges)
 		
 		if player_two_wins:
-			GlobalVariables.winner_label = "Player 2 wins!"
+			GlobalVariables.winner_label = "Red wins!"
 			game_manager.gameOver()
 			return
 			
