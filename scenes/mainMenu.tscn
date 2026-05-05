@@ -1,6 +1,11 @@
 [gd_scene format=3 uid="uid://rkun70jouwsb"]
 
 [ext_resource type="Script" uid="uid://cise5uh5hmws1" path="res://scripts/ui/mainMenu.gd" id="1_qkhwq"]
+[ext_resource type="Texture2D" uid="uid://ch0iex451fvrc" path="res://images/shannonGameIcon.svg" id="2_3d1i7"]
+[ext_resource type="Texture2D" uid="uid://de0vvhno84dpy" path="res://images/Gale'sGameIcon.svg" id="3_48ign"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_l7wge"]
+font_size = 32
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qkhwq"]
 bg_color = Color(0.4212927, 0.48581225, 0.21544455, 1)
@@ -13,12 +18,6 @@ corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_qkhwq"]
-load_path = "res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_3d1i7"]
-load_path = "res://.godot/imported/tempGalesGame.png-c03f56f9071b3aeeb14d04aa236bd3c4.ctex"
 
 [node name="MainMenu" type="Control" unique_id=677604285]
 layout_mode = 3
@@ -55,6 +54,12 @@ theme_override_font_sizes/font_size = 42
 text = "Shannon Switching Game"
 horizontal_alignment = 1
 
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/VBoxContainer" unique_id=1390413693]
+layout_mode = 2
+text = "Team 4"
+label_settings = SubResource("LabelSettings_l7wge")
+horizontal_alignment = 1
+
 [node name="SubtitleLabel" type="Label" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/VBoxContainer" unique_id=1611426792]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
@@ -86,12 +91,12 @@ alignment = 1
 [node name="ShannonButton" type="TextureButton" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow/ShannonPanelContainer/ShannonMarginContainer/ShannonCard" unique_id=1267460169]
 layout_mode = 2
 size_flags_vertical = 3
-texture_normal = SubResource("CompressedTexture2D_qkhwq")
+texture_normal = ExtResource("2_3d1i7")
 stretch_mode = 5
 
 [node name="ShannonLabel" type="Label" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow/ShannonPanelContainer/ShannonMarginContainer/ShannonCard" unique_id=827645476]
 layout_mode = 2
-text = "Original Shannon's Game"
+text = "Shannon Switching Game"
 horizontal_alignment = 1
 
 [node name="GalePanelContainer" type="PanelContainer" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow" unique_id=1495625830]
@@ -112,13 +117,12 @@ alignment = 1
 
 [node name="GaleButton" type="TextureButton" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow/GalePanelContainer/GaleMarginContainer/GaleCard" unique_id=172578359]
 layout_mode = 2
-texture_normal = SubResource("CompressedTexture2D_3d1i7")
+texture_normal = ExtResource("3_48ign")
 stretch_mode = 3
 
 [node name="GaleLabel" type="Label" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow/GalePanelContainer/GaleMarginContainer/GaleCard" unique_id=651829115]
 layout_mode = 2
-text = "Gale's Game 
-(Shannon Variant)"
+text = "Gale's Game "
 horizontal_alignment = 1
 
 [node name="VBoxButtonContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=1882733601]
