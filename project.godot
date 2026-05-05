@@ -13,7 +13,6 @@ config_version=5
 config/name="Shannon Switching Game"
 run/main_scene="uid://rkun70jouwsb"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-config/icon="uid://ddxmxgyyfy8mn"
 
 [autoload]
 
