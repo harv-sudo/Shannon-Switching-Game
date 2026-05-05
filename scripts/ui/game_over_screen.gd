@@ -1,7 +1,7 @@
 extends Control
 
-@onready var winnerLabel = $Label
-@onready var restartButton = $Button
+@onready var winnerLabel = $VBoxContainer/Label
+@onready var restartButton = $VBoxContainer/Button
 
 
 
@@ -11,4 +11,5 @@ func _ready() -> void:
 	restartButton.pressed.connect(return_to_main_menu)
 
 func return_to_main_menu():
+	GlobalVariables.reset()	# Harsh: Reset global variables here
 	get_tree().change_scene_to_file("res://scenes/mainMenu.tscn")

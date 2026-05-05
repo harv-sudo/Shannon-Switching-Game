@@ -18,22 +18,36 @@ func draw_edges() -> void:
 	for i in GlobalVariables.edges.keys():
 		var startPointIndex = GlobalVariables.edges[i]["start"]
 		var endPointIndex = GlobalVariables.edges[i]["end"]
-		
-		var startPosition:Vector2 = GlobalVariables.points[startPointIndex]["position"]
-		var endPosition:Vector2 = GlobalVariables.points[endPointIndex]["position"]
+
+		var start_raw = GlobalVariables.points[startPointIndex]["position"]
+		var end_raw = GlobalVariables.points[endPointIndex]["position"]
+
+		var startPosition = Vector2(start_raw[0], start_raw[1])
+		var endPosition = Vector2(end_raw[0], end_raw[1])
+
 		var edge = Edge.new(startPosition, endPosition, i)
 		edge.name = "edge-" + str(i)
 		add_child(edge)
 		edge.edge_clicked.connect(update_edges)
 
+# Harsh: Added colour code for terminal nodes
 func draw_nodes() -> void:
 	var numberOfNodes = GlobalVariables.points.size()
 	
 	for i in numberOfNodes:
+		var point_raw = GlobalVariables.points[i]["position"]
+		var point_colour = Color.BLACK
+
+		if i == GlobalVariables.start_node:
+			point_colour = Color.GREEN
+		elif i == GlobalVariables.end_node:
+			point_colour = Color.RED
 
 		var point = Point.new(
-			GlobalVariables.points[i]["position"][0],
-			GlobalVariables.points[i]["position"][1])
+			point_raw[0],
+			point_raw[1],
+			point_colour
+		)
 		
 		if (i == GlobalVariables.start_node 
 			or i == GlobalVariables.end_node):
@@ -43,39 +57,54 @@ func draw_nodes() -> void:
 		add_child(point)
 
 # NEEDS BETTER NAME
-# This function deals with short/cut edge interction
+# This function deals with short/cut edge interaction
 func update_edges(edge) -> void:
+	if _is_ai_turn():
+		return
 	var edgeReference = edge.edgeReference
+
 	if game_manager.currentPlayer == game_manager.Player.P1:
 		GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
 		edge.capture(Color.GREEN)
 		AudioPlayer.play_sound_effect(short_sound_effect)
-		
 	else:
 		AudioPlayer.play_sound_effect(cut_sound_effect)
-		
-		# Tracks the shorts players current selected edges
+
+		# Remove the edge from the available graph for Cut
 		GlobalVariables.edges.erase(edgeReference)
 		edge.visible = false
-		
+
 	is_game_over()
 
+# Harsh: Displays winner label when the game finishes
 func is_game_over() -> void:
 	var gameIsOver = WinConditions.is_game_over(
-	GlobalVariables.start_node,
-	GlobalVariables.end_node,
-	GlobalVariables.points,
-	GlobalVariables.edges
+		GlobalVariables.start_node,
+		GlobalVariables.end_node,
+		GlobalVariables.points,
+		GlobalVariables.edges
 	)
 	
 	if gameIsOver:
+		if game_manager.currentPlayer == game_manager.Player.P1:
+			GlobalVariables.winner_label = "Short wins!"
+		else:
+			GlobalVariables.winner_label = "Cut wins!"
+
 		await get_tree().create_timer(0.5).timeout
 		game_manager.gameOver()
 	else:
 		game_manager.switchPlayer()
 
+		# Trigger AI turn in PvAI or AIvAI
+		if _is_ai_turn():
+			_start_first_ai_turn()
+		elif GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
+			_start_first_ai_turn()
+
 func apply_ai_move(edge_id: int, acting_player: int) -> void:
 	await get_tree().create_timer(0.5).timeout
+
 	for child in get_children():
 		if child is Edge and child.edgeReference == edge_id:
 			if acting_player == game_manager.Player.P1:
@@ -84,8 +113,9 @@ func apply_ai_move(edge_id: int, acting_player: int) -> void:
 				AudioPlayer.play_sound_effect(short_sound_effect)
 			else:
 				GlobalVariables.edges.erase(edge_id)
-				child.remove()
+				child.visible = false
 				AudioPlayer.play_sound_effect(cut_sound_effect)
+
 			break
 
 	is_game_over()
@@ -93,16 +123,25 @@ func apply_ai_move(edge_id: int, acting_player: int) -> void:
 #starts AI vs AI and the AI when player plays cut in PvAI
 func _start_first_ai_turn() -> void:
 	await get_tree().create_timer(0.5).timeout
-	if GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
-		game_manager.ai_controller.ai_player = game_manager.currentPlayer
-	var best_edge: int = game_manager.ai_controller.ai_take_turn(GlobalVariables)
-	if best_edge != -1:
-		apply_ai_move(best_edge, game_manager.currentPlayer)
 
-# When the node is added to the scene, the function is called	
+	if GlobalVariables.game_mode == GlobalVariables.Mode.AI or GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
+		game_manager.ai_controller.ai_player = game_manager.currentPlayer
+		var best_edge: int = game_manager.ai_controller.ai_take_turn(GlobalVariables)
+		if best_edge != -1:
+			apply_ai_move(best_edge, game_manager.currentPlayer)
+
+func _is_ai_turn() -> bool:
+	if GlobalVariables.game_mode != GlobalVariables.Mode.AI:
+		return false
+
+	if GlobalVariables.selected_role == "Short":
+		return game_manager.currentPlayer == game_manager.Player.P2
+
+	if GlobalVariables.selected_role == "Cut":
+		return game_manager.currentPlayer == game_manager.Player.P1
+
+	return false
+
+# When the node is added to the scene, the function is called
 func _ready() -> void:
 	drawGraph()
-	if GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
-		call_deferred("_start_first_ai_turn")
-	elif game_manager.ai_controller.ai_enabled and game_manager.currentPlayer == game_manager.ai_controller.ai_player:
-		call_deferred("_start_first_ai_turn")

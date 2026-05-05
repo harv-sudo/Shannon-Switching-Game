@@ -97,6 +97,10 @@ var end_node: int = points.size() -1
 var short_edges = {}
 var winner_label:String = ""
 
+# Custom graph
+var use_custom_graph: bool = false
+var custom_points: Array = []
+var custom_edges: Dictionary = {}
 
 func setup_dynamic_graph(node_count: int, edge_count: int) -> void:
 	var generator = DynamicGraph.new()
@@ -112,12 +116,17 @@ func setup_dynamic_graph(node_count: int, edge_count: int) -> void:
 
 	short_edges = {}
 	use_dynamic_graph = true
-	
-	
+
 func reset():
 	short_edges = {}
-	# If using dynamic graph
-	if use_dynamic_graph:
+	winner_label = ""
+
+	if use_custom_graph and custom_points.size() > 0:
+		points = custom_points.duplicate(true)
+		edges = custom_edges.duplicate(true)
+		start_node = 0
+		end_node = points.size() - 1
+	elif use_dynamic_graph:
 		setup_dynamic_graph(dynamic_node_count, dynamic_edge_count)
 	else:
 		points = presetPoints[0].duplicate(true)

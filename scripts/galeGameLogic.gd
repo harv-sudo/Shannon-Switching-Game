@@ -16,7 +16,6 @@ var player_two_goal_points = [5, 11, 17, 23, 29]
 var game_manager: GameManager
 
 @onready var select_sound_effect = preload("res://audio/short_sound_effect.mp3")
-@onready var winner_sound_effect = preload("res://audio/victory_sound_effect.mp3")
 
 func _draw_graph():
 	_generate_points("One")
@@ -70,7 +69,7 @@ func _draw_point(points: Dictionary, colour: Color, row: int, col: int):
 		colour_name = "R"
 	
 	point.name = "{colour_name} | r: {row}, c: {col}".format({"colour_name" : colour_name, "row": row, "col": col})
-	point.z_index = 5
+	
 	add_child(point)
 
 func _make_edge(start_point: Vector2,
@@ -245,9 +244,9 @@ func change_edge(edge):
 			player_one_captured_edges)
 		
 		if player_one_wins:
-			get_tree().change_scene_to_file("res://scenes/gameOverScreen.tscn")
 			GlobalVariables.winner_label = "Player 1 wins!"
-			AudioPlayer.play_sound_effect(winner_sound_effect)
+			game_manager.gameOver()
+			return
 
 	else:
 		hide_child = "Blue_" + str(edgeReference)
@@ -260,9 +259,9 @@ func change_edge(edge):
 			player_two_captured_edges)
 		
 		if player_two_wins:
-			get_tree().change_scene_to_file("res://scenes/gameOverScreen.tscn")
 			GlobalVariables.winner_label = "Player 2 wins!"
-			AudioPlayer.play_sound_effect(winner_sound_effect)
+			game_manager.gameOver()
+			return
 			
 	# Edge name is changed to so that it become permanently visible
 	# for the rest of the game

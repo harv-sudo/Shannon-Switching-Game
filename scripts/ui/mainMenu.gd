@@ -68,7 +68,7 @@ func _on_shannon_pressed() -> void:
 	
 #TODO: Wire up properly
 func _on_gale_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/GameManager.tscn")
+	get_tree().change_scene_to_file("res://scenes/Board.tscn")
 	App.game_type = App.GameType.GALE
 	pass
 
