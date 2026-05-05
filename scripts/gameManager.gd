@@ -36,4 +36,4 @@ func switchPlayer() -> void:
 	currentPlayer = Player.P1 if currentPlayer == Player.P2 else Player.P2
 
 func gameOver():
-	get_tree().change_scene_to_file("res://gameOverScreen.tscn")
+	get_tree().change_scene_to_file("res://scenes/gameOverScreen.tscn")
