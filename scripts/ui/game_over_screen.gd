@@ -1,7 +1,7 @@
 extends Control
 
-@onready var winnerLabel = $VBoxContainer/Label
-@onready var restartButton = $VBoxContainer/Button
+@onready var winnerLabel = $Label
+@onready var restartButton = $Button
 @onready var victory_sound_effect = preload("res://audio/victory_sound_effect.mp3")
 
 
