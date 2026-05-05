@@ -24,7 +24,7 @@ func _ready() -> void:
 	
 	add_child(gameLogic)
 	gameLogic.set_game_manager(self)
-
+	
 	if App.game_type == App.GameType.SHANNON:
 		if GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
 			(gameLogic as ShannonGame)._start_first_ai_turn()
@@ -32,16 +32,8 @@ func _ready() -> void:
 			currentPlayer = Player.P1
 			(gameLogic as ShannonGame)._start_first_ai_turn()
 
-# Function is called in shannonGameLogic.updateEdges()
 func switchPlayer() -> void:
 	currentPlayer = Player.P1 if currentPlayer == Player.P2 else Player.P2
-	
-	#if currentPlayer == Player.P2:
-		#var best_edge = ai_controller.ai_take_turn(GlobalVariables)
-		#(gameLogic as ShannonGame).apply_ai_move(best_edge)
 
-
-# Used to transition the game to the gameOverScreen scene
-# Harsh: Changed the reset to happen upon restart rather than at the end
 func gameOver():
 	get_tree().change_scene_to_file("res://gameOverScreen.tscn")
