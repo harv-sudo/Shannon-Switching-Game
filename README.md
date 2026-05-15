@@ -6,7 +6,7 @@ If the pathway is built "Short" wins.
 If no paths exists from the start node to the goal node, "Cut" wins.
 
 ## How to Play
-You can play the game here on GitHub at https://github.com/Griffia/shannon-switching-game/deployments/github-pages
+You can play the game here on GitHub at [https://github.com/Griffia/shannon-switching-game/deployments/github-pages](https://griffia.github.io/shannon-switching-game/)
 
 ## Game Modes
 1. Shannon Switching Game
