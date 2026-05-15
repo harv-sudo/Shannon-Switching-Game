@@ -1,4 +1,5 @@
 # Shannon Switching Game
+![Shannon Switching Game Main Menu](https://github.com/Griffia/shannon-switching-game/blob/main/ReadMe%20Image)
 A Shannon Switching game is a two player game in which players take turn as the "Short" player, who is trying to build a path from the 
 start node to the goal node. The "Cut" player, is trying to prevent the "Short" player from creating this pathway.
 
