@@ -3,6 +3,7 @@ extends Node2D
 class_name ShannonGame
 
 var game_manager: GameManager
+var game_over: bool = false
 
 @onready var cut_sound_effect = preload("res://audio/cut_sound_effect.mp3")
 @onready var short_sound_effect = preload("res://audio/short_sound_effect.mp3")
@@ -59,7 +60,7 @@ func draw_nodes() -> void:
 # NEEDS BETTER NAME
 # This function deals with short/cut edge interaction
 func update_edges(edge) -> void:
-	if _is_ai_turn():
+	if game_over or _is_ai_turn():
 		return
 	var edgeReference = edge.edgeReference
 
@@ -78,6 +79,9 @@ func update_edges(edge) -> void:
 
 # Harsh: Displays winner label when the game finishes
 func is_game_over() -> void:
+	if game_over:
+		return
+
 	var gameIsOver = WinConditions.is_game_over(
 		GlobalVariables.start_node,
 		GlobalVariables.end_node,
@@ -86,6 +90,7 @@ func is_game_over() -> void:
 	)
 	
 	if gameIsOver:
+		game_over = true
 		if game_manager.currentPlayer == game_manager.Player.P1:
 			GlobalVariables.winner_label = "Short wins!"
 		else:
@@ -99,11 +104,11 @@ func is_game_over() -> void:
 		# Trigger AI turn in PvAI or AIvAI
 		if _is_ai_turn():
 			_start_first_ai_turn()
-		elif GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
-			_start_first_ai_turn()
 
 func apply_ai_move(edge_id: int, acting_player: int) -> void:
 	await get_tree().create_timer(0.5).timeout
+	if game_over or not is_inside_tree():
+		return
 
 	for child in get_children():
 		if child is Edge and child.edgeReference == edge_id:
@@ -123,6 +128,8 @@ func apply_ai_move(edge_id: int, acting_player: int) -> void:
 #starts AI vs AI and the AI when player plays cut in PvAI
 func _start_first_ai_turn() -> void:
 	await get_tree().create_timer(0.5).timeout
+	if game_over or not is_inside_tree():
+		return
 
 	if GlobalVariables.game_mode == GlobalVariables.Mode.AI or GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
 		game_manager.ai_controller.ai_player = game_manager.currentPlayer
@@ -131,6 +138,9 @@ func _start_first_ai_turn() -> void:
 			apply_ai_move(best_edge, game_manager.currentPlayer)
 
 func _is_ai_turn() -> bool:
+	if GlobalVariables.game_mode == GlobalVariables.Mode.AIVSAI:
+		return true
+
 	if GlobalVariables.game_mode != GlobalVariables.Mode.AI:
 		return false
 

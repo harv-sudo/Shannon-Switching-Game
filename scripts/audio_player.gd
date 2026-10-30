@@ -19,4 +19,5 @@ func play_sound_effect(stream_file: AudioStream, volume: float = 0.0):
 	sound_effect.name = "Sound_effect"
 	sound_effect.volume_db = volume
 	add_child(sound_effect)
+	sound_effect.finished.connect(sound_effect.queue_free)
 	sound_effect.play()

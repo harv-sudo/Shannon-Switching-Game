@@ -88,15 +88,16 @@ func _on_back_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/mainMenu.tscn")
 
 func _on_start_game_pressed() -> void:
+	if short_button.button_pressed:
+		GlobalVariables.selected_role = "Short"
+	elif cut_button.button_pressed:
+		GlobalVariables.selected_role = "Cut"
+
 	if custom_button.button_pressed:
 		get_tree().change_scene_to_file("res://scenes/customGraphSetup.tscn")
 		return
 
 	GlobalVariables.use_custom_graph = false
-	if short_button.button_pressed:
-		GlobalVariables.selected_role = "Short"
-	elif cut_button.button_pressed:
-		GlobalVariables.selected_role = "Cut"
 
 	if dynamic_button.button_pressed:
 		GlobalVariables.setup_dynamic_graph(
