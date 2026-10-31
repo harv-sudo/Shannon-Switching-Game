@@ -1,6 +1,10 @@
 # Shannon Switching Game
 
-![Shannon Switching Game cover artwork: a glowing mint route through a dark network, with a coral cut link](docs/cover.png)
+<p align="center">
+  <img src="docs/shannon-game-graph.svg" alt="Shannon switching-game diagram showing a network with two terminals, claimed links, and cut links" width="520">
+</p>
+
+<p align="center"><sub>Diagram by Dantesoft, via Wikimedia Commons · CC0 public domain. <a href="docs/IMAGE_CREDITS.md">Source and image credits</a>.</sub></p>
 
 **Connect a route. Cut it off. Make every move count.**
 
@@ -71,7 +75,7 @@ The **Web** preset exports to `builds/web/index.html`. It uses the Compatibility
 5. Create an itch.io project of type **HTML**, upload the ZIP, and select it as the browser-playable build.
 6. Use a **1200 × 760** embed with a fullscreen button. Test the uploaded draft before publishing.
 
-Use [`docs/cover.png`](docs/cover.png) as the page artwork. Add the public itch.io game link to this README once the release is live.
+Add the public itch.io game link to this README once the release is live.
 
 The **Windows Desktop** preset is also available, with output under `builds/windows/`; create that directory before exporting. Generated builds and release ZIPs stay out of Git.
 
