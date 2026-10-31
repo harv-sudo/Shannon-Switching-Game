@@ -11,23 +11,27 @@ config_version=5
 [application]
 
 config/name="Shannon Switching Game"
-run/main_scene="uid://rkun70jouwsb"
-config/features=PackedStringArray("4.6", "GL Compatibility")
+run/main_scene="res://scenes/mainMenu.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="uid://cdqxh1evlt11h"
 
 [autoload]
 
-GlobalVariables="*uid://2pm3mnk1c5aj"
-App="*uid://eov815ib73p1"
-AudioPlayer="*uid://4x8kwvniw3d1"
+GlobalVariables="*res://scripts/globalVariables.gd"
+App="*res://scripts/App.gd"
+AudioPlayer="*res://scripts/audio_player.gd"
 
 [display]
 
-window/stretch/mode="viewport"
+window/size/viewport_width=1200
+window/size/viewport_height=760
+window/size/window_width_override=1200
+window/size/window_height_override=760
+window/stretch/mode="canvas_items"
 
-[dotnet]
+[gui]
 
-project/assembly_name="Shannon Switching Game"
+theme/default_font_multichannel_signed_distance_field=true
 
 [physics]
 
@@ -38,4 +42,4 @@ project/assembly_name="Shannon Switching Game"
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
-environment/defaults/default_clear_color=Color(0.5529412, 0.63529414, 0.2901961, 1)
+environment/defaults/default_clear_color=Color(0.0627, 0.1059, 0.1412, 1)

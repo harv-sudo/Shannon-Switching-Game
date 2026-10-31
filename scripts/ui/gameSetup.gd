@@ -1,115 +1,84 @@
 extends Control
 
-@onready var back_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonsRow/BackButton
-@onready var start_game_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonsRow/StartGameButton
-@onready var short_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/RoleRow/RoleButtons/ShortButton
-@onready var cut_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/RoleRow/RoleButtons/CutButton
-
-@onready var preset_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GraphMode/ButtonContainer/PresetButton
-@onready var dynamic_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GraphMode/ButtonContainer/DynamicButton
-@onready var custom_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GraphMode/ButtonContainer/CustomButton
-
-@onready var pvp_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GameModeRow/GameModeButtons/PVPButton
-@onready var pvai_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GameModeRow/GameModeButtons/PVAIButton
-@onready var aivai_button: Button = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/GameModeRow/GameModeButtons/AIVAIButton
-
-@onready var role_row: HBoxContainer = $CenterContainer/PanelContainer/MarginContainer/VBoxContainer/RoleRow
-
+var mode: int = GlobalVariables.Mode.PVP
+var graph_mode: int = 0
+var role: String = "Short"
+var role_row: VBoxContainer
+var graph_hint: Label
 
 func _ready() -> void:
-	preset_button.button_pressed = true
-	dynamic_button.button_pressed = false
-	custom_button.button_pressed = false
-	GlobalVariables.use_dynamic_graph = false
-	
-	role_row.visible = false
-	preset_button.toggled.connect(_on_preset_button_toggled)
-	dynamic_button.toggled.connect(_on_dynamic_button_toggled)
-	custom_button.toggled.connect(_on_custom_button_toggled)
+	add_child(BoardBackdrop.new())
+	mode = GlobalVariables.game_mode
+	role = GlobalVariables.selected_role
+	var page = GameStyle.page(self, 850)
+	page.add_child(GameStyle.label("SHANNON SWITCHING", 15, GameStyle.TEAL))
+	page.add_child(GameStyle.label("Make your next move.", 40))
+	page.add_child(GameStyle.label("Choose your opponent and your playing field.", 19, GameStyle.MUTED))
+	var card = GameStyle.card(page)
+	_choices(card, "01  Opponent", ["Two players", "Play the AI", "Watch AI vs AI"], mode,
+		func(index): mode = index; role_row.visible = mode == GlobalVariables.Mode.AI)
+	role_row = VBoxContainer.new()
+	card.add_child(role_row)
+	_choices(role_row, "Your role", ["Short · build a route", "Cut · break the route"],
+		0 if role == "Short" else 1, func(index): role = "Short" if index == 0 else "Cut")
+	role_row.visible = mode == GlobalVariables.Mode.AI
+	_choices(card, "02  Playing field", ["Classic", "Random", "Create your own"], 0,
+		func(index): graph_mode = index; _update_hint())
+	graph_hint = GameStyle.paragraph("")
+	card.add_child(graph_hint)
+	_update_hint()
+	var actions = HBoxContainer.new()
+	page.add_child(actions)
+	actions.add_child(GameStyle.button("Back", func(): get_tree().change_scene_to_file("res://scenes/mainMenu.tscn")))
+	actions.add_child(GameStyle.button("How to play", func(): GameStyle.show_rules(self)))
+	var spacer = Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	actions.add_child(spacer)
+	var start = GameStyle.button("Start game", _start_game, true)
+	actions.add_child(start)
+	start.grab_focus()
 
-	pvp_button.toggled.connect(_on_pvp_button_toggled)
-	pvai_button.toggled.connect(_on_pvai_button_toggled)
-	aivai_button.toggled.connect(_on_aivai_button_toggled)
+func _choices(parent: Node, title: String, values: Array, selected: int, action: Callable) -> void:
+	parent.add_child(GameStyle.label(title, 17, GameStyle.MUTED))
+	var row = HBoxContainer.new()
+	parent.add_child(row)
+	var group = ButtonGroup.new()
+	for index in range(values.size()):
+		var choice = GameStyle.button(values[index], action.bind(index))
+		choice.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		choice.toggle_mode = true
+		choice.button_group = group
+		choice.set_pressed_no_signal(index == selected)
+		row.add_child(choice)
 
-	short_button.toggled.connect(_on_short_toggled)
-	cut_button.toggled.connect(_on_cut_toggled)
-	
-	back_button.pressed.connect(_on_back_pressed)
-	start_game_button.pressed.connect(_on_start_game_pressed)
+func _update_hint() -> void:
+	graph_hint.text = [
+		"A balanced starting point: 7 nodes, 13 links. Short always plays first.",
+		"A fresh network each game. Replay keeps the same board for another attempt.",
+		"Place nodes, draw links, then choose your start and goal."
+	][graph_mode]
 
-
-func _on_pvp_button_toggled(pressed: bool) -> void:
-	if pressed:
-		pvai_button.button_pressed = false
-		aivai_button.button_pressed = false
-		role_row.visible = false
-		GlobalVariables.game_mode = GlobalVariables.Mode.PVP
-		
-func _on_pvai_button_toggled(pressed: bool) -> void:
-	if pressed:
-		pvp_button.button_pressed = false
-		aivai_button.button_pressed = false
-		role_row.visible = true
-		GlobalVariables.game_mode = GlobalVariables.Mode.AI
-		
-func _on_aivai_button_toggled(pressed: bool) -> void:
-	if pressed:
-		pvp_button.button_pressed = false
-		pvai_button.button_pressed = false
-		role_row.visible = false
-		GlobalVariables.game_mode = GlobalVariables.Mode.AIVSAI
-		
-
-func _on_short_toggled(pressed: bool) -> void:
-	if pressed:
-		cut_button.button_pressed = false
-
-func _on_cut_toggled(pressed: bool) -> void:
-	if pressed:
-		short_button.button_pressed = false
-
-func _on_preset_button_toggled(pressed: bool) -> void:
-	if pressed:
-		dynamic_button.button_pressed = false
-		custom_button.button_pressed = false
-		GlobalVariables.use_dynamic_graph = false
-
-func _on_dynamic_button_toggled(pressed: bool) -> void:
-	if pressed:
-		preset_button.button_pressed = false
-		custom_button.button_pressed = false
-		GlobalVariables.use_dynamic_graph = true
-
-func _on_custom_button_toggled(pressed: bool) -> void:
-	if pressed:
-		preset_button.button_pressed = false
-		dynamic_button.button_pressed = false
-func _on_back_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/mainMenu.tscn")
-
-func _on_start_game_pressed() -> void:
-	if short_button.button_pressed:
-		GlobalVariables.selected_role = "Short"
-	elif cut_button.button_pressed:
-		GlobalVariables.selected_role = "Cut"
-
-	if custom_button.button_pressed:
+func _start_game() -> void:
+	GlobalVariables.game_mode = mode
+	GlobalVariables.selected_role = role
+	GlobalVariables.use_custom_graph = graph_mode == 2
+	GlobalVariables.use_dynamic_graph = graph_mode == 1
+	GlobalVariables.short_edges = {}
+	GlobalVariables.winner_label = ""
+	if graph_mode == 2:
+		GlobalVariables.custom_points = []
+		GlobalVariables.custom_edges = {}
 		get_tree().change_scene_to_file("res://scenes/customGraphSetup.tscn")
 		return
-
-	GlobalVariables.use_custom_graph = false
-
-	if dynamic_button.button_pressed:
-		GlobalVariables.setup_dynamic_graph(
-			GlobalVariables.dynamic_node_count,
-			GlobalVariables.dynamic_edge_count
-		)
+	if graph_mode == 1:
+		GlobalVariables.setup_dynamic_graph(GlobalVariables.dynamic_node_count, GlobalVariables.dynamic_edge_count)
 	else:
-		GlobalVariables.use_dynamic_graph = false
 		GlobalVariables.points = GlobalVariables.presetPoints[0].duplicate(true)
 		GlobalVariables.edges = GlobalVariables.presetEdges[0].duplicate(true)
 		GlobalVariables.start_node = 0
 		GlobalVariables.end_node = GlobalVariables.points.size() - 1
-		GlobalVariables.short_edges = {}
-
 	App.start_game(App.GameType.SHANNON)
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		get_tree().change_scene_to_file("res://scenes/mainMenu.tscn")

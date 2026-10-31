@@ -50,8 +50,10 @@ func draw_nodes() -> void:
 			point_colour
 		)
 		
-		if (i == GlobalVariables.start_node 
-			or i == GlobalVariables.end_node):
+		if i == GlobalVariables.start_node:
+			point.terminal_label = "S"
+		elif i == GlobalVariables.end_node:
+			point.terminal_label = "G"
 			point.colour = Color.GOLD
 		
 		point.name = "point-" + str(i)
@@ -63,6 +65,9 @@ func update_edges(edge) -> void:
 	if game_over or _is_ai_turn():
 		return
 	var edgeReference = edge.edgeReference
+	if not GlobalVariables.edges.has(edgeReference) or GlobalVariables.short_edges.has(edgeReference):
+		return
+	game_manager.move_count += 1
 
 	if game_manager.currentPlayer == game_manager.Player.P1:
 		GlobalVariables.short_edges[edgeReference] = GlobalVariables.edges[edgeReference]
@@ -73,7 +78,7 @@ func update_edges(edge) -> void:
 
 		# Remove the edge from the available graph for Cut
 		GlobalVariables.edges.erase(edgeReference)
-		edge.visible = false
+		edge.remove()
 
 	is_game_over()
 
@@ -96,7 +101,7 @@ func is_game_over() -> void:
 		else:
 			GlobalVariables.winner_label = "Cut wins!"
 
-		await get_tree().create_timer(0.5).timeout
+		await get_tree().create_timer(0.5, false).timeout
 		game_manager.gameOver()
 	else:
 		game_manager.switchPlayer()
@@ -106,19 +111,20 @@ func is_game_over() -> void:
 			_start_first_ai_turn()
 
 func apply_ai_move(edge_id: int, acting_player: int) -> void:
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(0.5, false).timeout
 	if game_over or not is_inside_tree():
 		return
 
 	for child in get_children():
 		if child is Edge and child.edgeReference == edge_id:
+			game_manager.move_count += 1
 			if acting_player == game_manager.Player.P1:
 				GlobalVariables.short_edges[edge_id] = GlobalVariables.edges[edge_id]
 				child.capture(Color.GREEN)
 				AudioPlayer.play_sound_effect(short_sound_effect)
 			else:
 				GlobalVariables.edges.erase(edge_id)
-				child.visible = false
+				child.remove()
 				AudioPlayer.play_sound_effect(cut_sound_effect)
 
 			break
@@ -127,7 +133,7 @@ func apply_ai_move(edge_id: int, acting_player: int) -> void:
 
 #starts AI vs AI and the AI when player plays cut in PvAI
 func _start_first_ai_turn() -> void:
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(0.5, false).timeout
 	if game_over or not is_inside_tree():
 		return
 

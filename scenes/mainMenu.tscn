@@ -1,135 +1,13 @@
 [gd_scene format=3 uid="uid://rkun70jouwsb"]
 
-[ext_resource type="Script" uid="uid://cise5uh5hmws1" path="res://scripts/ui/mainMenu.gd" id="1_qkhwq"]
-[ext_resource type="Texture2D" uid="uid://ch0iex451fvrc" path="res://images/shannonGameIcon.svg" id="2_3d1i7"]
-[ext_resource type="Texture2D" uid="uid://de0vvhno84dpy" path="res://images/Gale'sGameIcon.svg" id="3_48ign"]
+[ext_resource type="Script" path="res://scripts/ui/mainMenu.gd" id="1_script"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_l7wge"]
-font_size = 32
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qkhwq"]
-bg_color = Color(0.4212927, 0.48581225, 0.21544455, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.26909837, 0.3130014, 0.12902683, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-
-[node name="MainMenu" type="Control" unique_id=677604285]
+[node name="MainMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_qkhwq")
-
-[node name="CenterContainer" type="CenterContainer" parent="." unique_id=120979065]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=921303116]
-layout_mode = 2
-theme_override_constants/separation = 50
-
-[node name="VBoxLabelContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=1970271234]
-layout_mode = 2
-theme_override_constants/separation = 30
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/VBoxLabelContainer" unique_id=1498128143]
-layout_mode = 2
-theme_override_constants/separation = 14
-
-[node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/VBoxContainer" unique_id=863461831]
-layout_mode = 2
-theme_override_font_sizes/font_size = 42
-text = "Shannon Switching Game"
-horizontal_alignment = 1
-
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/VBoxContainer" unique_id=1390413693]
-layout_mode = 2
-text = "Team 4"
-label_settings = SubResource("LabelSettings_l7wge")
-horizontal_alignment = 1
-
-[node name="SubtitleLabel" type="Label" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/VBoxContainer" unique_id=1611426792]
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "COMP530 Group Project"
-horizontal_alignment = 1
-
-[node name="GamesRow" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxLabelContainer" unique_id=1119982998]
-custom_minimum_size = Vector2(0, 150)
-layout_mode = 2
-theme_override_constants/separation = 160
-alignment = 1
-
-[node name="ShannonPanelContainer" type="PanelContainer" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow" unique_id=236426372]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_qkhwq")
-
-[node name="ShannonMarginContainer" type="MarginContainer" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow/ShannonPanelContainer" unique_id=1343933224]
-layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="ShannonCard" type="VBoxContainer" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow/ShannonPanelContainer/ShannonMarginContainer" unique_id=759507827]
-layout_mode = 2
-alignment = 1
-
-[node name="ShannonButton" type="TextureButton" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow/ShannonPanelContainer/ShannonMarginContainer/ShannonCard" unique_id=1267460169]
-layout_mode = 2
-size_flags_vertical = 3
-texture_normal = ExtResource("2_3d1i7")
-stretch_mode = 5
-
-[node name="ShannonLabel" type="Label" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow/ShannonPanelContainer/ShannonMarginContainer/ShannonCard" unique_id=827645476]
-layout_mode = 2
-text = "Shannon Switching Game"
-horizontal_alignment = 1
-
-[node name="GalePanelContainer" type="PanelContainer" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow" unique_id=1495625830]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_qkhwq")
-
-[node name="GaleMarginContainer" type="MarginContainer" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow/GalePanelContainer" unique_id=28125126]
-layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="GaleCard" type="VBoxContainer" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow/GalePanelContainer/GaleMarginContainer" unique_id=1282302264]
-layout_mode = 2
-alignment = 1
-
-[node name="GaleButton" type="TextureButton" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow/GalePanelContainer/GaleMarginContainer/GaleCard" unique_id=172578359]
-layout_mode = 2
-texture_normal = ExtResource("3_48ign")
-stretch_mode = 3
-
-[node name="GaleLabel" type="Label" parent="CenterContainer/VBoxContainer/VBoxLabelContainer/GamesRow/GalePanelContainer/GaleMarginContainer/GaleCard" unique_id=651829115]
-layout_mode = 2
-text = "Gale's Game "
-horizontal_alignment = 1
-
-[node name="VBoxButtonContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=1882733601]
-layout_mode = 2
-theme_override_constants/separation = 24
-
-[node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer/VBoxButtonContainer" unique_id=69254621]
-custom_minimum_size = Vector2(220, 50)
-layout_mode = 2
-text = "Quit"
+mouse_filter = 2
+script = ExtResource("1_script")

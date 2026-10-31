@@ -1,3 +1,10 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# OS and editor leftovers
+.DS_Store
+*.tmp
+
+# Import metadata generated from the root-level web export icons
+/index*.png.import

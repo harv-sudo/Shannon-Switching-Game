@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://0fbh0ep5yaa8"]
-
-[ext_resource type="Script" uid="uid://df235a5857rg" path="res://scripts/gameManager.gd" id="1_qails"]
-
-[node name="Board" type="Node2D" unique_id=1845223269]
-script = ExtResource("1_qails")

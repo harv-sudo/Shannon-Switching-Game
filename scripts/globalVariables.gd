@@ -11,8 +11,6 @@ enum Player { P1, P2 }
 enum Mode { PVP, AI, AIVSAI }
 
 var game_mode: int = Mode.PVP
-enum GameType { SHANNON, GALE}
-var currentGameType :GameType
 var selected_role: String = "Short"
 
 # DYNAMIC GRAPHS VARIABLES
@@ -101,10 +99,33 @@ var winner_label:String = ""
 var use_custom_graph: bool = false
 var custom_points: Array = []
 var custom_edges: Dictionary = {}
+var initial_board: Dictionary = {}
+var last_move_count: int = 0
+
+# Keep a pristine board so replay preserves random layouts and custom terminals.
+func remember_board() -> void:
+	initial_board = {
+		"points": points.duplicate(true),
+		"edges": edges.duplicate(true),
+		"start": start_node,
+		"end": end_node,
+	}
+
+func restore_board() -> void:
+	if initial_board.is_empty():
+		reset()
+		return
+	points = initial_board["points"].duplicate(true)
+	edges = initial_board["edges"].duplicate(true)
+	start_node = initial_board["start"]
+	end_node = initial_board["end"]
+	short_edges = {}
+	winner_label = ""
 
 func setup_dynamic_graph(node_count: int, edge_count: int) -> void:
 	var generator = DynamicGraph.new()
 	var graph = generator.generate(node_count, edge_count)
+	generator.free()
 
 	points = graph["points"]
 	edges = graph["edges"]

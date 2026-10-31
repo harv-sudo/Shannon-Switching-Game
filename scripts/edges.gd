@@ -1,98 +1,96 @@
 extends Node2D
-
 class_name Edge
+
 signal edge_clicked(edge)
 
 var start_position: Vector2
 var end_position: Vector2
-var width: float = 10.0
+var width: float = 5.0
 var colour: Color = Color.BLACK
 var edgeReference: int
-var audio: AudioStreamPlayer
-
 var is_hovered: bool = false
 var is_captured: bool = false
 var hovered_colour: Color = Color.GRAY
-
-var area: Area2D 
+var area: Area2D
 var collision: CollisionShape2D
+var pulse: float = 0.0
 
 func _init(start: Vector2, end: Vector2, index: int) -> void:
-	self.start_position = start
-	self.end_position = end
-	self.edgeReference = index
+	start_position = start
+	end_position = end
+	edgeReference = index
 
-func createCollision() -> void:
+func _ready() -> void:
 	area = Area2D.new()
 	add_child(area)
-	
-	area.input_pickable = true
-	
-	var rectangle = RectangleShape2D.new()
-	var length = (start_position - end_position).length()
-	rectangle.size = Vector2(length, width)
-	
+	var shape = RectangleShape2D.new()
+	shape.size = Vector2(start_position.distance_to(end_position), 22)
 	collision = CollisionShape2D.new()
-	collision.shape = rectangle
-	collision.disabled = false
-	
+	collision.shape = shape
 	area.add_child(collision)
 	area.position = (start_position + end_position) * 0.5
 	area.rotation = (end_position - start_position).angle()
-	
-	# Adds event listeners to each area created
 	area.mouse_entered.connect(_on_mouse_entered)
 	area.mouse_exited.connect(_on_mouse_exited)
 	area.input_event.connect(_select_edge)
 
-# Used to add hover effect for the edge
 func _on_mouse_entered() -> void:
+	if is_captured:
+		return
 	Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
 	is_hovered = true
-	#if App.game_type == App.GameType.GALE:
-		#self.modulate.a = 1.0
-
 	queue_redraw()
-	
-# Used to remove hover effect for the edge
+
 func _on_mouse_exited() -> void:
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 	is_hovered = false
-	#if App.game_type == App.GameType.GALE:
-		#self.modulate.a = 0.0
-	queue_redraw()	
+	queue_redraw()
 
-func capture(change_color: Color):
+func capture(change_color: Color) -> void:
 	colour = change_color
 	is_captured = true
 	is_hovered = false
 	area.input_pickable = false
-	area.mouse_entered.disconnect(_on_mouse_entered)
-	area.mouse_exited.disconnect(_on_mouse_exited)
+	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+	pulse = 1.0
+	var tween = create_tween()
+	tween.tween_method(func(value: float): pulse = value; queue_redraw(), 1.0, 0.0, 0.3)
 	queue_redraw()
 
-func remove():
-	queue_free()
+func remove() -> void:
+	area.input_pickable = false
+	is_hovered = false
+	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+	var tween = create_tween()
+	tween.tween_property(self, "modulate:a", 0.0, 0.18)
+	tween.tween_callback(queue_free)
 
-# function needs to be fixed so that it works with SHANNON GAME
-# Will just be a case of changing how Edge.capture() is called.
-func _draw() ->void:
-	var current_colour: Color
-	if is_hovered:
-		current_colour = hovered_colour
-	else:
-		current_colour = colour
-	draw_line(start_position, end_position, current_colour, width)
+func _ink(value: Color) -> Color:
+	if value == Color.GREEN:
+		return GameStyle.TEAL
+	if value == Color.BLUE:
+		return GameStyle.BLUE
+	if value == Color.RED:
+		return GameStyle.CORAL
+	if value == Color.GRAY:
+		return GameStyle.TEXT
+	return Color("#617784")
 
-func _ready() -> void:
-	# Adds the collison to the edge, allowing for hover events to trigger
-	createCollision()
+func _draw() -> void:
+	var ink = _ink(hovered_colour if is_hovered else colour)
+	if is_hovered or is_captured:
+		draw_line(start_position, end_position, Color(ink, 0.12 + pulse * 0.12), width + 8 + pulse * 8, true)
+	draw_line(start_position, end_position, ink, width + (1.5 if is_hovered else 0.0), true)
+	draw_circle(start_position, width / 2, ink, true, -1, true)
+	draw_circle(end_position, width / 2, ink, true, -1, true)
 
-# _ is required infront of variables that are not used, 
-# but they are still need to not flag and error in the debugger
-# as input_event that it is connected to requires these 3 args
 func _select_edge(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	if (event is InputEventMouseButton 
-	and event.button_index == MOUSE_BUTTON_LEFT
-	and event.pressed):
+	if is_captured:
+		return
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		get_viewport().set_input_as_handled()
 		edge_clicked.emit(self)
+
+func _exit_tree() -> void:
+	if is_hovered:
+		Input.set_default_cursor_shape(Input.CURSOR_ARROW)

@@ -218,7 +218,8 @@ func _draw_visual_edge(start_point: Vector2,
 	
 	var line: Line2D = Line2D.new()
 	line.width = 10
-	line.default_color = colour
+	line.default_color = GameStyle.BLUE if colour == Color.BLUE else GameStyle.CORAL
+	line.antialiased = true
 	line.points = [start_point, end_point]
 	add_child(line)
 
@@ -228,6 +229,9 @@ func _ready() -> void:
 
 func change_edge(edge):
 	var edgeReference = edge.edgeReference
+	if not player_one_edges.has(edgeReference) or not player_two_edges.has(edgeReference):
+		return
+	game_manager.move_count += 1
 	var hide_child: String
 	
 	# Uses the AudioPlayer global to play sound effects

@@ -19,6 +19,15 @@ var node_radius: float = 16.0
 var status_message: String = "Click Add Node, then click anywhere to place nodes."
 
 func _ready() -> void:
+	add_child(BoardBackdrop.new())
+	$CanvasLayer/Control.theme = GameStyle.make_theme()
+	status_label.add_theme_font_size_override("font_size", 19)
+	status_label.add_theme_color_override("font_color", GameStyle.TEXT)
+	var back = GameStyle.button("Back to setup", func(): get_tree().change_scene_to_file("res://scenes/gameSetup.tscn"))
+	$CanvasLayer/Control/Panel/MarginContainer/VBoxContainer.add_child(back)
+	panel.size = Vector2(244, 350)
+	$CanvasLayer/Control/Panel/MarginContainer.size = panel.size
+	toggle_menu_button.text = "Hide tools"
 	add_node_button.pressed.connect(_on_add_node_button_pressed)
 	add_edge_button.pressed.connect(_on_add_edge_button_pressed)
 	start_game_button.pressed.connect(_on_start_game_button_pressed)
@@ -31,7 +40,7 @@ func _ready() -> void:
 		GlobalVariables.edges = GlobalVariables.custom_edges.duplicate(true)
 
 		editor_mode = EditorMode.SELECT_TERMINALS
-		status_message = "Select START node, then END node."
+		status_message = "Select START node, then GOAL node."
 	else:
 		GlobalVariables.points = []
 		GlobalVariables.edges = {}
@@ -69,7 +78,7 @@ func _draw():
 	if editor_mode == EditorMode.ADD_EDGE and drag_start_index != -1:
 		var start_raw = GlobalVariables.points[drag_start_index]["position"]
 		var start_pos = Vector2(start_raw[0], start_raw[1])
-		draw_line(start_pos, preview_mouse_pos, Color.WHITE, 2.0)
+		draw_line(start_pos, preview_mouse_pos, GameStyle.TEAL, 3.0, true)
 
 func _handle_add_node_input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
@@ -115,12 +124,16 @@ func _handle_terminal_selection_input(event):
 
 		if GlobalVariables.start_node == -1:
 			GlobalVariables.start_node = node_index
-			status_message = "Select END node."
+			status_message = "Select GOAL node."
 			_rebuild_graph_visuals()
 			queue_redraw()
 			return
 
 		if GlobalVariables.end_node == -1 and node_index != GlobalVariables.start_node:
+			var adjacency = WinConditions.build_adjacency(GlobalVariables.points, GlobalVariables.edges)
+			if not WinConditions.path_exists(GlobalVariables.start_node, node_index, adjacency):
+				status_message = "No route to this node. Choose a connected goal or add links."
+				return
 			GlobalVariables.end_node = node_index
 
 			GlobalVariables.custom_points = GlobalVariables.points.duplicate(true)
@@ -133,11 +146,13 @@ func _handle_terminal_selection_input(event):
 			get_tree().change_scene_to_file("res://scenes/GameManager.tscn")
 
 func _on_add_node_button_pressed():
+	cancel_edge_drag()
 	editor_mode = EditorMode.ADD_NODE
 	status_message = "Click anywhere outside the menu to place a node."
 	queue_redraw()
 
 func _on_add_edge_button_pressed():
+	cancel_edge_drag()
 	if GlobalVariables.points.size() < 2:
 		status_message = "Place at least 2 nodes first."
 		return
@@ -147,6 +162,7 @@ func _on_add_edge_button_pressed():
 	queue_redraw()
 
 func _on_start_game_button_pressed():
+	cancel_edge_drag()
 	if GlobalVariables.points.size() < 2:
 		status_message = "Place at least 2 nodes first."
 		return
@@ -158,16 +174,27 @@ func _on_start_game_button_pressed():
 	editor_mode = EditorMode.SELECT_TERMINALS
 	GlobalVariables.start_node = -1
 	GlobalVariables.end_node = -1
-	status_message = "Select START node, then END node."
+	status_message = "Select START node, then GOAL node."
 	queue_redraw()
 
 func _on_clear_graph_button_pressed():
+	var dialog = ConfirmationDialog.new()
+	dialog.title = "Clear the graph?"
+	dialog.dialog_text = "All nodes and links will be removed."
+	$CanvasLayer/Control.add_child(dialog)
+	dialog.confirmed.connect(_clear_graph)
+	dialog.confirmed.connect(dialog.queue_free)
+	dialog.canceled.connect(dialog.queue_free)
+	dialog.popup_centered(Vector2i(420, 160))
+
+func _clear_graph():
 	GlobalVariables.points = []
 	GlobalVariables.edges = {}
 	GlobalVariables.short_edges = {}
 	GlobalVariables.start_node = -1
 	GlobalVariables.end_node = -1
 	drag_start_index = -1
+	editor_mode = EditorMode.ADD_NODE
 	status_message = "Graph cleared."
 	_rebuild_graph_visuals()
 	queue_redraw()
@@ -176,11 +203,15 @@ func _on_toggle_menu_button_pressed():
 	panel.visible = not panel.visible
 
 	if panel.visible:
-		toggle_menu_button.text = "Hide Menu"
+		toggle_menu_button.text = "Hide tools"
 	else:
-		toggle_menu_button.text = "Settings"
+		toggle_menu_button.text = "Show tools"
 
 func add_node_at(pos: Vector2):
+	var safe_area = get_viewport_rect().grow(-24)
+	if not safe_area.has_point(pos) or pos.y < 100:
+		status_message = "Place nodes inside the board, below the status bar."
+		return
 	GlobalVariables.points.append({
 		"position": [pos.x, pos.y]
 	})
@@ -247,7 +278,7 @@ func _rebuild_graph_visuals():
 	for child in graph_root.get_children():
 		child.queue_free()
 
-	for i in GlobalVariables.edges.size():
+	for i in GlobalVariables.edges.keys():
 		var edge = GlobalVariables.edges[i]
 		var start_raw = GlobalVariables.points[edge["start"]]["position"]
 		var end_raw = GlobalVariables.points[edge["end"]]["position"]
@@ -264,4 +295,9 @@ func _rebuild_graph_visuals():
 		elif i == GlobalVariables.end_node:
 			point_colour = Color.RED
 
-		graph_root.add_child(Point.new(int(point_raw[0]), int(point_raw[1]), point_colour))
+		var point = Point.new(point_raw[0], point_raw[1], point_colour)
+		if i == GlobalVariables.start_node:
+			point.terminal_label = "S"
+		elif i == GlobalVariables.end_node:
+			point.terminal_label = "G"
+		graph_root.add_child(point)

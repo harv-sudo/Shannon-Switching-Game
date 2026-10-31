@@ -1,62 +1,13 @@
 [gd_scene format=3 uid="uid://cyjsn17mfonuq"]
 
-[ext_resource type="Script" uid="uid://dqmeeu17lhjiq" path="res://scripts/ui/game_over_screen.gd" id="1_iot85"]
+[ext_resource type="Script" path="res://scripts/ui/game_over_screen.gd" id="1_script"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_s5smn"]
-font_size = 72
-
-[sub_resource type="LabelSettings" id="LabelSettings_v7ja1"]
-font_size = 48
-
-[node name="Control" type="Control" unique_id=1752648630]
+[node name="GameOver" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 4
-script = ExtResource("1_iot85")
-
-[node name="Game Over" type="Label" parent="." unique_id=1272310459]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.14969136
-anchor_right = 0.5
-anchor_bottom = 0.14969136
-offset_left = -195.0
-offset_right = 195.0
-offset_bottom = 99.0
-grow_horizontal = 2
-text = "Game Over"
-label_settings = SubResource("LabelSettings_s5smn")
-horizontal_alignment = 1
-metadata/_edit_use_anchors_ = true
-
-[node name="Label" type="Label" parent="." unique_id=269874326]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -64.0
-offset_top = -22.5
-offset_right = 64.0
-offset_bottom = 22.5
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 32
-text = "WINNER"
-label_settings = SubResource("LabelSettings_v7ja1")
-
-[node name="Button" type="Button" parent="." unique_id=1434789436]
-layout_mode = 0
-offset_left = 418.0
-offset_top = 413.0
-offset_right = 754.0
-offset_bottom = 507.0
-theme_override_font_sizes/font_size = 32
-text = "Main Menu"
+mouse_filter = 2
+script = ExtResource("1_script")
