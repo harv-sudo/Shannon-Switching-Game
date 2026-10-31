@@ -6,5 +6,19 @@
 .DS_Store
 *.tmp
 
-# Import metadata generated from the root-level web export icons
+# Generated exports and release archives
+/builds/
+*.zip
+
+# Keep accidental root-level web exports out of source control
+/index.html
+/index.js
+/index.wasm
+/index.pck
+/index*.png
 /index*.png.import
+/index*.worklet.js
+/index.worker.js
+/index.service.worker.js
+/index.manifest.json
+/index.offline.html
